@@ -14,11 +14,15 @@ app.use(cors());
 
 connectToDB();
 
+app.get('/', (req, res) => {
+  console.log(req.baseUrl);
+});
+
 app.get('/sailorinfo', (req, res) => {
   SailorModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
-    }
+    } 
     res.send(result);
   });
 });
@@ -30,8 +34,7 @@ app.post('/insertsailor', async (req, res) => {
   const rig = req.body.rig;
   const dateEntered = req.body.dateEntered;
   const country = req.body.country;
-  // const userName = req.body.userName;
-  // const friends = req.body.friends;
+ 
   const sailor = new SailorModel ({
     sailorID: sailorID,
       name: name,
