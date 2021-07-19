@@ -29,7 +29,7 @@ const SailorSchema = new mongoose.Schema({
     required: true,
   }, 
   dateEntered: {
-    type: Date,
+    type: String,
     required: true,
   },
   country: {

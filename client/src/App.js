@@ -1,23 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+  const postSailor = () => {
+    axios
+      .post('http://localhost:3001/insertsailor', {
+        sailorID: 'AUTAM6',
+        name: {
+          firstName: 'Anton',
+          familyName: 'Messeritsch',
+        },
+        sailNumber: 'AUT212844',
+        rig: '4.7',
+        dateEntered: '18 Jun 2021',
+        country: 'Austria',
+      })
+      .then(console.log('sailor posted'));
+  };
+
+  const getSailors = () => {
+    console.log('sailors retrieved');
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={() => postSailor()}>Post Sailor</button>
+      <button onClick={() => getSailors()}>Get Sailors</button>
     </div>
   );
 }
