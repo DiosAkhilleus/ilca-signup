@@ -20,10 +20,7 @@ function App() {
         <Route path='/' component={NotFound}/>
       </Switch>
     </BrowserRouter>
-    // <div className="App">
-    //   <button onClick={() => postSailor()}>Post Sailor</button>
-    //   <button onClick={() => getSailors()}>Get Sailors</button>
-    // </div>
+   
   );
 }
 
