@@ -1,19 +1,17 @@
-import axios from 'axios';
+import Axios from 'axios';
 
-const postSailor = () => {
-  axios
-    .post('http://localhost:3001/insertsailor', {
-      sailorID: 'AUTAM6',
+const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateEntered, country) => {
+  Axios.post('http://localhost:3001/insertsailor', {
+      sailorID: id,
       name: {
-        firstName: 'Anton',
-        familyName: 'Messeritsch',
+        firstName: firstName,
+        familyName: familyName,
       },
-      sailNumber: 'AUT212844',
-      rig: '4.7',
-      dateEntered: '18 Jun 2021',
-      country: 'Austria',
-    })
-    .then(console.log('sailor posted'));
+      sailNumber: sailNumber,
+      rig: rig,
+      dateEntered: dateEntered,
+      country: country,
+    }).then(console.log('sailor posted'))
 };
 
-export default postSailor;
+export default postSailorToDB;

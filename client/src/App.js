@@ -1,15 +1,12 @@
 import './App.css';
-import postSailor from './javascript/sailor';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Components/Home'
 import About from './Components/About';
 import NotFound from './Components/NotFound';
+import PostSailor from './Components/Sailor/PostSailor';
+import DisplaySailors from './Components/Sailor/DisplaySailors';
 
 function App() {
-  
-  const getSailors = () => {
-    console.log('sailors retrieved');
-  }
 
   return (
 
@@ -17,6 +14,8 @@ function App() {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route exact path='/about' component={About} />
+        <Route exact path='/postsailor' component={PostSailor} />
+        <Route exact path='/displaysailors' component={DisplaySailors} />
         <Route path='/' component={NotFound}/>
       </Switch>
     </BrowserRouter>
