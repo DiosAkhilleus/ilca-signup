@@ -52,6 +52,12 @@ app.post('/insertsailor', async (req, res) => {
   res.end('Posted User');
 })
 
+app.post('/reqtimeslot', async (req, res) => {
+  const sailorID = req.sailorID;
+  const name = req.name;
+  const timeSlot = req.timeSlot;
+})
+
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
 })

@@ -66,3 +66,25 @@ button {
   align-content: center;
   align-items: center;
 }
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  margin-top: 30px;
+}
+
+.signup-form input {
+  width: 250px;
+  height: 40px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+.signup-form button {
+  font-size: 18px;
+  width: 250px;
+  height: 40px;
+  margin: 10px;
+}
