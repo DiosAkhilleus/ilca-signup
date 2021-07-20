@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import postSailorToDB from '../../javascript/sailor';
-import Axios from 'axios';
+import { useState, useEffect } from 'react';
+import { postSailorToDB, getSailors } from '../../javascript/sailorLogic';
 import '../../App.css';
 
 const PostSailor = () => {
@@ -13,6 +12,13 @@ const PostSailor = () => {
   const [rig, setRig] = useState('');
   const [dateEntered, setDateEntered] = useState('');
   const [country, setCountry] = useState('');
+  const [currentEntries, setCurrentEntries] = useState([]);
+
+  useEffect(() => {
+    getSailors().then((results) => {
+      setCurrentEntries(results);
+    });
+  }, []);
 
   const resetFields = () => {
     setID('');
@@ -22,20 +28,46 @@ const PostSailor = () => {
     setRig('');
     setDateEntered('');
     setCountry('');
-  }
+  };
 
   const submitSailor = (e) => {
-    
-    postSailorToDB(id, firstName, familyName, sailNumber, rig, dateEntered, country);
+    if (
+      id          === '' ||
+      firstName   === '' ||
+      familyName  === '' ||
+      sailNumber  === '' ||
+      rig         === '' ||
+      dateEntered === '' ||
+      country     === ''
+    ) {
+      alert('Please fill in all fields');
+    } else {
+      const filteredEntries = currentEntries.filter(
+      (entry) => entry.sailorID === id
+    );
+      if (filteredEntries.length > 0) {
+        alert(`Sailor matching ID: ${id} already entered`);
+      } else {
+        postSailorToDB(
+          id,
+          firstName,
+          familyName,
+          sailNumber,
+          rig,
+          dateEntered,
+          country
+        );
+        resetFields();
+      }
+    }
     e.preventDefault();
-    resetFields();
   };
 
   return (
     <div className="home-page">
       <h1>New Sailor</h1>
-      <Link to='/'>Back to Home</Link>
-      <Link to='/displaysailors'>See registered sailors</Link>
+      <Link to="/">Back to Home</Link>
+      <Link to="/displaysailors">See registered sailors</Link>
       <form
         className="sailor-form"
         onSubmit={() => {
@@ -43,7 +75,7 @@ const PostSailor = () => {
         }}
       >
         <input
-          required={true}
+          required
           type="text"
           placeholder="Sailor ID"
           value={id}
@@ -52,7 +84,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="text"
           placeholder="First Name"
           value={firstName}
@@ -61,7 +93,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="text"
           placeholder="Family Name"
           value={familyName}
@@ -70,7 +102,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="text"
           placeholder="Sail Number"
           value={sailNumber}
@@ -79,7 +111,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="text"
           placeholder="Rig"
           value={rig}
@@ -88,7 +120,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="date"
           placeholder="Date Entered"
           value={dateEntered}
@@ -97,7 +129,7 @@ const PostSailor = () => {
           }}
         />
         <input
-          required={true}
+          required
           type="text"
           placeholder="Country"
           value={country}
@@ -106,6 +138,7 @@ const PostSailor = () => {
           }}
         />
         <button
+          type="submit"
           onClick={(e) => {
             submitSailor(e);
           }}

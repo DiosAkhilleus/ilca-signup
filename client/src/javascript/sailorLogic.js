@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateEntered, country) => {
+export const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateEntered, country) => {
   Axios.post('http://localhost:3001/insertsailor', {
       sailorID: id,
       name: {
@@ -14,4 +14,9 @@ const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateEntered,
     }).then(console.log('sailor posted'))
 };
 
-export default postSailorToDB;
+export const getSailors = () => {
+  const retrieve = Axios.get('http://localhost:3001/sailorinfo').then((response) => {
+    return response.data;
+  })
+  return retrieve;
+}
