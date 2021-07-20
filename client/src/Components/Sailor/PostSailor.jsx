@@ -5,7 +5,7 @@ import { postSailorToDB, getSailors } from '../../javascript/sailorLogic';
 import '../../App.css';
 
 const PostSailor = () => {
-  const [id, setID] = useState('');
+  const [sailorID, setSailorID] = useState('');
   const [firstName, setFirstName] = useState('');
   const [familyName, setFamilyName] = useState('');
   const [sailNumber, setSailNumber] = useState('');
@@ -21,7 +21,7 @@ const PostSailor = () => {
   }, []);
 
   const resetFields = () => {
-    setID('');
+    setSailorID('');
     setFirstName('');
     setFamilyName('');
     setSailNumber('');
@@ -32,7 +32,7 @@ const PostSailor = () => {
 
   const submitSailor = (e) => {
     if (
-      id          === '' ||
+      sailorID    === '' ||
       firstName   === '' ||
       familyName  === '' ||
       sailNumber  === '' ||
@@ -43,13 +43,13 @@ const PostSailor = () => {
       alert('Please fill in all fields');
     } else {
       const filteredEntries = currentEntries.filter(
-      (entry) => entry.sailorID === id
+      (entry) => entry.sailorID === sailorID
     );
       if (filteredEntries.length > 0) {
-        alert(`Sailor matching ID: ${id} already entered`);
+        alert(`Sailor matching ID: ${sailorID} already entered`);
       } else {
         postSailorToDB(
-          id,
+          sailorID,
           firstName,
           familyName,
           sailNumber,
@@ -78,9 +78,9 @@ const PostSailor = () => {
           required
           type="text"
           placeholder="Sailor ID"
-          value={id}
+          value={sailorID}
           onChange={(e) => {
-            setID(e.target.value);
+            setSailorID(e.target.value);
           }}
         />
         <input

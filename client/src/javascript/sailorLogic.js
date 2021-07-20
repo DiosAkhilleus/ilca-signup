@@ -11,7 +11,7 @@ export const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateE
       rig: rig,
       dateEntered: dateEntered,
       country: country,
-    }).then(console.log('sailor posted'))
+    }).then(alert('Sailor Posted'));
 };
 
 export const getSailors = () => {

@@ -1,10 +1,11 @@
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Home from './Components/Home'
-import About from './Components/About';
-import NotFound from './Components/NotFound';
-import PostSailor from './Components/Sailor/PostSailor';
-import DisplaySailors from './Components/Sailor/DisplaySailors';
+import Home from './Components/Home.jsx'
+import About from './Components/About.jsx';
+import NotFound from './Components/NotFound.jsx';
+import Timeslot from './Components/Timeslot.jsx';
+import PostSailor from './Components/Sailor/PostSailor.jsx';
+import DisplaySailors from './Components/Sailor/DisplaySailors.jsx';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route exact path='/about' component={About} />
+        <Route exact path='/timeslot' component={Timeslot}/>
         <Route exact path='/postsailor' component={PostSailor} />
         <Route exact path='/displaysailors' component={DisplaySailors} />
         <Route path='/' component={NotFound}/>
