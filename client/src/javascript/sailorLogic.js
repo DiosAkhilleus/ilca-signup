@@ -1,8 +1,8 @@
 import Axios from 'axios';
 
-export const postSailorToDB = (id, firstName, familyName, sailNumber, rig, dateEntered, country) => {
+export const postSailorToDB = (sailorID, firstName, familyName, sailNumber, rig, dateEntered, country) => {
   Axios.post('http://localhost:3001/insertsailor', {
-      sailorID: id,
+      sailorID: sailorID,
       name: {
         firstName: firstName,
         familyName: familyName,
