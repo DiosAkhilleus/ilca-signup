@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const SailorModel = require('./models/Sailor');
+const InspectionModel = require('./models/Inspection');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
-const axios = require('axios');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
@@ -23,6 +23,15 @@ app.get('/sailorinfo', (req, res) => {
     if (err) {
       res.send(err);
     } 
+    res.send(result);
+  });
+});
+
+app.get('/timeslots/filled', (req, res) => {
+  InspectionModel.find({}, (err, result) => {
+    if (err) {
+      res.send(err);
+    }
     res.send(result);
   });
 });
@@ -48,15 +57,30 @@ app.post('/insertsailor', async (req, res) => {
   } catch (err) {
     console.error(err);
   }
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end('Posted User');
 })
 
 app.post('/reqtimeslot', async (req, res) => {
-  const sailorID = req.sailorID;
-  const name = req.name;
-  const timeSlot = req.timeSlot;
-})
+  const sailorID = req.body.sailorID;
+  const name = req.body.name;
+  const time = req.body.time;
+  const day = req.body.day;
+  console.log(sailorID, name, time, day);
+  const inspection = new InspectionModel ({
+    sailorID: sailorID,
+    name: name,
+    time: time, 
+    day: day
+  });
+  try {
+    await inspection.save();
+  } catch(err) {
+    console.error(err);
+  }
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end('Posted Timeslot Request');
+});
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
