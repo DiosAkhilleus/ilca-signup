@@ -138,7 +138,6 @@ const PostSailor = () => {
           }}
         />
         <button
-          type="submit"
           onClick={(e) => {
             submitSailor(e);
           }}
