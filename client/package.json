@@ -14,7 +14,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "scheduler": "^0.20.2",
-    "slotpicker": "^1.2.0",
+    "slotpicker": "github:DiosAkhilleus/slotpicker",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

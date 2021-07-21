@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import SlotPicker from 'slotpicker';
+import SlotPicker from 'slotpicker';  
 import { Link } from 'react-router-dom';
 import { getSailors } from '../javascript/sailorLogic';
 import {
@@ -11,9 +11,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../App.css';
-
+  
 const Timeslot = () => {
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(0); 
   const [currentEntries, setCurrentEntries] = useState([]);
   const [scheduledInspections, setScheduledInspections] = useState([]);
   const [searchList, setSearchList] = useState([]);
