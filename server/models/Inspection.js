@@ -11,7 +11,7 @@ const NameSchema = new mongoose.Schema({
   }
 })
 
-const SignupSchema = new mongoose.Schema({
+const InspectionSchema = new mongoose.Schema({
   sailorID: {
     type: String, 
     required: true
@@ -20,12 +20,16 @@ const SignupSchema = new mongoose.Schema({
     type: NameSchema,
     required: true
   }, 
-  timeSlot: {
+  time: {
     type: Number,
+    required: true
+  }, 
+  day: {
+    type: String,
     required: true
   }
 });
 
-const SignupModel = mongoose.model('Signup', SignupSchema);
+const InspectionModel = mongoose.model('Inspection_Req', InspectionSchema);
 
-module.exports = SignupModel;
+module.exports = InspectionModel;
