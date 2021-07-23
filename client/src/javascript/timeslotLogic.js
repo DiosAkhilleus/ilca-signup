@@ -18,3 +18,22 @@ export const getCurrentlyScheduledInspections = () => {
   });
   return retrieve;
 }
+
+export const postCreatedTimeslotToDB = (unavailableSlots, interval, selectedDates, timeFrom, timeTo, uuid) => {
+  console.log({
+    unavailableSlots: unavailableSlots, 
+    interval: interval,
+    selectedDates: selectedDates,
+    timeFrom: timeFrom,
+    timeTo: timeTo ,
+    uuid: uuid
+  })
+  Axios.post('http://localhost:3001/timeslots/created/', {
+    unavailableSlots: unavailableSlots, 
+    interval: interval,
+    selectedDates: selectedDates,
+    timeFrom: timeFrom,
+    timeTo: timeTo,
+    uuid: uuid
+  }).then(alert(`Timeslot Posted. Your unique identifier for your created timeslot is ${uuid}`));
+}

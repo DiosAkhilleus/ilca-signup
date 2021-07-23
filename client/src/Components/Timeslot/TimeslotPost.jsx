@@ -6,8 +6,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
+import { postCreatedTimeslotToDB } from '../../javascript/timeslotLogic';
+import { v4 as uuidv4 } from 'uuid';
 import 'rc-time-picker/assets/index.css';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -15,14 +18,16 @@ import 'react-date-range/dist/theme/default.css';
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
   const [unavailable, setUnavailable] = useState([]);
-  const [timeFrom, setTimeFrom] = useState(8 * 60);
+  const [entryLimit, setEntryLimit] = useState('');
+  const [UUID, setUUID] = useState('');
+  const [timeFrom, setTimeFrom] = useState(510);
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
-  const [timeTo, setTimeTo] = useState(14 * 60);
+  const [timeTo, setTimeTo] = useState(870);
   const [endValue, setEndValue] = useState(moment('2021-01-01 14:30'));
-  const [state, setState] = useState([
+  const [calendar, setCalendar] = useState([
     {
       startDate: new Date(),
-      endDate: null,
+      endDate: new Date(),
       key: 'selection',
     },
   ]);
@@ -41,14 +46,46 @@ const TimeslotPost = () => {
     setTimeTo(endTimeSum);
   }, [endValue]);
 
+  const handleTimeslotPost = () => {
+    const selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
+    let uuid = uuidv4();
+    setUUID(uuid);
+    postCreatedTimeslotToDB(unavailable, interval, selectedDates, timeFrom, timeTo, uuid);
+  }
+  //eslint-disable-next-line
+  Date.prototype.addDays = function(days) {
+      var dat = new Date(this.valueOf())
+      dat.setDate(dat.getDate() + days);
+      return dat;
+  }
+
+  const getDates = (startDate, stopDate) => {
+    let dateArray = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+      dateArray.push(currentDate)
+      currentDate = currentDate.addDays(1);
+    }
+    return dateArray;
+  }
+  const handleNumberInput = (e) => {
+    let val = e.target.value;
+    const regexp = /^[0-9\b]+$/;
+    if (regexp.test(val)) {
+      setEntryLimit(val);
+      console.log(val);
+    }
+  }
+
   return (
     <div className="timeslot-post">
       <DateRange
         style={{ fontSize: 18 }}
         editableDateInputs={true}
-        onChange={(item) => setState([item.selection])}
+        onChange={(item) => setCalendar([item.selection])}
         moveRangeOnFirstSelection={false}
-        ranges={state}
+        ranges={calendar}
+        value={calendar}
       />
       <div className="start-end-times">
         <div className="start-end-labels">
@@ -87,6 +124,15 @@ const TimeslotPost = () => {
           <MenuItem value={60}>60</MenuItem>
         </Select>
       </FormControl>
+      <TextField 
+        style={{minWidth: 250}}
+        id="filled-number" 
+        variant="filled"
+        label="Timeslot Entry Limit"
+        type="number"
+        value={entryLimit}
+        onChange={(e) => handleNumberInput(e)}
+      />
       <div className="timeslot">
         <button
           onClick={() => {
@@ -95,6 +141,7 @@ const TimeslotPost = () => {
         >
           Reset Unavailable Slots
         </button>
+        <h3>Click individual slots below to make them unavailable</h3>
         <SlotPicker
           interval={interval}
           unavailableSlots={unavailable}
@@ -106,9 +153,10 @@ const TimeslotPost = () => {
           }}
         />
       </div>
-      <button style={{ marginBottom: 20 }} onClick={() => console.log(state)}>
+      <button style={{ marginBottom: 20 }} onClick={() => handleTimeslotPost()}>
         Submit
       </button>
+      {UUID !== '' ? <h3>The unique identifier for your created timesheet is {UUID}</h3> : ''}
     </div>
   );
 };
