@@ -72,6 +72,11 @@ body {
   height: 100%;
 }
 
+.timeslot-options-container {
+  display: flex;
+  flex-direction:row;
+}
+
 .signup-form {
   display: flex;
   flex-direction: column;
@@ -93,7 +98,9 @@ body {
   justify-content: space-around;
   align-content: center;
   align-items: center;
-  margin-top: 20px
+  margin-top: 20px;
+  width: 98vw;
+  margin: auto;
 }
 
 .rc-time-picker-input {
@@ -107,8 +114,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap:wrap;
-  align-items:stretch;
-  justify-content:space-between;
+  align-items:center;
 }
 .start-end-labels {
   width: 250px;
@@ -120,6 +126,22 @@ body {
 .start-end-times .label {
   width: 250px;
   text-align:center;
+}
+
+.start-end-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.timeslot-option-group {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  align-content: center;
+  margin: auto;
 }
 
 .home-link {
