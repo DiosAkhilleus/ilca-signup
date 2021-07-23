@@ -94,3 +94,29 @@ body {
   margin-top: 20px
 }
 
+.rc-time-picker-input {
+  min-height: 60px;
+  width: 120px !important;
+  font-size: 20px !important;
+}
+
+.start-end-times {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  align-items:stretch;
+  justify-content:space-between;
+}
+.start-end-labels {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items:stretch;
+  justify-content:center;
+}
+.start-end-times .label {
+  width: 250px;
+  text-align:center;
+}
+
