@@ -19,11 +19,12 @@ export const getCurrentlyScheduledInspections = () => {
   return retrieve;
 }
 
-export const postCreatedTimeslotToDB = (unavailableSlots, interval, selectedDates, timeFrom, timeTo, uuid) => {
+export const postCreatedTimeslotToDB = (unavailableSlots, interval, selectedDates, eventTitle, timeFrom, timeTo, uuid) => {
   console.log({
     unavailableSlots: unavailableSlots, 
     interval: interval,
     selectedDates: selectedDates,
+    eventTitle: eventTitle,
     timeFrom: timeFrom,
     timeTo: timeTo ,
     uuid: uuid
@@ -32,6 +33,7 @@ export const postCreatedTimeslotToDB = (unavailableSlots, interval, selectedDate
     unavailableSlots: unavailableSlots, 
     interval: interval,
     selectedDates: selectedDates,
+    eventTitle: eventTitle,
     timeFrom: timeFrom,
     timeTo: timeTo,
     uuid: uuid
