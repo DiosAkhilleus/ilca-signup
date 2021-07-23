@@ -17,6 +17,7 @@ import FormControl from '@material-ui/core/FormControl';
 import '../../App.css';
 
 const Timeslot = () => {
+  // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
   const [scheduledInspections, setScheduledInspections] = useState([]);
@@ -24,6 +25,7 @@ const Timeslot = () => {
   const [sailorID, setSailorID] = useState('');
   const [currentSailor, setCurrentSailor] = useState({});
   const [day, setDay] = useState('2021-07-12');
+  const [propEvent, setPropEvent] = useState('World Cup 2021');
 
   useEffect(() => {
     getSailors().then((sailors) => setCurrentEntries(sailors));
@@ -58,7 +60,6 @@ const Timeslot = () => {
     }
     setSearchList(newList);
   };
-
   const getInspectionsAndSubmitReq = (e) => {
     getCurrentlyScheduledInspections()
       .then((inspecs) => submitInspectionReq(inspecs))
@@ -102,12 +103,13 @@ const Timeslot = () => {
   };
   const handleDateChange = (e) => {
     setDay(e.target.value);
-  }
+  };
 
   return (
     <div className="timeslot-container">
       <h1>Time Slot Selector</h1>
       <Link to="/">Back to Home</Link>
+      <h3>Event: {propEvent}</h3>
         <FormControl variant="filled" style={{margin: 10, minWidth: 250}}>
           <InputLabel id="demo-simple-select-filled-label">Date</InputLabel>
           <Select 
