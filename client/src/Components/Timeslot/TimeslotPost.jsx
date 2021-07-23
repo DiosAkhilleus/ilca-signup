@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { DateRange } from 'react-date-range';
+import { Link } from 'react-router-dom';
 import SlotPicker from 'slotpicker';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -50,24 +51,31 @@ const TimeslotPost = () => {
     const selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
     let uuid = uuidv4();
     setUUID(uuid);
-    postCreatedTimeslotToDB(unavailable, interval, selectedDates, timeFrom, timeTo, uuid);
-  }
+    postCreatedTimeslotToDB(
+      unavailable,
+      interval,
+      selectedDates,
+      timeFrom,
+      timeTo,
+      uuid
+    );
+  };
   //eslint-disable-next-line
-  Date.prototype.addDays = function(days) {
-      var dat = new Date(this.valueOf())
-      dat.setDate(dat.getDate() + days);
-      return dat;
-  }
+  Date.prototype.addDays = function (days) {
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+  };
 
   const getDates = (startDate, stopDate) => {
     let dateArray = [];
     let currentDate = startDate;
     while (currentDate <= stopDate) {
-      dateArray.push(currentDate)
+      dateArray.push(currentDate);
       currentDate = currentDate.addDays(1);
     }
     return dateArray;
-  }
+  };
   const handleNumberInput = (e) => {
     let val = e.target.value;
     const regexp = /^[0-9\b]+$/;
@@ -75,10 +83,12 @@ const TimeslotPost = () => {
       setEntryLimit(val);
       console.log(val);
     }
-  }
+  };
 
   return (
     <div className="timeslot-post">
+      <h1>Timeslot Creator</h1>
+      <Link to="/">Back to home</Link>
       <DateRange
         style={{ fontSize: 18 }}
         editableDateInputs={true}
@@ -124,9 +134,9 @@ const TimeslotPost = () => {
           <MenuItem value={60}>60</MenuItem>
         </Select>
       </FormControl>
-      <TextField 
-        style={{minWidth: 250}}
-        id="filled-number" 
+      <TextField
+        style={{ minWidth: 250 }}
+        id="filled-number"
         variant="filled"
         label="Timeslot Entry Limit"
         type="number"
@@ -156,7 +166,15 @@ const TimeslotPost = () => {
       <button style={{ marginBottom: 20 }} onClick={() => handleTimeslotPost()}>
         Submit
       </button>
-      {UUID !== '' ? <h3>The unique identifier for your created timesheet is {UUID}</h3> : ''}
+      {UUID !== '' ? (
+        <div>
+          <div style={{fontSize: 18}}>The unique identifier for your created timesheet is: {UUID}</div>
+          <br />
+          <div style={{marginBottom: 15, fontSize: 18}}>Save this id somewhere to send to sailors. It will be their only way to access the signup you created.</div>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };
