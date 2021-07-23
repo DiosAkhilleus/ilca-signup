@@ -16,9 +16,9 @@ const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
   const [unavailable, setUnavailable] = useState([]);
   const [timeFrom, setTimeFrom] = useState(8 * 60);
-  const [startValue, setStartValue] = useState(moment("2021-01-01 08:30"));
+  const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
   const [timeTo, setTimeTo] = useState(14 * 60);
-  const [endValue, setEndValue] = useState(moment("2021-01-01 14:30"));
+  const [endValue, setEndValue] = useState(moment('2021-01-01 14:30'));
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -28,18 +28,18 @@ const TimeslotPost = () => {
   ]);
 
   useEffect(() => {
-    const start = moment(startValue._d.toString()).format("HH:mm");
+    const start = moment(startValue._d.toString()).format('HH:mm');
     const parsedStart = start.split(':').map((el) => parseInt(el));
-    const startTimeSum = parsedStart[0]*60 + parsedStart[1];
+    const startTimeSum = parsedStart[0] * 60 + parsedStart[1];
     setTimeFrom(startTimeSum);
-  }, [startValue])
+  }, [startValue]);
 
   useEffect(() => {
-    const end = moment(endValue._d.toString()).format("HH:mm")
-    const parsedEnd = end.split(':').map((el) => parseInt(el))
-    const endTimeSum = parsedEnd[0]*60 + parsedEnd[1];
+    const end = moment(endValue._d.toString()).format('HH:mm');
+    const parsedEnd = end.split(':').map((el) => parseInt(el));
+    const endTimeSum = parsedEnd[0] * 60 + parsedEnd[1];
     setTimeTo(endTimeSum);
-  }, [endValue])
+  }, [endValue]);
 
   return (
     <div className="timeslot-post">
@@ -50,19 +50,19 @@ const TimeslotPost = () => {
         moveRangeOnFirstSelection={false}
         ranges={state}
       />
-      <div className='start-end-times'>
-        <div className='start-end-labels'>
-          <div className='label'>Start Time</div>
-          <div className='label'>End Time</div>
+      <div className="start-end-times">
+        <div className="start-end-labels">
+          <div className="label">Start Time</div>
+          <div className="label">End Time</div>
         </div>
-        <TimePicker 
+        <TimePicker
           showSecond={false}
           allowEmpty={false}
           minuteStep={15}
           value={startValue}
           onChange={(value) => setStartValue(moment(value._d))}
         />
-        <TimePicker 
+        <TimePicker
           showSecond={false}
           allowEmpty={false}
           minuteStep={15}
@@ -106,7 +106,9 @@ const TimeslotPost = () => {
           }}
         />
       </div>
-      <button style={{marginBottom: 20}} onClick={() => console.log(state)}>Submit</button>
+      <button style={{ marginBottom: 20 }} onClick={() => console.log(state)}>
+        Submit
+      </button>
     </div>
   );
 };
