@@ -80,3 +80,17 @@ body {
   margin-top: 30px;
   height: 100%;
 }
+
+.date-picker {
+  width: 250px;
+  height: 100px;
+}
+
+.timeslot-post {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  margin-top: 20px
+}
+
