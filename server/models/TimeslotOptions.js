@@ -9,8 +9,8 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: Number,
     required: true
   }, 
-  selectedDate: {
-    type: String, 
+  selectedDates: {
+    type: Array, 
     required: true
   },
   timeFrom: {
@@ -20,7 +20,13 @@ const TimeslotOptionSchema = new mongoose.Schema({
   timeTo: {
     type: Number,
     required: true
+  }, 
+  uuid: {
+    type: String,
+    required: true
   }
 })
 
 const TimeslotOptionModel = mongoose.model('Timeslot_Option', TimeslotOptionSchema);
+
+module.exports = TimeslotOptionModel;

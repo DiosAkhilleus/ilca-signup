@@ -46,6 +46,30 @@ app.get('/timeslots/options', async (req, res) => {
   });
 });
 
+app.post('/timeslots/created', async (req, res) => {
+  const unavailableSlots = req.body.unavailableSlots;
+  const interval = req.body.interval;
+  const selectedDates = req.body.selectedDates;
+  const timeFrom = req.body.timeFrom;
+  const timeTo = req.body.timeTo;
+  const uuid = req.body.uuid;
+  const timeslot = new TimeslotOptionModel ({
+    unavailableSlots: unavailableSlots, 
+    interval: interval,
+    selectedDates: selectedDates,
+    timeFrom: timeFrom,
+    timeTo: timeTo ,
+    uuid: uuid
+  })
+  try {
+    await timeslot.save();
+  } catch (err) {
+    console.error(err);
+  }
+  res.writeHead(200, {'content-type': 'application/json'});
+  res.end('Posted Timeslot');
+})
+
 app.post('/insertsailor', async (req, res) => {
   const sailorID = req.body.sailorID;
   const name = req.body.name;
@@ -55,7 +79,7 @@ app.post('/insertsailor', async (req, res) => {
   const country = req.body.country;
  
   const sailor = new SailorModel ({
-    sailorID: sailorID,
+      sailorID: sailorID,
       name: name,
       sailNumber: sailNumber,
       rig: rig,
