@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const SailorModel = require('./models/Sailor');
 const InspectionModel = require('./models/Inspection');
+const TimeslotOptionModel = require('./models/TimeslotOptions');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
 require('dotenv').config();
@@ -29,6 +30,15 @@ app.get('/sailorinfo', (req, res) => {
 
 app.get('/timeslots/filled', (req, res) => {
   InspectionModel.find({}, (err, result) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(result);
+  });
+});
+
+app.get('/timeslots/options', async (req, res) => {
+  TimeslotOptionModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
     }
@@ -81,6 +91,8 @@ app.post('/reqtimeslot', async (req, res) => {
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end('Posted Timeslot Request');
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
