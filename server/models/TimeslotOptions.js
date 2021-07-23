@@ -13,6 +13,10 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: Array, 
     required: true
   },
+  eventTitle: {
+    type: String,
+    required: true
+  },
   timeFrom: {
     type: Number,
     required: true
