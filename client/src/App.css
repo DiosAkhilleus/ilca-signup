@@ -122,3 +122,24 @@ body {
   text-align:center;
 }
 
+.home-link {
+  margin: 15px;
+  font-size: 18px;
+}
+
+.timeslot-search-container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.timeslot-search-bar {
+  margin: auto;
+  width: 50rem;
+  height: 4rem;
+  font-size: 2rem;
+  padding-bottom:4px;
+  text-align: center;
+}
