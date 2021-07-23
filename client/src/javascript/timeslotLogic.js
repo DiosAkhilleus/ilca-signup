@@ -37,3 +37,10 @@ export const postCreatedTimeslotToDB = (unavailableSlots, interval, selectedDate
     uuid: uuid
   }).then(alert(`Timeslot Posted. Your unique identifier for your created timeslot is ${uuid}`));
 }
+
+export const getTimeslotByUUID = (UUID) => {
+  const retrieve = Axios.get('http://localhost:3001/timeslots/options').then((response) => {
+    return response.data;
+  })
+  return retrieve;
+}
