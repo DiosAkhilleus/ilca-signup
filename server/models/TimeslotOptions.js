@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TimeslotOption = new mongoose.Schema({
+const TimeslotOptionSchema = new mongoose.Schema({
   unavailableSlots: {
     type: Array, 
     required: true
