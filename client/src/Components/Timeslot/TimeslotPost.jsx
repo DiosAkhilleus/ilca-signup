@@ -8,6 +8,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import { postCreatedTimeslotToDB } from '../../javascript/timeslotLogic';
@@ -19,7 +20,8 @@ import 'react-date-range/dist/theme/default.css';
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
   const [unavailable, setUnavailable] = useState([]);
-  const [entryLimit, setEntryLimit] = useState('');
+  const [entryLimit, setEntryLimit] = useState(0);
+  const [eventTitle, setEventTitle] = useState('');
   const [UUID, setUUID] = useState('');
   const [timeFrom, setTimeFrom] = useState(510);
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
@@ -51,14 +53,19 @@ const TimeslotPost = () => {
     const selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
     let uuid = uuidv4();
     setUUID(uuid);
-    postCreatedTimeslotToDB(
-      unavailable,
-      interval,
-      selectedDates,
-      timeFrom,
-      timeTo,
-      uuid
-    );
+    if (entryLimit === 0 || eventTitle === '') {
+      alert('Please fill out all fields');
+    } else {
+      postCreatedTimeslotToDB(
+        unavailable,
+        interval,
+        selectedDates,
+        eventTitle,
+        timeFrom,
+        timeTo,
+        uuid
+      );
+    };
   };
   //eslint-disable-next-line
   Date.prototype.addDays = function (days) {
@@ -84,65 +91,96 @@ const TimeslotPost = () => {
       console.log(val);
     }
   };
+  
 
   return (
     <div className="timeslot-post">
       <h1>Timeslot Creator</h1>
-      <Link to="/">Back to home</Link>
-      <DateRange
-        style={{ fontSize: 18 }}
-        editableDateInputs={true}
-        onChange={(item) => setCalendar([item.selection])}
-        moveRangeOnFirstSelection={false}
-        ranges={calendar}
-        value={calendar}
-      />
-      <div className="start-end-times">
-        <div className="start-end-labels">
-          <div className="label">Start Time</div>
-          <div className="label">End Time</div>
+      <Link to="/" style={{marginBottom: 30}}>Back to home</Link>
+      <div className="timeslot-options-container">
+        <DateRange
+          style={{ fontSize: 18 }}
+          editableDateInputs={true}
+          onChange={(item) => setCalendar([item.selection])}
+          moveRangeOnFirstSelection={false}
+          ranges={calendar}
+          value={calendar}
+        />
+        <div className="timeslot-option-group">
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <TextField
+              style={{ minWidth: 250, marginBottom: 20 }}
+              id="filled"
+              variant="filled"
+              label="Event Title"
+              type="text"
+              value={eventTitle}
+              onChange={(e) => setEventTitle(e.target.value)}
+            />
+            <FormControl
+              variant="filled"
+              style={{ margin: 0, marginBottom: 20, minWidth: 250 }}
+            >
+              <InputLabel id="demo-simple-select-filled-label">
+                Timeslot Interval
+              </InputLabel>
+              <Select
+                id="demo-simple-select-filled"
+                value={interval}
+                onChange={(e) => {
+                  setInterval(e.target.value);
+                }}
+              >
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={45}>45</MenuItem>
+                <MenuItem value={60}>60</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              style={{ minWidth: 250, marginBottom: 20 }}
+              id="filled-number"
+              variant="filled"
+              label="Timeslot Entry Limit"
+              type="number"
+              value={entryLimit}
+              onChange={(e) => handleNumberInput(e)}
+            />
+          </div>
         </div>
-        <TimePicker
-          showSecond={false}
-          allowEmpty={false}
-          minuteStep={15}
-          value={startValue}
-          onChange={(value) => setStartValue(moment(value._d))}
-        />
-        <TimePicker
-          showSecond={false}
-          allowEmpty={false}
-          minuteStep={15}
-          value={endValue}
-          onChange={(value) => setEndValue(moment(value._d))}
-        />
+        <div className="start-end-times">
+          <div>
+            <div className="start-end-group">
+              <div className="label">Start Time</div>
+              <TimePicker
+                showSecond={false}
+                allowEmpty={false}
+                minuteStep={15}
+                value={startValue}
+                onChange={(value) => setStartValue(moment(value._d))}
+              />
+            </div>
+            <div className="start-end-group">
+              <div className="label">End Time</div>
+              <TimePicker
+                showSecond={false}
+                allowEmpty={false}
+                minuteStep={15}
+                value={endValue}
+                onChange={(value) => setEndValue(moment(value._d))}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <FormControl variant="filled" style={{ margin: 10, minWidth: 250 }}>
-        <InputLabel id="demo-simple-select-filled-label">
-          Timeslot Interval
-        </InputLabel>
-        <Select
-          id="demo-simple-select-filled"
-          value={interval}
-          onChange={(e) => {
-            setInterval(e.target.value);
-          }}
-        >
-          <MenuItem value={15}>15</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
-          <MenuItem value={45}>45</MenuItem>
-          <MenuItem value={60}>60</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        style={{ minWidth: 250 }}
-        id="filled-number"
-        variant="filled"
-        label="Timeslot Entry Limit"
-        type="number"
-        value={entryLimit}
-        onChange={(e) => handleNumberInput(e)}
-      />
+
       <div className="timeslot">
         <button
           onClick={() => {
@@ -163,18 +201,24 @@ const TimeslotPost = () => {
           }}
         />
       </div>
-      <button style={{ marginBottom: 20 }} onClick={() => handleTimeslotPost()}>
-        Submit
-      </button>
+      <Button variant="contained" color="primary" style={{ marginBottom: 20, marginTop: 40 }} onClick={() => handleTimeslotPost()}>
+        Submit Timeslot Sheet
+      </Button>
       {UUID !== '' ? (
         <div>
-          <div style={{fontSize: 18}}>The unique identifier for your created timesheet is: {UUID}</div>
+          <div style={{ fontSize: 18 }}>
+            The unique identifier for your created timesheet is: {UUID}
+          </div>
           <br />
-          <div style={{marginBottom: 15, fontSize: 18}}>Save this id somewhere to send to sailors. It will be their only way to access the signup you created.</div>
+          <div style={{ marginBottom: 15, fontSize: 18 }}>
+            Save this id somewhere to send to sailors. It will be their only way
+            to access the signup you created.
+          </div>
         </div>
       ) : (
         ''
       )}
+      <hr style={{border: '1px solid black', width: '100%', marginBottom: 40}}/>
     </div>
   );
 };
