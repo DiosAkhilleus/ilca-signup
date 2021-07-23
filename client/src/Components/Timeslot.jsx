@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import SlotPicker from 'slotpicker';  
+import SlotPicker from 'slotpicker';
 import { Link } from 'react-router-dom';
 import { getSailors } from '../javascript/sailorLogic';
 import {
@@ -11,9 +11,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../App.css';
-  
+
 const Timeslot = () => {
-  const [time, setTime] = useState(0); 
+  const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
   const [scheduledInspections, setScheduledInspections] = useState([]);
   const [searchList, setSearchList] = useState([]);
@@ -22,7 +22,10 @@ const Timeslot = () => {
   const [day, setDay] = useState('2021-07-12');
 
   useEffect(() => {
-    retrieveDBInfo();
+    getSailors().then((sailors) => setCurrentEntries(sailors));
+    getCurrentlyScheduledInspections().then((entries) =>
+      setScheduledInspections(entries)
+    );
   }, []);
 
   useEffect(() => {
@@ -52,18 +55,16 @@ const Timeslot = () => {
     setSearchList(newList);
   };
 
-  const retrieveDBInfo = async () => {
-    getSailors().then((result) => setCurrentEntries(result));
-    getCurrentlyScheduledInspections().then((result) =>
-      setScheduledInspections(result)
-    );
-  };
+  const getInspectionsAndSubmitReq = (e) => {
+    getCurrentlyScheduledInspections()
+      .then((inspecs) => submitInspectionReq(inspecs))
 
-  const submitInspectionReq = async (e) => {
-    await retrieveDBInfo();
+      e.preventDefault();
+  };
+  const submitInspectionReq = (inspecs) => {
     if (sailorID === '' || time === 0 || day === '') {
       alert('please enter Sailor ID and select a day and timeslot');
-      e.preventDefault();
+      // e.preventDefault();
       return;
     }
     if (
@@ -72,16 +73,16 @@ const Timeslot = () => {
       alert(
         `Sailor with ID: "${sailorID}" not found in current race entries. Sailor must be entered to request inspection`
       );
-      e.preventDefault();
+      // e.preventDefault();
       return;
     }
     if (
-      scheduledInspections.filter(
+      inspecs.filter(
         (inspection) => inspection.sailorID === sailorID
       ).length > 0
     ) {
       alert(`Sailor with ID: "${sailorID}" already entered for inspection.`);
-      e.preventDefault();
+      // e.preventDefault();
       return;
     }
     const sailorEntry = currentEntries.filter(
@@ -90,13 +91,12 @@ const Timeslot = () => {
     let firstName = sailorEntry[0].name.firstName;
     let familyName = sailorEntry[0].name.familyName;
     postTimeslotReqToDB(sailorID, firstName, familyName, time, day);
-
-    e.preventDefault();
+    // e.preventDefault();
   };
 
   const onInputChange = (event, value) => {
     setSailorID(value);
-  }
+  };
 
   return (
     <div className="timeslot-container">
@@ -105,7 +105,7 @@ const Timeslot = () => {
       <div className="timeslot">
         <SlotPicker
           interval={30}
-          unavailableSlots={[720, 750]}
+          unavailableSlots={[540, 750]}
           selected_date={new Date()}
           from={8 * 60}
           to={16 * 60}
@@ -119,6 +119,7 @@ const Timeslot = () => {
           id="combo-box-demo"
           options={currentEntries}
           getOptionLabel={(option) => option.sailorID}
+          getOptionSelected={(option) => option.sailorID}
           onInputChange={onInputChange}
           style={{ width: 300 }}
           renderInput={(params) => (
@@ -138,14 +139,14 @@ const Timeslot = () => {
               {currentSailor.sailorID} - {currentSailor.name.firstName}{' '}
               {currentSailor.name.familyName}
             </h3>
-          )
-        }
+          )}
         </div>
         <Button
           color="primary"
           style={{ marginTop: 10 }}
           variant="contained"
-          onClick={(e) => submitInspectionReq(e)}
+          type="submit"
+          onClick={(e) => getInspectionsAndSubmitReq(e)}
         >
           Submit Inspection Request
         </Button>
