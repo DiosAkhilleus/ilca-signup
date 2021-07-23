@@ -10422,7 +10422,7 @@
     "is-fullwidth-code-point" "^3.0.0"
 
 "slotpicker@github:DiosAkhilleus/slotpicker":
-  "resolved" "git+ssh://git@github.com/DiosAkhilleus/slotpicker.git#eebccd0ca07769ac7c14b86c9e0bf7ca44443868"
+  "resolved" "git+ssh://git@github.com/DiosAkhilleus/slotpicker.git#aa20b0b07b85c3982cc70cc20d4401fe9d7b4965"
   "version" "1.2.0"
   dependencies:
     "dayjs" "^1.9.1"
