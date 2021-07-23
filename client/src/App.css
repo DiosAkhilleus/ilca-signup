@@ -89,6 +89,8 @@ body {
 .timeslot-post {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
   align-content: center;
   align-items: center;
   margin-top: 20px
