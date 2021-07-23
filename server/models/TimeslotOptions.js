@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TimeSelectorSchema = new mongoose.Schema({
+const TimeslotOption = new mongoose.Schema({
   unavailableSlots: {
     type: Array, 
     required: true
@@ -10,7 +10,7 @@ const TimeSelectorSchema = new mongoose.Schema({
     required: true
   }, 
   selectedDate: {
-    type: Date, 
+    type: String, 
     required: true
   },
   timeFrom: {
@@ -23,4 +23,4 @@ const TimeSelectorSchema = new mongoose.Schema({
   }
 })
 
-const TimeSelectorModel = mongoose.model('Time_Selector', TimeSelectorSchema);
+const TimeslotOptionModel = mongoose.model('Timeslot_Option', TimeslotOptionSchema);
