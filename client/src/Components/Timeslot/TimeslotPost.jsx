@@ -16,9 +16,9 @@ const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
   const [unavailable, setUnavailable] = useState([]);
   const [timeFrom, setTimeFrom] = useState(8 * 60);
-  const [startValue, setStartValue] = useState(moment());
+  const [startValue, setStartValue] = useState(moment("2021-01-01 08:30"));
   const [timeTo, setTimeTo] = useState(14 * 60);
-  const [endValue, setEndValue] = useState(moment());
+  const [endValue, setEndValue] = useState(moment("2021-01-01 14:30"));
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -106,7 +106,7 @@ const TimeslotPost = () => {
           }}
         />
       </div>
-      <button onClick={() => console.log(state)}>Submit</button>
+      <button style={{marginBottom: 20}} onClick={() => console.log(state)}>Submit</button>
     </div>
   );
 };
