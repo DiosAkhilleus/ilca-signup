@@ -20,7 +20,7 @@ import '../../App.css';
 
 const Timeslot = ({
   interval,
-  unavailable,
+  unavailableSlots,
   entryLimit,
   timeFrom,
   timeTo,
@@ -109,7 +109,7 @@ const Timeslot = ({
     let firstName = sailorEntry[0].name.firstName;
     let familyName = sailorEntry[0].name.familyName;
     postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
-    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay);
+    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay, unavailableSlots);
     // e.preventDefault();
   };
   const onInputChange = (event, value) => {
@@ -152,7 +152,7 @@ const Timeslot = ({
         </div>
         <SlotPicker
           interval={interval}
-          unavailableSlots={unavailable}
+          unavailableSlots={unavailableSlots}
           selected_date={new Date()}
           from={timeFrom}
           to={timeTo}
