@@ -15,8 +15,8 @@ export const postSailorToDB = (sailorID, firstName, familyName, sailNumber, rig,
 };
 
 export const getSailors = () => {
-  const retrieve = Axios.get('http://localhost:3001/sailorinfo').then((response) => {
+  const res = Axios.get('http://localhost:3001/sailorinfo').then((response) => {
     return response.data;
   })
-  return retrieve;
+  return res;
 }
