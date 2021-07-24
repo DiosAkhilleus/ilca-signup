@@ -41,21 +41,24 @@ export const getTimeslotByUUID = (UUID) => {
   return res;
 }
 
-export const updateTimeslotByUUID = (UUID, day, time, slotsAvailableByDay) => {
+export const updateTimeslotByUUID = (UUID, day, time, slotsAvailableByDay, unavailableSlots) => {
   let correctDaySlots = slotsAvailableByDay[day];
-  let slotToUpdate = correctDaySlots.filter((slot) => slot[0] === time);
   let index;
   for (let i = 0; i < slotsAvailableByDay[day].length; i++) {
     if (correctDaySlots[i][0] === time) {
       index = i;
     }
+    
   }
-  // console.log(correctDaySlots, slotToUpdate, index);
   correctDaySlots[index][1] = slotsAvailableByDay[day][index][1] - 1;
+  if (correctDaySlots[index][1] === 0) {
+    unavailableSlots.push(correctDaySlots[index][0]);
+    // console.log(unavailable)
+  }
   slotsAvailableByDay[day] = correctDaySlots;
-  console.log(slotsAvailableByDay);
 
   Axios.put(`http://localhost:3001/timeslots/update/${UUID}`, {
-    slotsAvailableByDay: slotsAvailableByDay
+    slotsAvailableByDay: slotsAvailableByDay, 
+    unavailableSlots: unavailableSlots
   });
 }
