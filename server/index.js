@@ -48,7 +48,6 @@ app.get('/timeslots/options', async (req, res) => {
 
 app.post('/timeslots/created', async (req, res) => {
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
-  const unavailableSlots = req.body.unavailableSlots;
   const interval = req.body.interval;
   const entryLimit = req.body.entryLimit;
   const selectedDates = req.body.selectedDates;
@@ -58,7 +57,6 @@ app.post('/timeslots/created', async (req, res) => {
   const uuid = req.body.uuid;
   const timeslot = new TimeslotOptionModel({
     slotsAvailableByDay: slotsAvailableByDay,
-    unavailableSlots: unavailableSlots,
     interval: interval,
     entryLimit: entryLimit,
     selectedDates: selectedDates,

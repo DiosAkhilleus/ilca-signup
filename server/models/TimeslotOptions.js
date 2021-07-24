@@ -5,10 +5,6 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: Object,
     required: true
   },
-  unavailableSlots: {
-    type: Array, 
-    required: true
-  },
   interval: {
     type: Number,
     required: true
