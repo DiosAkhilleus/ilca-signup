@@ -63,7 +63,9 @@ const TimeslotPost = () => {
       }
     }
     for (let element of selectedDates) {
-      slotsAvailableByDay[element] = dailyArr;
+      slotsAvailableByDay[element] = {};
+      slotsAvailableByDay[element].entriesLeft = dailyArr;
+      slotsAvailableByDay[element].unavailableSlots = unavailableSlots;
     }
     setUUID(uuid);
     if (entryLimit === 0 || eventTitle === '') {
@@ -71,7 +73,6 @@ const TimeslotPost = () => {
     } else {
       postCreatedTimeslotToDB(
         slotsAvailableByDay,
-        unavailableSlots,
         interval,
         entryLimit,
         selectedDates,

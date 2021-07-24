@@ -59,7 +59,7 @@ const ViewTimeslot = () => {
           <Timeslot 
             setActive={setActive}
             interval={selectedTimeslot.interval}
-            unavailableSlots={selectedTimeslot.unavailableSlots}
+            // unavailableSlots={selectedTimeslot.unavailableSlots}
             entryLimit={selectedTimeslot.entryLimit}
             slotsAvailableByDay={selectedTimeslot.slotsAvailableByDay}
             timeFrom={selectedTimeslot.timeFrom}
