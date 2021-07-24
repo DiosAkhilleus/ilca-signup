@@ -20,10 +20,9 @@ export const getCurrentlyScheduledInspections = () => {
   return res;
 }
 
-export const postCreatedTimeslotToDB = (slotsAvailableByDay, unavailableSlots, interval, entryLimit, selectedDates, eventTitle, timeFrom, timeTo, uuid) => {
+export const postCreatedTimeslotToDB = (slotsAvailableByDay, interval, entryLimit, selectedDates, eventTitle, timeFrom, timeTo, uuid) => {
   Axios.post('http://localhost:3001/timeslots/created/', {
     slotsAvailableByDay: slotsAvailableByDay,
-    unavailableSlots: unavailableSlots, 
     interval: interval,
     entryLimit: entryLimit,
     selectedDates: selectedDates,
@@ -41,24 +40,26 @@ export const getTimeslotByUUID = (UUID) => {
   return res;
 }
 
-export const updateTimeslotByUUID = (UUID, day, time, slotsAvailableByDay, unavailableSlots) => {
-  let correctDaySlots = slotsAvailableByDay[day];
+export const updateTimeslotByUUID = (UUID, day, time, slotsAvailableByDay) => {
+  let correctDaySlots = slotsAvailableByDay[day].entriesLeft;
   let index;
-  for (let i = 0; i < slotsAvailableByDay[day].length; i++) {
+  for (let i = 0; i < slotsAvailableByDay[day].entriesLeft.length; i++) {
     if (correctDaySlots[i][0] === time) {
       index = i;
     }
-    
   }
-  correctDaySlots[index][1] = slotsAvailableByDay[day][index][1] - 1;
+  correctDaySlots[index][1] -= 1;
+  console.log(correctDaySlots, index);
+
+
   if (correctDaySlots[index][1] === 0) {
-    unavailableSlots.push(correctDaySlots[index][0]);
+    slotsAvailableByDay[day].unavailableSlots.push(correctDaySlots[index][0]);
     // console.log(unavailable)
   }
-  slotsAvailableByDay[day] = correctDaySlots;
+  slotsAvailableByDay[day].entriesLeft = correctDaySlots;
 
+  console.log(slotsAvailableByDay);
   Axios.put(`http://localhost:3001/timeslots/update/${UUID}`, {
     slotsAvailableByDay: slotsAvailableByDay, 
-    unavailableSlots: unavailableSlots
   });
 }
