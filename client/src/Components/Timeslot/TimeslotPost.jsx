@@ -19,7 +19,7 @@ import 'react-date-range/dist/theme/default.css';
 
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
-  const [unavailable, setUnavailable] = useState([]);
+  const [unavailableSlots, setUnavailableSlots] = useState([]);
   const [entryLimit, setEntryLimit] = useState(0);
   const [eventTitle, setEventTitle] = useState('');
   const [UUID, setUUID] = useState('');
@@ -50,20 +50,35 @@ const TimeslotPost = () => {
   }, [endValue]);
 
   const handleTimeslotPost = () => {
-    const selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
+    let selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
+    selectedDates = selectedDates.map((date) => moment(date).format("YYYY-MM-DD"))
     let uuid = uuidv4();
+    let slotsAvailableByDay = {};
+    let dailyArr = [];
+    for (let i = timeFrom; i <= timeTo-interval; i+= interval) {
+      if (unavailableSlots.filter(time => time === i).length > 0) {
+        dailyArr.push([i, 0]); 
+      } else {
+        dailyArr.push([i, entryLimit]);
+      }
+    }
+    for (let element of selectedDates) {
+      slotsAvailableByDay[element] = dailyArr;
+    }
     setUUID(uuid);
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
       postCreatedTimeslotToDB(
-        unavailable,
+        slotsAvailableByDay,
+        unavailableSlots,
         interval,
+        entryLimit,
         selectedDates,
         eventTitle,
         timeFrom,
         timeTo,
-        uuid
+        uuid 
       );
     };
   };
@@ -85,10 +100,9 @@ const TimeslotPost = () => {
   };
   const handleNumberInput = (e) => {
     let val = e.target.value;
-    const regexp = /^[0-9\b]+$/;
-    if (regexp.test(val)) {
-      setEntryLimit(val);
-      console.log(val);
+    const regexp = /^[\s0-9\b]+$/;
+    if (regexp.test(val) || val === '') {
+      setEntryLimit(parseInt(val));
     }
   };
   
@@ -184,7 +198,7 @@ const TimeslotPost = () => {
       <div className="timeslot">
         <button
           onClick={() => {
-            setUnavailable([]);
+            setUnavailableSlots([]);
           }}
         >
           Reset Unavailable Slots
@@ -192,12 +206,12 @@ const TimeslotPost = () => {
         <h3>Click individual slots below to make them unavailable</h3>
         <SlotPicker
           interval={interval}
-          unavailableSlots={unavailable}
+          unavailableSlots={unavailableSlots}
           selected_date={new Date()}
           from={timeFrom}
           to={timeTo}
           onSelectTime={(slot) => {
-            setUnavailable([...unavailable, slot]);
+            setUnavailableSlots([...unavailableSlots, slot]);
           }}
         />
       </div>

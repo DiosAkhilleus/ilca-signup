@@ -6,6 +6,7 @@ import { getSailors } from '../../javascript/sailorLogic';
 import {
   postTimeslotReqToDB,
   getCurrentlyScheduledInspections,
+  updateTimeslotByUUID
 } from '../../javascript/timeslotLogic';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -14,9 +15,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
+import moment from 'moment';
 import '../../App.css';
 
-const Timeslot = () => {
+const Timeslot = ({
+  interval,
+  unavailable,
+  entryLimit,
+  timeFrom,
+  timeTo,
+  selectedDates,
+  eventTitle,
+  setActive,
+  slotsAvailableByDay,
+  UUID,
+  updateSelectedTimeslot
+}) => {
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
@@ -24,8 +38,7 @@ const Timeslot = () => {
   const [searchList, setSearchList] = useState([]);
   const [sailorID, setSailorID] = useState('');
   const [currentSailor, setCurrentSailor] = useState({});
-  const [day, setDay] = useState('2021-07-12');
-  const [propEvent, setPropEvent] = useState('World Cup 2021');
+  const [day, setDay] = useState(selectedDates[0] || '2021-01-01');
 
   useEffect(() => {
     getSailors().then((sailors) => setCurrentEntries(sailors));
@@ -61,10 +74,11 @@ const Timeslot = () => {
     setSearchList(newList);
   };
   const getInspectionsAndSubmitReq = (e) => {
-    getCurrentlyScheduledInspections()
-      .then((inspecs) => submitInspectionReq(inspecs))
-
-      e.preventDefault();
+    getCurrentlyScheduledInspections().then((inspecs) =>
+      submitInspectionReq(inspecs)
+    );
+    updateSelectedTimeslot();
+    e.preventDefault();
   };
   const submitInspectionReq = (inspecs) => {
     if (sailorID === '' || time === 0 || day === '') {
@@ -82,9 +96,8 @@ const Timeslot = () => {
       return;
     }
     if (
-      inspecs.filter(
-        (inspection) => inspection.sailorID === sailorID
-      ).length > 0
+      inspecs.filter((inspection) => inspection.sailorID === sailorID).length >
+      0
     ) {
       alert(`Sailor with ID: "${sailorID}" already entered for inspection.`);
       // e.preventDefault();
@@ -95,7 +108,8 @@ const Timeslot = () => {
     );
     let firstName = sailorEntry[0].name.firstName;
     let familyName = sailorEntry[0].name.familyName;
-    postTimeslotReqToDB(sailorID, firstName, familyName, time, day);
+    postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
+    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay);
     // e.preventDefault();
   };
   const onInputChange = (event, value) => {
@@ -109,27 +123,39 @@ const Timeslot = () => {
     <div className="timeslot-container">
       <h1>Time Slot Selector</h1>
       <Link to="/">Back to Home</Link>
-      <h3>Event: {propEvent}</h3>
-        <FormControl variant="filled" style={{margin: 10, minWidth: 250}}>
-          <InputLabel id="demo-simple-select-filled-label">Date</InputLabel>
-          <Select 
+
+      <button onClick={() => setActive(false)} style={{ marginTop: 10 }}>
+        Select Different Event
+      </button>
+      <h3>Event: {eventTitle}</h3>
+      <FormControl variant="filled" style={{ margin: 10, minWidth: 250 }}>
+        <InputLabel id="demo-simple-select-filled-label">Date</InputLabel>
+        <Select
           id="demo-simple-select-filled"
           value={day}
-          onChange={(e) => {handleDateChange(e)}}
-          >
-            <MenuItem value={'2021-07-12'}>2021-07-12</MenuItem>
-            <MenuItem value={'2021-07-13'}>2021-07-13</MenuItem>
-            <MenuItem value={'2021-07-14'}>2021-07-14</MenuItem>
-            <MenuItem value={'2021-07-15'}>2021-07-15</MenuItem>
-          </Select>
-        </FormControl> 
+          onChange={(e) => {
+            handleDateChange(e);
+          }}
+        >
+          {selectedDates.map((el, index) => (
+            <MenuItem key={[el, index]} value={el}>
+              {moment(el).format('D MMMM YYYY')}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <div style={{marginTop: 30, fontSize: 20}}>Slots Remaining</div>
+      <hr style={{border: '1px solid black', width: '100%'}}/>
       <div className="timeslot">
+        <div className="timeslots-available">
+          {slotsAvailableByDay[day].map((timeslot, index) => <div key={index} className="slot-num">{timeslot[1]}</div>)}
+        </div>
         <SlotPicker
-          interval={30}
-          unavailableSlots={[540, 750]}
+          interval={interval}
+          unavailableSlots={unavailable}
           selected_date={new Date()}
-          from={8 * 60}
-          to={16 * 60}
+          from={timeFrom}
+          to={timeTo}
           onSelectTime={(slot) => {
             setTime(slot);
           }}
