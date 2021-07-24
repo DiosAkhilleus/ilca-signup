@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const TimeslotOptionSchema = new mongoose.Schema({
+  slotsAvailableByDay: {
+    type: Object,
+    required: true
+  },
   unavailableSlots: {
     type: Array, 
     required: true
@@ -9,6 +13,10 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: Number,
     required: true
   }, 
+  entryLimit: {
+    type: Number,
+    required: true
+  },
   selectedDates: {
     type: Array, 
     required: true

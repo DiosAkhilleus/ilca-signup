@@ -47,16 +47,20 @@ app.get('/timeslots/options', async (req, res) => {
 });
 
 app.post('/timeslots/created', async (req, res) => {
+  const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const unavailableSlots = req.body.unavailableSlots;
   const interval = req.body.interval;
+  const entryLimit = req.body.entryLimit;
   const selectedDates = req.body.selectedDates;
   const eventTitle = req.body.eventTitle;
   const timeFrom = req.body.timeFrom;
   const timeTo = req.body.timeTo;
   const uuid = req.body.uuid;
   const timeslot = new TimeslotOptionModel ({
+    slotsAvailableByDay: slotsAvailableByDay,
     unavailableSlots: unavailableSlots, 
     interval: interval,
+    entryLimit: entryLimit,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
     timeFrom: timeFrom,
@@ -71,6 +75,17 @@ app.post('/timeslots/created', async (req, res) => {
   res.writeHead(200, {'content-type': 'application/json'});
   res.end('Posted Timeslot');
 })
+
+app.put('/timeslots/update/:uuid', async (req, res) => {
+  const uuid = req.params.uuid
+  const slotsAvailableByDay = req.body.slotsAvailableByDay;
+  TimeslotOptionModel.findOneAndUpdate({uuid: uuid}, {slotsAvailableByDay: slotsAvailableByDay}, {new: true}, (err, result) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(result);
+  });
+});
 
 app.post('/insertsailor', async (req, res) => {
   const sailorID = req.body.sailorID;
@@ -98,12 +113,14 @@ app.post('/insertsailor', async (req, res) => {
 })
 
 app.post('/reqtimeslot', async (req, res) => {
+  const eventTitle = req.body.eventTitle;
   const sailorID = req.body.sailorID;
   const name = req.body.name;
   const time = req.body.time;
   const day = req.body.day;
-  console.log(sailorID, name, time, day);
+  console.log(eventTitle, sailorID, name, time, day);
   const inspection = new InspectionModel ({
+    eventTitle: eventTitle,
     sailorID: sailorID,
     name: name,
     time: time, 

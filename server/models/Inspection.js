@@ -12,6 +12,10 @@ const NameSchema = new mongoose.Schema({
 })
 
 const InspectionSchema = new mongoose.Schema({
+  eventTitle: {
+    type: String,
+    required: true
+  },
   sailorID: {
     type: String, 
     required: true
