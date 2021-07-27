@@ -25,7 +25,6 @@ const TimeslotPost = () => {
   const [entryLimit, setEntryLimit] = useState(0);
   const [eventTitle, setEventTitle] = useState('');
   const [UUID, setUUID] = useState('');
-  const [entriesAvailable, setEntriesAvailable] = useState([]);
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({});
   const [timeFrom, setTimeFrom] = useState(510);
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
@@ -38,14 +37,14 @@ const TimeslotPost = () => {
       key: 'selection',
     },
   ]);
-  useEffect(() => {
+  useEffect(() => { // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
     let days = getDates(calendar[0].startDate, calendar[0].endDate);
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
     setSelectedDates(formatted);
     setDateObj(formatted);
   }, [calendar]);
 
-  useEffect(() => {
+  useEffect(() => { // If the entry limit is adjusted, this will update each slot to reflect the new limit unless that slot is in that day's set of unavailable slots
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     for (let el in replacementObj) {
       replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map(
@@ -60,26 +59,26 @@ const TimeslotPost = () => {
     setSlotsAvailableByDay(replacementObj);
   }, [entryLimit]);
 
-  useEffect(() => {
+  useEffect(() => { // Adjusts the format of the "Start Time" input value so that it is in milliseconds, the format needed for the SlotPicker component 
     const start = moment(startValue._d.toString()).format('HH:mm');
     const parsedStart = start.split(':').map((el) => parseInt(el));
-    const startTimeSum = parsedStart[0] * 60 + parsedStart[1];
-    setTimeFrom(startTimeSum);
+    const startTimeSum = parsedStart[0] * 60 + parsedStart[1]; 
+    setTimeFrom(startTimeSum); // For instance... ('08:30') would be transformed to 510
   }, [startValue]);
 
-  useEffect(() => {
+  useEffect(() => { // Adjusts the format of the "End Time" input value so that it is in milliseconds, the format needed for the SlotPicker component
     const end = moment(endValue._d.toString()).format('HH:mm');
     const parsedEnd = end.split(':').map((el) => parseInt(el));
     const endTimeSum = parsedEnd[0] * 60 + parsedEnd[1];
     setTimeTo(endTimeSum);
   }, [endValue]);
 
-  const handleTimeslotPost = () => {
+  const handleTimeslotPost = () => { // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
     let selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
     selectedDates = selectedDates.map((date) =>
       moment(date).format('YYYY-MM-DD')
     );
-    let uuid = uuidv4();
+    let uuid = uuidv4(); // creates unique ID for the DB entry
 
     setUUID(uuid);
     if (entryLimit === 0 || eventTitle === '') {
@@ -99,13 +98,13 @@ const TimeslotPost = () => {
     }
   };
   //eslint-disable-next-line
-  Date.prototype.addDays = function (days) {
+  Date.prototype.addDays = function (days) { // Function added from outside source that adds a method to Date. Probably not best practice.
     var dat = new Date(this.valueOf());
     dat.setDate(dat.getDate() + days);
     return dat;
   };
 
-  const getDates = (startDate, stopDate) => {
+  const getDates = (startDate, stopDate) => { // Returns an Array of dates between two dates (inclusive)
     let dateArray = [];
     let currentDate = startDate;
     while (currentDate <= stopDate) {
@@ -114,25 +113,22 @@ const TimeslotPost = () => {
     }
     return dateArray;
   };
-  const handleNumberInput = (e) => {
+
+  const handleNumberInput = (e) => { // Sets limits on what can be entered into the entry limit text field
     let val = e.target.value;
-    const regexp = /^[\s0-9\b]+$/;
-    if (regexp.test(val) || val === '') {
+    const regexp = /^[0-9\b]+$/; // 
+    if (regexp.test(val) || val === '') { // If the value only includes numbers or has a string value of ''
       setEntryLimit(parseInt(val));
     }
   };
 
-  const setDateObj = (days) => {
+  const setDateObj = (days) => { // Creates the slotsAvailableByDay object from the days array (days between start and end)
     let slotsObj = {};
     let dailyArr = [];
-    for (let i = timeFrom; i <= timeTo - interval; i += interval) {
-      if (unavailableSlots.filter((time) => time === i).length > 0) {
-        dailyArr.push([i, 0]);
-      } else {
+    for (let i = timeFrom; i <= timeTo - interval; i += interval) { // this creates an array of the form [[time, entryLimit], ...] from the start time to the end time 
         dailyArr.push([i, entryLimit]);
-      }
     }
-    for (let element of days) {
+    for (let element of days) { // add key value pairs of entriesLeft and unavailableSlots
       slotsObj[element] = {};
       slotsObj[element].entriesLeft = dailyArr;
       slotsObj[element].unavailableSlots = unavailableSlots;
@@ -140,14 +136,13 @@ const TimeslotPost = () => {
     setSlotsAvailableByDay(slotsObj);
   };
 
-  const handleSetUnavailable = (el, slot) => {
-    let replacementObj = Object.assign({}, slotsAvailableByDay);
-    replacementObj[el].unavailableSlots = [
+  const handleSetUnavailable = (el, slot) => { // Controls the effects of setting a slot unavailable by clicking on the slot
+    let replacementObj = Object.assign({}, slotsAvailableByDay); // new placeholder object matching slotsAvailableByDay
+    replacementObj[el].unavailableSlots = [ // adds the selected slot to that day's unavailable slots array
       ...replacementObj[el].unavailableSlots,
       slot,
     ];
-    console.log(replacementObj[el]);
-    for (let slot of replacementObj[el].entriesLeft) {
+    for (let slot of replacementObj[el].entriesLeft) { // sets the newly unavailable slot's entry limit to 0
       if (replacementObj[el].unavailableSlots.indexOf(slot[0]) > -1) {
         slot[1] = 0;
       }
@@ -263,7 +258,6 @@ const TimeslotPost = () => {
                 setSlotsAvailableByDay={setSlotsAvailableByDay}
                 slotsAvailableByDay={slotsAvailableByDay}
                 element={el}
-                index={index}
               />
             </div>
             <div style={{ marginBottom: 15 }}>

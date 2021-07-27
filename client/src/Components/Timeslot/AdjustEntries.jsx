@@ -1,42 +1,34 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import '../../App.css';
 
 const AdjustEntries = ({
   setSlotsAvailableByDay,
   slotsAvailableByDay,
   element,
-  index,
 }) => {
-  const [currentElement, setCurrentElement] = useState('');
-  useEffect(() => {
-    // console.log(element);
-    setCurrentElement(element);
-  }, []);
-  const handleEntryChange = (index, method) => {
+  
+  const handleEntryChange = (index, method) => { // Controls the effects of clicking the up or down arrows on each day's entry limit
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     if (method === 'increase') {
-      // console.log(replacementObj[element].entriesLeft[index][1]);
-      if (
+      if ( // if this specific slot is not found in the list of unavailable slots...
         replacementObj[element].unavailableSlots.indexOf(
           replacementObj[element].entriesLeft[index][0]
         ) === -1
-      ) {
+      ) { // ...add one to that slot's entry limit
         replacementObj[element].entriesLeft[index][1] += 1;
       }
       console.log(replacementObj);
-    } else if (method === 'decrease') {
+    } else if (method === 'decrease') { // if this specific slot is not found in the list of unavailable slots...
       if (
         replacementObj[element].entriesLeft[index][1] > 0 &&
         replacementObj[element].unavailableSlots.indexOf(
           replacementObj[element].entriesLeft[index][0]
         ) === -1
-      ) {
+      ) { // ...subtract one from that slot's entry limit
         replacementObj[element].entriesLeft[index][1] -= 1;
       }
     }
-    console.log(replacementObj);
-    setSlotsAvailableByDay(replacementObj);
+    setSlotsAvailableByDay(replacementObj); // Replace slotsAvailableByDay with the updated object
   };
 
   return (
@@ -51,7 +43,7 @@ const AdjustEntries = ({
                   handleEntryChange(index, 'increase');
                 }}
               >
-                &#9651;
+                &#9651; {/* upward pointing triangle */}
               </div>
               <div>{timeslot[1]}</div>
               <div
@@ -60,7 +52,7 @@ const AdjustEntries = ({
                   handleEntryChange(index, 'decrease');
                 }}
               >
-                &#9661;
+                &#9661; {/* downward pointing triangle */}
               </div>
             </div>
           </>

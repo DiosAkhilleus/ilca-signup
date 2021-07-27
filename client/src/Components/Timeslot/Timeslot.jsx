@@ -34,24 +34,18 @@ const Timeslot = ({
   const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
   const [scheduledInspections, setScheduledInspections] = useState([]);
-  const [searchList, setSearchList] = useState([]);
   const [sailorID, setSailorID] = useState('');
   const [currentSailor, setCurrentSailor] = useState({});
   const [day, setDay] = useState(selectedDates[0] || '2021-01-01');
 
-  useEffect(() => {
+  useEffect(() => { // Requests DB information on load to reflect the most recently entered list of sailors in the specific competition as well as the currently requested sailor equipment inspections
     getSailors().then((sailors) => setCurrentEntries(sailors));
     getCurrentlyScheduledInspections().then((entries) =>
       setScheduledInspections(entries)
     );
   }, []);
 
-  useEffect(() => {
-    compileSearchList();
-  }, [currentEntries]);
-
-  useEffect(() => {
-    console.log(sailorID);
+  useEffect(() => { // Every time sailorID updates, if that sailorID matches one in the currentEntries, currentSailor will update to reflect that selected sailor from the entries list
     const selectedSailor = currentEntries.filter(
       (entry) => entry.sailorID === sailorID
     );
@@ -60,26 +54,17 @@ const Timeslot = ({
     } else {
       setCurrentSailor({});
     }
-    console.log(selectedSailor);
   }, [sailorID]);
 
-  const compileSearchList = () => {
-    let newList = [];
-    for (let i = 0; i < currentEntries.length; i++) {
-      newList.push(
-        `${currentEntries[i].sailorID} - ${currentEntries[i].name.firstName} ${currentEntries[i].name.familyName}`
-      );
-    }
-    setSearchList(newList);
-  };
-  const getInspectionsAndSubmitReq = (e) => {
+  const getInspectionsAndSubmitReq = (e) => { // Retrieves already-scheduled inspections, then updates the timeslot information from the DB
     getCurrentlyScheduledInspections().then((inspecs) =>
       submitInspectionReq(inspecs)
     );
-    updateSelectedTimeslot();
+    updateSelectedTimeslot(); // Passed from the parent component. Retrieves timeslot DB information
     e.preventDefault();
   };
-  const submitInspectionReq = (inspecs) => {
+
+  const submitInspectionReq = (inspecs) => { // Submits an inspection request if all fields are filled out
     if (sailorID === '' || time === 0 || day === '') {
       alert('please enter Sailor ID and select a day and timeslot');
       // e.preventDefault();
@@ -111,10 +96,12 @@ const Timeslot = ({
     updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay);
     // e.preventDefault();
   };
-  const onInputChange = (event, value) => {
+
+  const onInputChange = (event, value) => { // Sets the current sailorID based on the Autocomplete field's value
     setSailorID(value);
   };
-  const handleDateChange = (e) => {
+
+  const handleDateChange = (e) => { // Sets the current date based on the Date selector dropdown
     setDay(e.target.value);
   };
 

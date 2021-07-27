@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getTimeslotByUUID } from '../../javascript/timeslotLogic';
+import { getTimeslots } from '../../javascript/timeslotLogic';
 import Timeslot from './Timeslot';
 import '../../App.css';
 
@@ -9,27 +9,22 @@ const ViewTimeslot = () => {
   const [UUID, setUUID] = useState('');
   const [currentTimeslots, setCurrentTimeslots] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState({});
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(false); // Whether or not the timeslot display is active
 
-  useEffect(() => {
+  useEffect(() => { // Retrieves created timeslots on page load
     setTimeslot();
   }, []);
 
-
-  useEffect(() => {
-    console.log(active);
-  }, [active])
-
-  const setTimeslot = () => {
-    getTimeslotByUUID().then((results) => setCurrentTimeslots(results));
+  const setTimeslot = () => { // Run on page load — sets current timeslots to those retrieved from the DB
+    getTimeslots().then((results) => setCurrentTimeslots(results));
   }
 
-  const updateSelectedTimeslot = () => {
+  const updateSelectedTimeslot = () => { // Passed to the timeslot component so that on inspection time request, the timeslots update to reflect the newly submitted request
     setTimeslot();
     handleIDSubmission();
   }
 
-  const handleIDSubmission = () => {
+  const handleIDSubmission = () => { // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
     const filteredTimeslots = currentTimeslots.filter(
       (timeslot) => timeslot.uuid === UUID
     );
@@ -59,7 +54,6 @@ const ViewTimeslot = () => {
           <Timeslot 
             setActive={setActive}
             interval={selectedTimeslot.interval}
-            // unavailableSlots={selectedTimeslot.unavailableSlots}
             entryLimit={selectedTimeslot.entryLimit}
             slotsAvailableByDay={selectedTimeslot.slotsAvailableByDay}
             timeFrom={selectedTimeslot.timeFrom}
