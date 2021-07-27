@@ -99,7 +99,7 @@ const TimeslotPost = () => {
         timeTo,
         uuid
       );
-    }
+    };
   };
   //eslint-disable-next-line
   Date.prototype.addDays = function (days) { // Function added from outside source that adds a method to Date. Probably not best practice.
