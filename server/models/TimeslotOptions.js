@@ -9,10 +9,6 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: Number,
     required: true
   }, 
-  entryLimit: {
-    type: Number,
-    required: true
-  },
   selectedDates: {
     type: Array, 
     required: true
