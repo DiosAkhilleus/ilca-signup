@@ -37,6 +37,11 @@ const TimeslotPost = () => {
       key: 'selection',
     },
   ]);
+
+  useEffect(() => {
+    console.log(slotsAvailableByDay);
+    
+  }, [slotsAvailableByDay])
   useEffect(() => { // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
     let days = getDates(calendar[0].startDate, calendar[0].endDate);
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
@@ -84,17 +89,16 @@ const TimeslotPost = () => {
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
-      console.log(slotsAvailableByDay);
-      // postCreatedTimeslotToDB(
-      //   slotsAvailableByDay,
-      //   interval,
-      //   entryLimit,
-      //   selectedDates,
-      //   eventTitle,
-      //   timeFrom,
-      //   timeTo,
-      //   uuid
-      // );
+      console.log(slotsAvailableByDay, interval, selectedDates, eventTitle, timeFrom, timeTo, uuid);
+      postCreatedTimeslotToDB(
+        slotsAvailableByDay,
+        interval,
+        selectedDates,
+        eventTitle,
+        timeFrom,
+        timeTo,
+        uuid
+      );
     }
   };
   //eslint-disable-next-line

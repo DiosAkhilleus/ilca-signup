@@ -36,17 +36,16 @@ export const getCurrentlyScheduledInspections = () => { // Retrieves the full li
 export const postCreatedTimeslotToDB = ( // Posts a newly created timeslot to the DB. Will need to be updated soon.
   slotsAvailableByDay,
   interval,
-  entryLimit,
   selectedDates,
   eventTitle,
   timeFrom,
   timeTo,
   uuid
 ) => {
+  //slotsAvailableByDay, interval, selectedDates, eventTitle, timeFrom, timeTo, uuid
   Axios.post('http://localhost:3001/timeslots/created/', {
     slotsAvailableByDay: slotsAvailableByDay,
     interval: interval,
-    entryLimit: entryLimit,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
     timeFrom: timeFrom,
