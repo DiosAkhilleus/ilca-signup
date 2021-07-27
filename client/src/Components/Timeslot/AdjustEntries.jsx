@@ -6,6 +6,7 @@ const AdjustEntries = ({
   slotsAvailableByDay,
   element,
 }) => {
+
   
   const handleEntryChange = (index, method) => { // Controls the effects of clicking the up or down arrows on each day's entry limit
     let replacementObj = Object.assign({}, slotsAvailableByDay);
@@ -35,7 +36,6 @@ const AdjustEntries = ({
     <div>
       <div className="timeslots-available" style={{ marginBottom: 28 }}>
         {slotsAvailableByDay[element].entriesLeft.map((timeslot, index) => (
-          <>
             <div key={index} className="slot-num">
               <div
                 className="increase"
@@ -55,7 +55,6 @@ const AdjustEntries = ({
                 &#9661; {/* downward pointing triangle */}
               </div>
             </div>
-          </>
         ))}
       </div>
     </div>

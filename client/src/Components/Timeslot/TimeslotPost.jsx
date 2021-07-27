@@ -20,7 +20,6 @@ import 'react-date-range/dist/theme/default.css';
 
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30);
-  const [unavailableSlots, setUnavailableSlots] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
   const [entryLimit, setEntryLimit] = useState(0);
   const [eventTitle, setEventTitle] = useState('');
@@ -38,8 +37,9 @@ const TimeslotPost = () => {
     },
   ]);
 
+
   useEffect(() => {
-    console.log(slotsAvailableByDay);
+    // console.log(slotsAvailableByDay);
     
   }, [slotsAvailableByDay])
   useEffect(() => { // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
@@ -79,10 +79,10 @@ const TimeslotPost = () => {
   }, [endValue]);
 
   const handleTimeslotPost = () => { // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
-    let selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
-    selectedDates = selectedDates.map((date) =>
-      moment(date).format('YYYY-MM-DD')
-    );
+    // let selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
+    // selectedDates = selectedDates.map((date) =>
+    //   moment(date).format('YYYY-MM-DD')
+    // );
     let uuid = uuidv4(); // creates unique ID for the DB entry
 
     setUUID(uuid);
@@ -124,6 +124,7 @@ const TimeslotPost = () => {
     if (regexp.test(val) || val === '') { // If the value only includes numbers or has a string value of ''
       setEntryLimit(parseInt(val));
     }
+    console.log(slotsAvailableByDay);
   };
 
   const setDateObj = (days) => { // Creates the slotsAvailableByDay object from the days array (days between start and end)
@@ -135,22 +136,25 @@ const TimeslotPost = () => {
     for (let element of days) { // add key value pairs of entriesLeft and unavailableSlots
       slotsObj[element] = {};
       slotsObj[element].entriesLeft = dailyArr;
-      slotsObj[element].unavailableSlots = unavailableSlots;
+      slotsObj[element].unavailableSlots = [];
     }
     setSlotsAvailableByDay(slotsObj);
   };
 
-  const handleSetUnavailable = (el, slot) => { // Controls the effects of setting a slot unavailable by clicking on the slot
+  const handleSetUnavailable = (el, slot) => { // Controls the effects of setting a slot unavailable by clicking on the slot;
+    // console.log(el);
     let replacementObj = Object.assign({}, slotsAvailableByDay); // new placeholder object matching slotsAvailableByDay
     replacementObj[el].unavailableSlots = [ // adds the selected slot to that day's unavailable slots array
       ...replacementObj[el].unavailableSlots,
       slot,
     ];
-    for (let slot of replacementObj[el].entriesLeft) { // sets the newly unavailable slot's entry limit to 0
-      if (replacementObj[el].unavailableSlots.indexOf(slot[0]) > -1) {
-        slot[1] = 0;
-      }
-    }
+    console.log(replacementObj, replacementObj[el]);
+    replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map((item, index) => {
+      if (replacementObj[el].unavailableSlots.indexOf(item[0]) > -1) {
+        return [item[0], 0]
+      } else return item;
+    })
+    
     setSlotsAvailableByDay(replacementObj);
   };
 
@@ -245,9 +249,7 @@ const TimeslotPost = () => {
       </div>
       <div className="timeslot">
         <button
-          onClick={() => {
-            setUnavailableSlots([]);
-          }}
+          onClick={() => {}}
         >
           Reset Unavailable Slots
         </button>
@@ -266,7 +268,6 @@ const TimeslotPost = () => {
             </div>
             <div style={{ marginBottom: 15 }}>
               <SlotPicker
-                key={[el, index]}
                 interval={interval}
                 unavailableSlots={slotsAvailableByDay[el].unavailableSlots}
                 selected_date={new Date()}
