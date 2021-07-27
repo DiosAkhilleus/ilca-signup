@@ -16,7 +16,9 @@ const AdjustEntries = ({
           replacementObj[element].entriesLeft[index][0]
         ) === -1
       ) { // ...add one to that slot's entry limit
-        replacementObj[element].entriesLeft[index][1] += 1;
+        replacementObj[element].entriesLeft = replacementObj[element].entriesLeft.map((el, ind) => (
+          ind === index ? [el[0], el[1] + 1] : el 
+          ));
       }
       console.log(replacementObj);
     } else if (method === 'decrease') { // if this specific slot is not found in the list of unavailable slots...
@@ -26,7 +28,9 @@ const AdjustEntries = ({
           replacementObj[element].entriesLeft[index][0]
         ) === -1
       ) { // ...subtract one from that slot's entry limit
-        replacementObj[element].entriesLeft[index][1] -= 1;
+        replacementObj[element].entriesLeft = replacementObj[element].entriesLeft.map((el, ind) => (
+          ind === index ? [el[0], el[1] - 1] : el
+        )); 
       }
     }
     setSlotsAvailableByDay(replacementObj); // Replace slotsAvailableByDay with the updated object
