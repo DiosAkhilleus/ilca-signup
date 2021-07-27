@@ -178,3 +178,26 @@ body {
   flex: 1;
   text-align: center;
 }
+
+.slotpicker {
+  margin-bottom: 15px !important;
+}
+
+.increase {
+  user-select: none;
+}
+.increase:hover {
+  cursor:pointer;
+}
+.decrease {
+  user-select: none;
+}
+.decrease:hover {
+  cursor:pointer;
+}
+
+.admin-slot-container {
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+  padding: 5px;
+}
