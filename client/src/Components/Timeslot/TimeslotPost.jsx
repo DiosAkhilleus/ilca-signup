@@ -37,7 +37,6 @@ const TimeslotPost = () => {
     },
   ]);
 
-
   useEffect(() => {
     // console.log(slotsAvailableByDay);
     
@@ -292,11 +291,12 @@ const TimeslotPost = () => {
       {UUID !== '' ? (
         <div>
           <div style={{ fontSize: 18 }}>
-            The unique identifier for your created timesheet is: {UUID}
+            {/* The unique identifier for your created timesheet is: {UUID} */}
+            The link to your newly created timesheet is <strong>localhost:3002/viewtimeslot/{UUID}</strong>
           </div>
           <br />
           <div style={{ marginBottom: 15, fontSize: 18 }}>
-            Save this id somewhere to send to sailors. It will be their only way
+            Save this link somewhere to send to sailors. It will be their only way
             to access the signup you created.
           </div>
         </div>
