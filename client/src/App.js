@@ -16,10 +16,11 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path='/' component={Home} />
+        <Route path="/viewtimeslot/:id" children={<ViewTimeslot />}/>
         <Route exact path='/about' component={About} />
         <Route exact path='/timeslots' component={Timeslot} />
         <Route exact path='/posttimeslot' component={TimeslotPost} />
-        <Route exact path='/viewtimeslot' component={ViewTimeslot}/>
+        {/* <Route exact path='/viewtimeslot' component={ViewTimeslot}/> */}
         <Route exact path='/postsailor' component={PostSailor} />
         <Route exact path='/displaysailors' component={DisplaySailors} />
         <Route path='/' component={NotFound}/>
