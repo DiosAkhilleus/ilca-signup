@@ -1,22 +1,24 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getTimeslots } from '../../javascript/timeslotLogic';
 import Timeslot from './Timeslot';
 import '../../App.css';
 
 const ViewTimeslot = () => {
-  const [UUID, setUUID] = useState('');
-  const [currentTimeslots, setCurrentTimeslots] = useState([]);
+  // const [UUID, setUUID] = useState('');
+  // const [currentTimeslots, setCurrentTimeslots] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState({});
   const [active, setActive] = useState(false); // Whether or not the timeslot display is active
 
+  let { id } = useParams();
+
   useEffect(() => { // Retrieves created timeslots on page load
-    setTimeslot();
+    setTimeslot(); 
   }, []);
 
   const setTimeslot = () => { // Run on page load — sets current timeslots to those retrieved from the DB
-    getTimeslots().then((results) => setCurrentTimeslots(results));
+    getTimeslots().then((results) => handleIDSubmission(results));
   }
 
   const updateSelectedTimeslot = () => { // Passed to the timeslot component so that on inspection time request, the timeslots update to reflect the newly submitted request
@@ -24,9 +26,9 @@ const ViewTimeslot = () => {
     handleIDSubmission();
   }
 
-  const handleIDSubmission = () => { // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
-    const filteredTimeslots = currentTimeslots.filter(
-      (timeslot) => timeslot.uuid === UUID
+  const handleIDSubmission = (timeslots) => { // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
+    const filteredTimeslots = timeslots.filter(
+      (timeslot) => timeslot.uuid === id
     );
     if (!filteredTimeslots.length > 0) {
       alert(`This id doesn't match a registered Inspection Signup`);
@@ -40,16 +42,17 @@ const ViewTimeslot = () => {
     <div>
       {active === false ? (
         <div className="timeslot-search-container">
-          <h1>Enter Timeslot ID below to access inspection signup</h1>
+          <h1>Loading Inspection Signup...</h1>
+          {/* <h1>Enter Timeslot ID below to access inspection signup</h1>
           <Link to="/">Back to home</Link>
           <input
             className="timeslot-search-bar"
             type="text"
-            onChange={(e) => setUUID(e.target.value)}
+            // onChange={(e) => setUUID(e.target.value)}
           />
-          <button onClick={() => handleIDSubmission()}>Submit ID</button>
+          <button onClick={() => handleIDSubmission()}>Submit ID</button> */}
         </div>
-      ) : (
+      ) : ( 
         <div>
           <Timeslot 
             setActive={setActive}
@@ -60,7 +63,7 @@ const ViewTimeslot = () => {
             timeTo={selectedTimeslot.timeTo}
             selectedDates={selectedTimeslot.selectedDates}
             eventTitle={selectedTimeslot.eventTitle}
-            UUID={UUID}
+            UUID={id}
             updateSelectedTimeslot={updateSelectedTimeslot}
           />
         </div>
