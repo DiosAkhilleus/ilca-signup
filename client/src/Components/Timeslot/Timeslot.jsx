@@ -25,6 +25,7 @@ const Timeslot = ({
   timeTo,
   selectedDates,
   eventTitle,
+  ilcaNum,
   setActive,
   slotsAvailableByDay,
   UUID,
@@ -121,7 +122,11 @@ const Timeslot = ({
       <button onClick={() => setActive(false)} style={{ marginTop: 10 }}>
         Select Different Event
       </button>
-      <h3>Event: {eventTitle}</h3>
+      <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', width: '100%'}}>
+        <img src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg" alt="ILCA Logo" style={{width: 200}}/>
+        <h3>Event: {eventTitle}</h3>
+        <img src="https://sailing.laserinternational.org/regattauploads/2021/4_7Y/Event_Logo.png" alt="Event Logo" style={{width: 200}} />
+      </div>
       <FormControl variant="filled" style={{ margin: 10, minWidth: 250 }}>
         <InputLabel id="demo-simple-select-filled-label">Date</InputLabel>
         <Select
