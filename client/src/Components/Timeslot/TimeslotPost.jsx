@@ -23,6 +23,7 @@ const TimeslotPost = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [entryLimit, setEntryLimit] = useState(0);
   const [eventTitle, setEventTitle] = useState('');
+  const [ilcaNum, setILCANum] = useState('');
   const [UUID, setUUID] = useState('');
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({});
   const [timeFrom, setTimeFrom] = useState(510);
@@ -37,10 +38,7 @@ const TimeslotPost = () => {
     },
   ]);
 
-  useEffect(() => {
-    // console.log(slotsAvailableByDay);
-    
-  }, [slotsAvailableByDay])
+  
   useEffect(() => { // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
     let days = getDates(calendar[0].startDate, calendar[0].endDate);
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
@@ -88,12 +86,13 @@ const TimeslotPost = () => {
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
-      console.log(slotsAvailableByDay, interval, selectedDates, eventTitle, timeFrom, timeTo, uuid);
+      console.log(slotsAvailableByDay, interval, selectedDates, eventTitle, ilcaNum, timeFrom, timeTo, uuid);
       postCreatedTimeslotToDB(
         slotsAvailableByDay,
         interval,
         selectedDates,
         eventTitle,
+        ilcaNum,
         timeFrom,
         timeTo,
         uuid
@@ -156,6 +155,13 @@ const TimeslotPost = () => {
     
     setSlotsAvailableByDay(replacementObj);
   };
+  
+  const resetUnavailable = (el) => {
+    console.log(el);
+    let replacementObj = Object.assign({}, slotsAvailableByDay);
+    replacementObj[el].unavailableSlots = [];
+    setSlotsAvailableByDay(replacementObj);
+  }
 
   return (
     <div className="timeslot-post">
@@ -189,6 +195,15 @@ const TimeslotPost = () => {
               type="text"
               value={eventTitle}
               onChange={(e) => setEventTitle(e.target.value)}
+            />
+            <TextField
+              style={{ minWidth: 250, marginBottom: 20 }}
+              id="filled"
+              variant="filled"
+              label="ILCA Event #"
+              type="text"
+              value={ilcaNum}
+              onChange={(e) => setILCANum(e.target.value)}
             />
             <FormControl
               variant="filled"
@@ -247,17 +262,18 @@ const TimeslotPost = () => {
         </div>
       </div>
       <div className="timeslot">
-        <button
-          onClick={() => {}}
-        >
-          Reset Unavailable Slots
-        </button>
         <h3>Click individual slots below to make them unavailable</h3>
         {Object.keys(slotsAvailableByDay).map((el, index) => (
           <div key={index} className="admin-slot-container">
             <div style={{ textAlign: 'center', marginBottom: 10 }}>
               <strong>{moment(el).format('D MMMM YYYY')}</strong>
             </div>
+            <button
+              onClick={() => {resetUnavailable(el)}}
+              style={{marginBottom: 20}}
+            >
+              Reset Unavailable Slots For This Day
+            </button>
             <div style={{ marginBottom: 8 }}>
               <AdjustEntries
                 setSlotsAvailableByDay={setSlotsAvailableByDay}

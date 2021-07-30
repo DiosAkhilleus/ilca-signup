@@ -38,6 +38,7 @@ export const postCreatedTimeslotToDB = ( // Posts a newly created timeslot to th
   interval,
   selectedDates,
   eventTitle,
+  ilcaNum,
   timeFrom,
   timeTo,
   uuid
@@ -48,6 +49,7 @@ export const postCreatedTimeslotToDB = ( // Posts a newly created timeslot to th
     interval: interval,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
+    ilcaNum: ilcaNum,
     timeFrom: timeFrom,
     timeTo: timeTo,
     uuid: uuid,
