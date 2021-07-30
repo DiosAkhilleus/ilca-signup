@@ -51,6 +51,7 @@ app.post('/timeslots/created', async (req, res) => {
   const interval = req.body.interval;
   const selectedDates = req.body.selectedDates;
   const eventTitle = req.body.eventTitle;
+  const ilcaNum = req.body.ilcaNum;
   const timeFrom = req.body.timeFrom;
   const timeTo = req.body.timeTo;
   const uuid = req.body.uuid;
@@ -59,6 +60,7 @@ app.post('/timeslots/created', async (req, res) => {
     interval: interval,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
+    ilcaNum: ilcaNum,
     timeFrom: timeFrom,
     timeTo: timeTo,
     uuid: uuid,

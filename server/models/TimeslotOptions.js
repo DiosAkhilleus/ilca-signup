@@ -17,6 +17,10 @@ const TimeslotOptionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  ilcaNum: {
+    type: String,
+    required: true
+  },
   timeFrom: {
     type: Number,
     required: true
