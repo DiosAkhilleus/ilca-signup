@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Components/Home.jsx'
 import About from './Components/About.jsx';
+import Admin from './Components/Admin.jsx';
 import NotFound from './Components/NotFound.jsx';
 import Timeslot from './Components/Timeslot/Timeslot.jsx';
 import TimeslotPost from './Components/Timeslot/TimeslotPost.jsx';
@@ -16,10 +17,12 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path='/' component={Home} />
-        <Route path="/viewtimeslot/:id" children={<ViewTimeslot />}/>
         <Route exact path='/about' component={About} />
+        <Route exact path='/admin' component={Admin}/>
+        <Route exact path='/admin/create' component={TimeslotPost} />
         <Route exact path='/timeslots' component={Timeslot} />
-        <Route exact path='/posttimeslot' component={TimeslotPost} />
+        <Route path='/viewtimeslot/:id' children={<ViewTimeslot />}/>
+        <Route path='/edittimeslot/:id' children={Home}/>
         {/* <Route exact path='/viewtimeslot' component={ViewTimeslot}/> */}
         <Route exact path='/postsailor' component={PostSailor} />
         <Route exact path='/displaysailors' component={DisplaySailors} />
