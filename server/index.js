@@ -48,6 +48,7 @@ app.get('/timeslots/options', async (req, res) => {
 
 app.post('/timeslots/created', async (req, res) => {
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
+  const inspectionReqs = req.body.inspectionReqs;
   const interval = req.body.interval;
   const selectedDates = req.body.selectedDates;
   const eventTitle = req.body.eventTitle;
@@ -57,6 +58,7 @@ app.post('/timeslots/created', async (req, res) => {
   const uuid = req.body.uuid;
   const timeslot = new TimeslotOptionModel({
     slotsAvailableByDay: slotsAvailableByDay,
+    inspectionReqs: inspectionReqs,
     interval: interval,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
@@ -78,13 +80,15 @@ app.put('/timeslots/update/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const unavailableSlots = req.body.unavailableSlots;
+  const inspectionReqs = req.body.inspectionReqs;
   TimeslotOptionModel.findOneAndUpdate(
     { uuid: uuid },
     {
       slotsAvailableByDay: slotsAvailableByDay,
       unavailableSlots: unavailableSlots,
+      inspectionReqs: inspectionReqs
     },
-    { new: true },
+    { new: true, useFindAndModify: false },
     (err, result) => {
       if (err) {
         res.send(err);
