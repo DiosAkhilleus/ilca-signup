@@ -26,6 +26,7 @@ const TimeslotPost = () => {
   const [ilcaNum, setILCANum] = useState('');
   const [UUID, setUUID] = useState('');
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({});
+  const [inspectionReqs, setInspectionReqs] = useState([]);
   const [timeFrom, setTimeFrom] = useState(510);
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
   const [timeTo, setTimeTo] = useState(870);
@@ -86,9 +87,10 @@ const TimeslotPost = () => {
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
-      console.log(slotsAvailableByDay, interval, selectedDates, eventTitle, ilcaNum, timeFrom, timeTo, uuid);
+      console.log(slotsAvailableByDay, inspectionReqs, interval, selectedDates, eventTitle, ilcaNum, timeFrom, timeTo, uuid);
       postCreatedTimeslotToDB(
         slotsAvailableByDay,
+        inspectionReqs,
         interval,
         selectedDates,
         eventTitle,
@@ -308,7 +310,7 @@ const TimeslotPost = () => {
         <div>
           <div style={{ fontSize: 18 }}>
             {/* The unique identifier for your created timesheet is: {UUID} */}
-            The link to your newly created timesheet is <strong>localhost:3002/viewtimeslot/{UUID}</strong>
+            The link to your newly created timesheet is <strong>localhost:3000/viewtimeslot/{UUID}</strong>
           </div>
           <br />
           <div style={{ marginBottom: 15, fontSize: 18 }}>

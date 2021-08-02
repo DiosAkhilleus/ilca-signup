@@ -23,7 +23,6 @@ const ViewTimeslot = () => {
 
   const updateSelectedTimeslot = () => { // Passed to the timeslot component so that on inspection time request, the timeslots update to reflect the newly submitted request
     setTimeslot();
-    handleIDSubmission();
   }
 
   const handleIDSubmission = (timeslots) => { // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
@@ -65,6 +64,7 @@ const ViewTimeslot = () => {
             eventTitle={selectedTimeslot.eventTitle}
             UUID={id}
             updateSelectedTimeslot={updateSelectedTimeslot}
+            inspectionReqs={selectedTimeslot.inspectionReqs}
           />
         </div>
       )}

@@ -30,6 +30,7 @@ const Timeslot = ({
   slotsAvailableByDay,
   UUID,
   updateSelectedTimeslot,
+  inspectionReqs
 }) => {
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
@@ -42,9 +43,9 @@ const Timeslot = ({
   useEffect(() => {
     // Requests DB information on load to reflect the most recently entered list of sailors in the specific competition as well as the currently requested sailor equipment inspections
     getSailors().then((sailors) => setCurrentEntries(sailors));
-    getCurrentlyScheduledInspections().then((entries) =>
-      setScheduledInspections(entries)
-    );
+    // getCurrentlyScheduledInspections(UUID).then((entries) =>
+    //   setScheduledInspections(entries)
+    // );
   }, []);
 
   useEffect(() => {
@@ -59,19 +60,19 @@ const Timeslot = ({
     }
   }, [sailorID]);
 
-  const getInspectionsAndSubmitReq = (e) => {
-    // Retrieves already-scheduled inspections, then updates the timeslot information from the DB
-    getCurrentlyScheduledInspections().then((inspecs) => {
-      submitInspectionReq(inspecs);
-      setScheduledInspections(inspecs);
-    });
-    updateSelectedTimeslot(); // Passed from the parent component. Retrieves timeslot DB information
-    e.preventDefault();
-  };
+  // const getInspectionsAndSubmitReq = (e) => {
+  //   // Retrieves already-scheduled inspections, then updates the timeslot information from the DB
+  //   // getCurrentlyScheduledInspections().then((inspecs) => {
+  //   // });
+  //   updateSelectedTimeslot(); // Passed from the parent component. Retrieves timeslot DB information
+  //   submitInspectionReq();
+  //   // setScheduledInspections(inspecs);
+  //   e.preventDefault();
+  // };
 
-  const submitInspectionReq = (inspecs) => {
+  const submitInspectionReq = (e) => {
     // Submits an inspection request if all fields are filled out
-    console.log(inspecs);
+
     if (sailorID === '' || time === 0 || day === '') {
       alert('please enter Sailor ID and select a day and timeslot');
       // e.preventDefault();
@@ -87,7 +88,7 @@ const Timeslot = ({
       return;
     }
     if (
-      inspecs.filter((inspection) => inspection.sailorID === sailorID).length >
+      inspectionReqs.filter((inspection) => inspection.sailorID === sailorID).length >
       0
     ) {
       alert(`Sailor with ID: "${sailorID}" already entered for inspection.`);
@@ -99,9 +100,19 @@ const Timeslot = ({
     );
     let firstName = sailorEntry[0].name.firstName;
     let familyName = sailorEntry[0].name.familyName;
-    postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
-    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay);
-    // e.preventDefault();
+    let inspectionReq = {
+      eventTitle: eventTitle,
+      day: day, 
+      time: time, 
+      name: {
+        firstName: firstName,
+        familyName: familyName
+      },
+      sailorID: sailorID
+    }
+    // postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
+    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay, inspectionReq);
+    e.preventDefault();
   };
 
   const onInputChange = (event, value) => {
@@ -196,7 +207,14 @@ const Timeslot = ({
           style={{ marginTop: 10 }}
           variant="contained"
           type="submit"
-          onClick={(e) => getInspectionsAndSubmitReq(e)}
+          onClick={(e) => {
+            updateSelectedTimeslot();
+            if (inspectionReqs.filter((element) => element.sailorID === sailorID).length < 1) {
+            submitInspectionReq(e);
+            } else alert("Sailor already entered");
+            e.preventDefault();
+            }
+          }
         >
           Submit Inspection Request
         </Button>
