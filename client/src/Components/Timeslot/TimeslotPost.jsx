@@ -26,7 +26,6 @@ const TimeslotPost = () => {
   const [ilcaNum, setILCANum] = useState('');
   const [UUID, setUUID] = useState('');
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({});
-  const [inspectionReqs, setInspectionReqs] = useState([]);
   const [timeFrom, setTimeFrom] = useState(510);
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
   const [timeTo, setTimeTo] = useState(870);
@@ -45,6 +44,7 @@ const TimeslotPost = () => {
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
     setSelectedDates(formatted);
     setDateObj(formatted);
+  //eslint-disable-next-line
   }, [calendar]);
 
   useEffect(() => { // If the entry limit is adjusted, this will update each slot to reflect the new limit unless that slot is in that day's set of unavailable slots
@@ -60,6 +60,7 @@ const TimeslotPost = () => {
       );
     }
     setSlotsAvailableByDay(replacementObj);
+  //eslint-disable-next-line
   }, [entryLimit]);
 
   useEffect(() => { // Adjusts the format of the "Start Time" input value so that it is in milliseconds, the format needed for the SlotPicker component 
@@ -77,16 +78,14 @@ const TimeslotPost = () => {
   }, [endValue]);
 
   const handleTimeslotPost = () => { // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
-    // let selectedDates = getDates(calendar[0].startDate, calendar[0].endDate);
-    // selectedDates = selectedDates.map((date) =>
-    //   moment(date).format('YYYY-MM-DD')
-    // );
+   
     let uuid = uuidv4(); // creates unique ID for the DB entry
-
+    let inspectionReqs = [];
     setUUID(uuid);
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
+
       console.log(slotsAvailableByDay, inspectionReqs, interval, selectedDates, eventTitle, ilcaNum, timeFrom, timeTo, uuid);
       postCreatedTimeslotToDB(
         slotsAvailableByDay,

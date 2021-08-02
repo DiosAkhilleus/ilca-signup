@@ -27,14 +27,11 @@ export const postTimeslotReqToDB = (
 
 export const getCurrentlyScheduledInspections = (UUID) => {
   // Retrieves the full list of registered inspections
-  let currentReqs;
-
-  getTimeslots().then(
-    (results) =>
-      (currentReqs = results.filter((element) => element.uuid === UUID))
+  let currentReqs = getTimeslots().then(
+    (results) => {
+      return results.filter((element) => element.uuid === UUID)
+    }
   );
-  console.log(currentReqs);
-  // const filteredReqs = currentReqs.filter((element) => element.uuid === UUID).inspectionReqs;
   return currentReqs;
 };
 

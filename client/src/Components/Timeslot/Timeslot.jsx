@@ -4,8 +4,8 @@ import SlotPicker from 'slotpicker';
 import { Link } from 'react-router-dom';
 import { getSailors } from '../../javascript/sailorLogic';
 import {
-  postTimeslotReqToDB,
-  getCurrentlyScheduledInspections,
+  // postTimeslotReqToDB,
+  // getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
 } from '../../javascript/timeslotLogic';
 import Button from '@material-ui/core/Button';
@@ -29,13 +29,13 @@ const Timeslot = ({
   setActive,
   slotsAvailableByDay,
   UUID,
-  updateSelectedTimeslot,
-  inspectionReqs
+  setTimeslot,
+  inspectionReqs,
 }) => {
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
-  const [scheduledInspections, setScheduledInspections] = useState([]);
+  // const [scheduledInspections, setScheduledInspections] = useState([]);
   const [sailorID, setSailorID] = useState('');
   const [currentSailor, setCurrentSailor] = useState({});
   const [day, setDay] = useState(selectedDates[0] || '2021-01-01');
@@ -43,9 +43,6 @@ const Timeslot = ({
   useEffect(() => {
     // Requests DB information on load to reflect the most recently entered list of sailors in the specific competition as well as the currently requested sailor equipment inspections
     getSailors().then((sailors) => setCurrentEntries(sailors));
-    // getCurrentlyScheduledInspections(UUID).then((entries) =>
-    //   setScheduledInspections(entries)
-    // );
   }, []);
 
   useEffect(() => {
@@ -58,24 +55,13 @@ const Timeslot = ({
     } else {
       setCurrentSailor({});
     }
+    //eslint-disable-next-line
   }, [sailorID]);
-
-  // const getInspectionsAndSubmitReq = (e) => {
-  //   // Retrieves already-scheduled inspections, then updates the timeslot information from the DB
-  //   // getCurrentlyScheduledInspections().then((inspecs) => {
-  //   // });
-  //   updateSelectedTimeslot(); // Passed from the parent component. Retrieves timeslot DB information
-  //   submitInspectionReq();
-  //   // setScheduledInspections(inspecs);
-  //   e.preventDefault();
-  // };
 
   const submitInspectionReq = (e) => {
     // Submits an inspection request if all fields are filled out
-
     if (sailorID === '' || time === 0 || day === '') {
       alert('please enter Sailor ID and select a day and timeslot');
-      // e.preventDefault();
       return;
     }
     if (
@@ -84,15 +70,13 @@ const Timeslot = ({
       alert(
         `Sailor with ID: "${sailorID}" not found in current race entries. Sailor must be entered to request inspection`
       );
-      // e.preventDefault();
       return;
     }
     if (
-      inspectionReqs.filter((inspection) => inspection.sailorID === sailorID).length >
-      0
+      inspectionReqs.filter((inspection) => inspection.sailorID === sailorID)
+        .length > 0
     ) {
       alert(`Sailor with ID: "${sailorID}" already entered for inspection.`);
-      // e.preventDefault();
       return;
     }
     const sailorEntry = currentEntries.filter(
@@ -102,14 +86,14 @@ const Timeslot = ({
     let familyName = sailorEntry[0].name.familyName;
     let inspectionReq = {
       eventTitle: eventTitle,
-      day: day, 
-      time: time, 
+      day: day,
+      time: time,
       name: {
         firstName: firstName,
-        familyName: familyName
+        familyName: familyName,
       },
-      sailorID: sailorID
-    }
+      sailorID: sailorID,
+    };
     // postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
     updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay, inspectionReq);
     e.preventDefault();
@@ -133,10 +117,26 @@ const Timeslot = ({
       <button onClick={() => setActive(false)} style={{ marginTop: 10 }}>
         Select Different Event
       </button>
-      <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', width: '100%'}}>
-        <img src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg" alt="ILCA Logo" style={{width: 200}}/>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          width: '100%',
+        }}
+      >
+        <img
+          src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
+          alt="ILCA Logo"
+          style={{ width: 200 }}
+        />
         <h3>Event: {eventTitle}</h3>
-        <img src="https://sailing.laserinternational.org/regattauploads/2021/4_7Y/Event_Logo.png" alt="Event Logo" style={{width: 200}} />
+        <img
+          src="https://sailing.laserinternational.org/regattauploads/2021/4_7Y/Event_Logo.png"
+          alt="Event Logo"
+          style={{ width: 200 }}
+        />
       </div>
       <FormControl variant="filled" style={{ margin: 10, minWidth: 250 }}>
         <InputLabel id="demo-simple-select-filled-label">Date</InputLabel>
@@ -208,13 +208,15 @@ const Timeslot = ({
           variant="contained"
           type="submit"
           onClick={(e) => {
-            updateSelectedTimeslot();
-            if (inspectionReqs.filter((element) => element.sailorID === sailorID).length < 1) {
-            submitInspectionReq(e);
-            } else alert("Sailor already entered");
+            setTimeslot();
+            if (
+              inspectionReqs.filter((element) => element.sailorID === sailorID)
+                .length < 1
+            ) {
+              submitInspectionReq(e);
+            } else alert('Sailor already entered');
             e.preventDefault();
-            }
-          }
+          }}
         >
           Submit Inspection Request
         </Button>
