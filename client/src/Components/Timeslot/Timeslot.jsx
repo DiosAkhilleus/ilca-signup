@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { getSailors } from '../../javascript/sailorLogic';
 import {
   // postTimeslotReqToDB,
-  // getCurrentlyScheduledInspections,
+  getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
 } from '../../javascript/timeslotLogic';
 import Button from '@material-ui/core/Button';
@@ -35,6 +35,7 @@ const Timeslot = ({
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
   const [currentEntries, setCurrentEntries] = useState([]);
+  const [requestingInspection, setRequestingInspection] = useState(false);
   // const [scheduledInspections, setScheduledInspections] = useState([]);
   const [sailorID, setSailorID] = useState('');
   const [currentSailor, setCurrentSailor] = useState({});
@@ -58,6 +59,10 @@ const Timeslot = ({
     //eslint-disable-next-line
   }, [sailorID]);
 
+  const refreshOnSubmit = () => {
+    window.location.reload();
+  }
+
   const submitInspectionReq = (e) => {
     // Submits an inspection request if all fields are filled out
     if (sailorID === '' || time === 0 || day === '') {
@@ -72,31 +77,46 @@ const Timeslot = ({
       );
       return;
     }
-    if (
-      inspectionReqs.filter((inspection) => inspection.sailorID === sailorID)
-        .length > 0
-    ) {
-      alert(`Sailor with ID: "${sailorID}" already entered for inspection.`);
-      return;
-    }
-    const sailorEntry = currentEntries.filter(
-      (entry) => entry.sailorID === sailorID
-    );
-    let firstName = sailorEntry[0].name.firstName;
-    let familyName = sailorEntry[0].name.familyName;
-    let inspectionReq = {
-      eventTitle: eventTitle,
-      day: day,
-      time: time,
-      name: {
-        firstName: firstName,
-        familyName: familyName,
-      },
-      sailorID: sailorID,
-    };
-    // postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
-    updateTimeslotByUUID(UUID, day, time, slotsAvailableByDay, inspectionReq);
-    e.preventDefault();
+    getCurrentlyScheduledInspections(UUID).then(
+      (currentlyScheduledInspections) => {
+        if (
+          currentlyScheduledInspections.filter(
+            (inspection) => inspection.sailorID === sailorID
+          ).length > 0
+        ) {
+          alert(
+            `Sailor with ID: "${sailorID}" already entered for inspection.`
+          );
+          return;
+        }
+        const sailorEntry = currentEntries.filter(
+          (entry) => entry.sailorID === sailorID
+        );
+        let firstName = sailorEntry[0].name.firstName;
+        let familyName = sailorEntry[0].name.familyName;
+        let inspectionReq = {
+          eventTitle: eventTitle,
+          day: day,
+          time: time,
+          name: {
+            firstName: firstName,
+            familyName: familyName,
+          },
+          sailorID: sailorID,
+        };
+        // postTimeslotReqToDB(eventTitle, sailorID, firstName, familyName, time, day);
+        updateTimeslotByUUID(
+          UUID,
+          day,
+          time,
+          slotsAvailableByDay,
+          inspectionReq, 
+        );
+        setRequestingInspection(true);
+        setTimeout(refreshOnSubmit, 500);
+        }
+      );
+      e.preventDefault();
   };
 
   const onInputChange = (event, value) => {
@@ -201,20 +221,15 @@ const Timeslot = ({
               {currentSailor.name.familyName}
             </h3>
           )}
+          {requestingInspection === true ? <h3>Sending Inspection Request...</h3> : ''}
         </div>
         <Button
           color="primary"
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 10, marginBottom: 40 }}
           variant="contained"
           type="submit"
           onClick={(e) => {
-            setTimeslot();
-            if (
-              inspectionReqs.filter((element) => element.sailorID === sailorID)
-                .length < 1
-            ) {
-              submitInspectionReq(e);
-            } else alert('Sailor already entered');
+            submitInspectionReq(e);
             e.preventDefault();
           }}
         >

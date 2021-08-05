@@ -29,7 +29,9 @@ export const getCurrentlyScheduledInspections = (UUID) => {
   // Retrieves the full list of registered inspections
   let currentReqs = getTimeslots().then(
     (results) => {
-      return results.filter((element) => element.uuid === UUID)
+
+      let filteredResults = results.filter((element) => element.uuid === UUID);
+      return filteredResults[0].inspectionReqs;
     }
   );
   return currentReqs;
@@ -80,7 +82,7 @@ export const updateTimeslotByUUID = async (
   day,
   time,
   slotsAvailableByDay,
-  inspectionReq
+  inspectionReq,
 ) => {
   // Sends a PUT request to update a timeslot's information based on a new inspection request
   let correctDaySlots = slotsAvailableByDay[day].entriesLeft;
@@ -91,7 +93,6 @@ export const updateTimeslotByUUID = async (
     }
   }
   correctDaySlots[index][1] -= 1;
-  console.log(correctDaySlots, index);
 
   if (correctDaySlots[index][1] === 0) {
     slotsAvailableByDay[day].unavailableSlots.push(correctDaySlots[index][0]);
