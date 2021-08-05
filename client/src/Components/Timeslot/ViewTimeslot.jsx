@@ -43,15 +43,13 @@ const ViewTimeslot = () => {
           <Timeslot 
             setActive={setActive}
             interval={selectedTimeslot.interval}
-            entryLimit={selectedTimeslot.entryLimit}
+            ilcaNum={selectedTimeslot.ilcaNum}
             slotsAvailableByDay={selectedTimeslot.slotsAvailableByDay}
             timeFrom={selectedTimeslot.timeFrom}
             timeTo={selectedTimeslot.timeTo}
             selectedDates={selectedTimeslot.selectedDates}
             eventTitle={selectedTimeslot.eventTitle}
             UUID={id}
-            setTimeslot={setTimeslot}
-            inspectionReqs={selectedTimeslot.inspectionReqs}
           />
         </div>
       )}

@@ -4,7 +4,6 @@ import SlotPicker from 'slotpicker';
 import { Link } from 'react-router-dom';
 import { getSailors } from '../../javascript/sailorLogic';
 import {
-  // postTimeslotReqToDB,
   getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
 } from '../../javascript/timeslotLogic';
@@ -20,7 +19,6 @@ import '../../App.css';
 
 const Timeslot = ({
   interval,
-  entryLimit,
   timeFrom,
   timeTo,
   selectedDates,
@@ -29,8 +27,6 @@ const Timeslot = ({
   setActive,
   slotsAvailableByDay,
   UUID,
-  setTimeslot,
-  inspectionReqs,
 }) => {
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0);
@@ -43,7 +39,8 @@ const Timeslot = ({
 
   useEffect(() => {
     // Requests DB information on load to reflect the most recently entered list of sailors in the specific competition as well as the currently requested sailor equipment inspections
-    getSailors().then((sailors) => setCurrentEntries(sailors));
+    getSailors(ilcaNum).then((sailors) => setCurrentEntries(sailors));
+    //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
