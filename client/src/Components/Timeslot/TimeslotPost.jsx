@@ -19,18 +19,19 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
 const TimeslotPost = () => {
-  const [interval, setInterval] = useState(30);
-  const [selectedDates, setSelectedDates] = useState([]);
-  const [entryLimit, setEntryLimit] = useState(0);
-  const [eventTitle, setEventTitle] = useState('');
-  const [ilcaNum, setILCANum] = useState('');
-  const [UUID, setUUID] = useState('');
-  const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({});
-  const [timeFrom, setTimeFrom] = useState(510);
-  const [startValue, setStartValue] = useState(moment('2021-01-01 08:30'));
-  const [timeTo, setTimeTo] = useState(870);
-  const [endValue, setEndValue] = useState(moment('2021-01-01 14:30'));
+  const [interval, setInterval] = useState(30); // The time interval between signup time options
+  const [selectedDates, setSelectedDates] = useState([]); // An array representing the dates during which the event will take place
+  const [entryLimit, setEntryLimit] = useState(0); // The initial entry limit for all time options, though each time option can later be individually adjusted
+  const [eventTitle, setEventTitle] = useState(''); // The title for the event
+  const [ilcaNum, setILCANum] = useState(''); // The number designation for the particular event, which will be used in the future for an API call requesting event information
+  const [UUID, setUUID] = useState(''); // The UUID that will be created, then used for searching the DB for the correct inspection signup
+  const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({}); // This is the object that will represent all the information for each day, including unavailable slots and number of signups left per time option
+  const [timeFrom, setTimeFrom] = useState(510); // The start time for each day of inspection signup
+  const [startValue, setStartValue] = useState(moment('2021-01-01 08:30')); // The initial time for the starting time selector
+  const [timeTo, setTimeTo] = useState(870); // The end time for each day of inspection signup
+  const [endValue, setEndValue] = useState(moment('2021-01-01 14:30')); // The initial time for the ending time selector
   const [calendar, setCalendar] = useState([
+    // The calendar's state information
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -38,16 +39,17 @@ const TimeslotPost = () => {
     },
   ]);
 
-  
-  useEffect(() => { // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
+  useEffect(() => {
+    // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
     let days = getDates(calendar[0].startDate, calendar[0].endDate);
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
     setSelectedDates(formatted);
     setDateObj(formatted);
-  //eslint-disable-next-line
+    //eslint-disable-next-line
   }, [calendar]);
 
-  useEffect(() => { // If the entry limit is adjusted, this will update each slot to reflect the new limit unless that slot is in that day's set of unavailable slots
+  useEffect(() => {
+    // If the entry limit is adjusted, this will update each slot to reflect the new limit unless that slot is in that day's set of unavailable slots
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     for (let el in replacementObj) {
       replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map(
@@ -60,34 +62,35 @@ const TimeslotPost = () => {
       );
     }
     setSlotsAvailableByDay(replacementObj);
-  //eslint-disable-next-line
+    //eslint-disable-next-line
   }, [entryLimit]);
 
-  useEffect(() => { // Adjusts the format of the "Start Time" input value so that it is in milliseconds, the format needed for the SlotPicker component 
+  useEffect(() => {
+    // Adjusts the format of the "Start Time" input value so that it is in milliseconds, the format needed for the SlotPicker component
     const start = moment(startValue._d.toString()).format('HH:mm');
     const parsedStart = start.split(':').map((el) => parseInt(el));
-    const startTimeSum = parsedStart[0] * 60 + parsedStart[1]; 
+    const startTimeSum = parsedStart[0] * 60 + parsedStart[1];
     setTimeFrom(startTimeSum); // For instance... ('08:30') would be transformed to 510
   }, [startValue]);
 
-  useEffect(() => { // Adjusts the format of the "End Time" input value so that it is in milliseconds, the format needed for the SlotPicker component
+  useEffect(() => {
+    // Adjusts the format of the "End Time" input value so that it is in milliseconds, the format needed for the SlotPicker component
     const end = moment(endValue._d.toString()).format('HH:mm');
     const parsedEnd = end.split(':').map((el) => parseInt(el));
     const endTimeSum = parsedEnd[0] * 60 + parsedEnd[1];
     setTimeTo(endTimeSum);
   }, [endValue]);
 
-  const handleTimeslotPost = () => { // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
-   
+  const handleTimeslotPost = () => {
+    // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
+
     let uuid = uuidv4(); // creates unique ID for the DB entry
     let inspectionReqs = [];
     setUUID(uuid);
     if (entryLimit === 0 || eventTitle === '') {
       alert('Please fill out all fields');
     } else {
-
-      console.log(slotsAvailableByDay, inspectionReqs, interval, selectedDates, eventTitle, ilcaNum, timeFrom, timeTo, uuid);
-      postCreatedTimeslotToDB(
+      console.log(
         slotsAvailableByDay,
         inspectionReqs,
         interval,
@@ -98,16 +101,30 @@ const TimeslotPost = () => {
         timeTo,
         uuid
       );
-    };
+      postCreatedTimeslotToDB(
+        // Creates a POST request, adding a new inspection signup entry to the DB
+        slotsAvailableByDay,
+        inspectionReqs,
+        interval,
+        selectedDates,
+        eventTitle,
+        ilcaNum,
+        timeFrom,
+        timeTo,
+        uuid
+      );
+    }
   };
   //eslint-disable-next-line
-  Date.prototype.addDays = function (days) { // Function added from outside source that adds a method to Date. Probably not best practice.
+  Date.prototype.addDays = function (days) {
+    // Function added from outside source that adds a method to Date. Probably not best practice.
     var dat = new Date(this.valueOf());
     dat.setDate(dat.getDate() + days);
     return dat;
   };
 
-  const getDates = (startDate, stopDate) => { // Returns an Array of dates between two dates (inclusive)
+  const getDates = (startDate, stopDate) => {
+    // Returns an Array of dates between two dates (inclusive)
     let dateArray = [];
     let currentDate = startDate;
     while (currentDate <= stopDate) {
@@ -117,22 +134,27 @@ const TimeslotPost = () => {
     return dateArray;
   };
 
-  const handleNumberInput = (e) => { // Sets limits on what can be entered into the entry limit text field
+  const handleNumberInput = (e) => {
+    // Sets limits on what can be entered into the entry limit text field
     let val = e.target.value;
-    const regexp = /^[0-9\b]+$/; // 
-    if (regexp.test(val) || val === '') { // If the value only includes numbers or has a string value of ''
+    const regexp = /^[0-9\b]+$/; //
+    if (regexp.test(val) || val === '') {
+      // If the value only includes numbers or has a string value of ''
       setEntryLimit(parseInt(val));
     }
     console.log(slotsAvailableByDay);
   };
 
-  const setDateObj = (days) => { // Creates the slotsAvailableByDay object from the days array (days between start and end)
+  const setDateObj = (days) => {
+    // Creates the slotsAvailableByDay object from the days array (days between start and end)
     let slotsObj = {};
     let dailyArr = [];
-    for (let i = timeFrom; i <= timeTo - interval; i += interval) { // this creates an array of the form [[time, entryLimit], ...] from the start time to the end time 
-        dailyArr.push([i, entryLimit]);
+    for (let i = timeFrom; i <= timeTo - interval; i += interval) {
+      // this creates an array of the form [[time, entryLimit], ...] from the start time to the end time
+      dailyArr.push([i, entryLimit]);
     }
-    for (let element of days) { // add key value pairs of entriesLeft and unavailableSlots
+    for (let element of days) {
+      // add key value pairs of entriesLeft and unavailableSlots
       slotsObj[element] = {};
       slotsObj[element].entriesLeft = dailyArr;
       slotsObj[element].unavailableSlots = [];
@@ -140,29 +162,34 @@ const TimeslotPost = () => {
     setSlotsAvailableByDay(slotsObj);
   };
 
-  const handleSetUnavailable = (el, slot) => { // Controls the effects of setting a slot unavailable by clicking on the slot;
+  const handleSetUnavailable = (el, slot) => {
+    // Controls the effects of setting a slot unavailable by clicking on the slot;
     // console.log(el);
     let replacementObj = Object.assign({}, slotsAvailableByDay); // new placeholder object matching slotsAvailableByDay
-    replacementObj[el].unavailableSlots = [ // adds the selected slot to that day's unavailable slots array
+    replacementObj[el].unavailableSlots = [
+      // adds the selected slot to that day's unavailable slots array
       ...replacementObj[el].unavailableSlots,
       slot,
     ];
     console.log(replacementObj, replacementObj[el]);
-    replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map((item, index) => {
-      if (replacementObj[el].unavailableSlots.indexOf(item[0]) > -1) {
-        return [item[0], 0]
-      } else return item;
-    })
-    
+    replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map(
+      (item, index) => {
+        if (replacementObj[el].unavailableSlots.indexOf(item[0]) > -1) {
+          return [item[0], 0];
+        } else return item;
+      }
+    );
+
     setSlotsAvailableByDay(replacementObj);
   };
-  
+
   const resetUnavailable = (el) => {
+    // Resets the unavailable slots for the selected day
     console.log(el);
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     replacementObj[el].unavailableSlots = [];
     setSlotsAvailableByDay(replacementObj);
-  }
+  };
 
   return (
     <div className="timeslot-post">
@@ -270,8 +297,10 @@ const TimeslotPost = () => {
               <strong>{moment(el).format('D MMMM YYYY')}</strong>
             </div>
             <button
-              onClick={() => {resetUnavailable(el)}}
-              style={{marginBottom: 20}}
+              onClick={() => {
+                resetUnavailable(el);
+              }}
+              style={{ marginBottom: 20 }}
             >
               Reset Unavailable Slots For This Day
             </button>
@@ -309,12 +338,13 @@ const TimeslotPost = () => {
         <div>
           <div style={{ fontSize: 18 }}>
             {/* The unique identifier for your created timesheet is: {UUID} */}
-            The link to your newly created timesheet is <strong>localhost:3000/viewtimeslot/{UUID}</strong>
+            The link to your newly created timesheet is{' '}
+            <strong>localhost:3000/viewtimeslot/{UUID}</strong>
           </div>
           <br />
           <div style={{ marginBottom: 15, fontSize: 18 }}>
-            Save this link somewhere to send to sailors. It will be their only way
-            to access the signup you created.
+            Save this link somewhere to send to sailors. It will be their only
+            way to access the signup you created.
           </div>
         </div>
       ) : (

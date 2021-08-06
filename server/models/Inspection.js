@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+// THIS IS DEPRECATED AND NO LONGER IN USE
+
 const NameSchema = new mongoose.Schema({
   firstName: {
     type: String,

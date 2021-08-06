@@ -1,30 +1,5 @@
 import Axios from 'axios';
 
-export const postTimeslotReqToDB = (
-  eventTitle,
-  sailorID,
-  firstName,
-  familyName,
-  time,
-  day
-) => {
-  // Posts a timeslot request to the DB with all relevant information. May need to be updated in the future.
-  Axios.post('http://localhost:3001/reqtimeslot', {
-    eventTitle: eventTitle,
-    sailorID: sailorID,
-    name: {
-      firstName: firstName,
-      familyName: familyName,
-    },
-    time: time,
-    day: day,
-  }).then(
-    alert(
-      `Inspection successfully requested for "${firstName} ${familyName}" with ID: "${sailorID}"`
-    )
-  );
-};
-
 export const getCurrentlyScheduledInspections = (UUID) => {
   // Retrieves the full list of registered inspections
   let currentReqs = getTimeslots().then(
@@ -38,7 +13,7 @@ export const getCurrentlyScheduledInspections = (UUID) => {
 };
 
 export const postCreatedTimeslotToDB = (
-  // Posts a newly created timeslot to the DB. Will need to be updated soon.
+  // Posts a newly created inspection signup to the DB
   slotsAvailableByDay,
   inspectionReqs,
   interval,
@@ -49,7 +24,6 @@ export const postCreatedTimeslotToDB = (
   timeTo,
   uuid
 ) => {
-  //slotsAvailableByDay, interval, selectedDates, eventTitle, timeFrom, timeTo, uuid
   Axios.post('http://localhost:3001/timeslots/created/', {
     slotsAvailableByDay: slotsAvailableByDay,
     inspectionReqs: inspectionReqs,
@@ -96,7 +70,6 @@ export const updateTimeslotByUUID = async (
 
   if (correctDaySlots[index][1] === 0) {
     slotsAvailableByDay[day].unavailableSlots.push(correctDaySlots[index][0]);
-    // console.log(unavailable)
   }
   slotsAvailableByDay[day].entriesLeft = correctDaySlots;
   getTimeslots().then(

@@ -13,13 +13,13 @@ const DB = process.env.DB;
 app.use(express.json());
 app.use(cors());
 
-connectToDB();
+connectToDB(); // Connects to MongoDB
 
 app.get('/', (req, res) => {
   console.log(req.baseUrl);
 });
 
-app.get('/sailorinfo', (req, res) => {
+app.get('/sailorinfo', (req, res) => { // Retrieves all entered sailors
   SailorModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -28,16 +28,9 @@ app.get('/sailorinfo', (req, res) => {
   });
 });
 
-app.get('/timeslots/filled', (req, res) => {
-  InspectionModel.find({}, (err, result) => {
-    if (err) {
-      res.send(err);
-    }
-    res.send(result);
-  });
-});
 
-app.get('/timeslots/options', async (req, res) => {
+
+app.get('/timeslots/options', async (req, res) => { // Retrieves all inspection signups created by admin
   TimeslotOptionModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -46,7 +39,7 @@ app.get('/timeslots/options', async (req, res) => {
   });
 });
 
-app.post('/timeslots/created', async (req, res) => {
+app.post('/timeslots/created', async (req, res) => { // Posts a new inspection signup from the admin page
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const inspectionReqs = req.body.inspectionReqs;
   const interval = req.body.interval;
@@ -76,7 +69,7 @@ app.post('/timeslots/created', async (req, res) => {
   res.end('Posted Timeslot');
 });
 
-app.put('/timeslots/update/:uuid', async (req, res) => {
+app.put('/timeslots/update/:uuid', async (req, res) => { // Updates an inspection signup by UUID
   const uuid = req.params.uuid;
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const unavailableSlots = req.body.unavailableSlots;
@@ -98,7 +91,7 @@ app.put('/timeslots/update/:uuid', async (req, res) => {
   );
 });
 
-app.post('/insertsailor', async (req, res) => {
+app.post('/insertsailor', async (req, res) => { // Adds a new sailor to the currently entered sailors list
   const sailorID = req.body.sailorID;
   const name = req.body.name;
   const sailNumber = req.body.sailNumber;
@@ -121,29 +114,6 @@ app.post('/insertsailor', async (req, res) => {
   }
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end('Posted User');
-});
-
-app.post('/reqtimeslot', async (req, res) => {
-  const eventTitle = req.body.eventTitle;
-  const sailorID = req.body.sailorID;
-  const name = req.body.name;
-  const time = req.body.time;
-  const day = req.body.day;
-  console.log(eventTitle, sailorID, name, time, day);
-  const inspection = new InspectionModel({
-    eventTitle: eventTitle,
-    sailorID: sailorID,
-    name: name,
-    time: time,
-    day: day,
-  });
-  try {
-    await inspection.save();
-  } catch (err) {
-    console.error(err);
-  }
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end('Posted Timeslot Request');
 });
 
 app.listen(PORT, () => {
