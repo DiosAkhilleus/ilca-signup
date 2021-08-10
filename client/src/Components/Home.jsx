@@ -9,9 +9,9 @@ const Home = () => {
       {/* <Link className='home-link' to='/timeslots'>Time Slot Selector</Link> */}
       {/* <Link className='home-link' to='/posttimeslot'>Post Time Slot</Link> */}
       {/* <Link className='home-link' to='/viewtimeslot'>View Time Slot</Link> */}
-      <Link className='home-link' to='/admin'>Admin Page</Link>
-      <Link className='home-link' to='/postsailor'>New Sailor Form</Link>
-      <Link className='home-link' to='/displaysailors'>Show all entered sailors</Link> 
+      <Link className='link' to='/admin'>Admin Page</Link>
+      <Link className='link' to='/postsailor'>New Sailor Form</Link>
+      <Link className='link' to='/displaysailors'>Show all entered sailors</Link> 
     </div>
   );
 };
