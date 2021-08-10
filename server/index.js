@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
 const SailorModel = require('./models/Sailor');
-const InspectionModel = require('./models/Inspection');
 const TimeslotOptionModel = require('./models/TimeslotOptions');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
-const DB = process.env.DB;
 
 app.use(express.json());
 app.use(cors());
