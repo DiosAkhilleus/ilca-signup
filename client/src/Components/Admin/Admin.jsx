@@ -20,7 +20,7 @@ const Admin = () => {
       <Link className='link' to='/admin/create'>Create Inspection Signup</Link>
       <h3>Created Events</h3>
       <div style={{height: '50vw'}}>
-        {timeslots.map((el, index) => <Link className='link' to={`/admin/event/${el.ilcaNum}`}>{el.eventTitle}</Link>)}
+        {timeslots.map((el, index) => <Link key={index} className='link' to={`/admin/event/${el.ilcaNum}`}>{el.eventTitle}</Link>)}
       </div>
     </div>
   )
