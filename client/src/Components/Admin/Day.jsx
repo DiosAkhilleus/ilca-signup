@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
+import moment from 'moment';
 import '../../App.css';
 
 const Day = ({
@@ -36,7 +37,7 @@ const Day = ({
           paddingBottom: 10,
         }}
       >
-        {date}
+        {moment(date).format('MMM. DD, yyyy')}
       </h2>
       <div className="admin-day-slot-container">
         {slotsByDay
