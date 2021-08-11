@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getSignupByEventNum } from '../../javascript/adminLogic';
+import { updateSailorInspection } from '../../javascript/adminLogic';
+import Button from '@material-ui/core/Button';
 import Day from './Day';
 
 const ViewEvent = () => {
@@ -10,6 +12,10 @@ const ViewEvent = () => {
   const [dates, setDates] = useState([]);
   const [slotsByDay, setSlotsByDay] = useState({});
   const [registered, setRegistered] = useState([]);
+  const [moveToggle, setMoveToggle] = useState(false);
+  const [toggledTime, setToggledTime] = useState(0);
+  const [toggledDate, setToggledDate] = useState('');
+  const [sailorToMove, setSailorToMove] = useState('');
 
   useEffect(() => {
     getSignupByEventNum(ilcaNum).then((results) => {
@@ -27,10 +33,45 @@ const ViewEvent = () => {
     }
   }, [currentSignup]);
 
+  const toggleSailorMove = (sailorID, time, day) => {
+      setMoveToggle(true);
+      setSailorToMove(sailorID);
+      setToggledTime(time);
+      setToggledDate(day);
+    console.log(sailorID, time);
+  };
+
+  const unToggleSailorMove = (sailorID) => {
+    setMoveToggle(false);
+    setSailorToMove('');
+  }
+
+  const moveSailorInDB = (sailorID, timeTo, day, slotsIndex) => {
+    updateSailorInspection(sailorID, toggledTime, timeTo, day, registered, ilcaNum, slotsByDay, slotsIndex);
+    setMoveToggle(false);
+    setSailorToMove('');
+    // setTimeout(window.location.reload(), 500)
+  }
+
   const getRegistered = (time, date) => {
     return registered
       .filter((item) => item.time === time && item.day === date)
-      .map((el, ind) => <div className="reg-sailor" key={ind}><strong>{el.sailorID}</strong></div>);
+      .map((el, ind) => (
+        <div className="reg-sailor" key={ind}>
+          <strong>{el.sailorID}</strong>
+          {moveToggle === false ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => toggleSailorMove(el.sailorID, el.time, el.day)}
+            >
+              Move
+            </Button>
+          ) : (
+            ''
+          )}
+        </div>
+      ));
   };
 
   return (
@@ -67,6 +108,12 @@ const ViewEvent = () => {
                 date={date}
                 slotsByDay={slotsByDay}
                 getRegistered={getRegistered}
+                moveToggle={moveToggle}
+                toggledTime={toggledTime}
+                toggledDate={toggledDate}
+                unToggle={unToggleSailorMove}
+                sailorToMove={sailorToMove}
+                moveSailorInDB={moveSailorInDB}
               />
             ))
           : ''}
