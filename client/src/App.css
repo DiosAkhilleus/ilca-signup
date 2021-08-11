@@ -309,6 +309,11 @@ body {
   margin-bottom: 10px;
 }
 
+.reg-sailor {
+  display: flex;
+  flex-direction: column;
+}
+
 .admin-event-title {
   font-size: 30px;
   text-align: center;
