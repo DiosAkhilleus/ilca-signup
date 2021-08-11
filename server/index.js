@@ -17,7 +17,8 @@ app.get('/', (req, res) => {
   console.log(req.baseUrl);
 });
 
-app.get('/sailorinfo', (req, res) => { // Retrieves all entered sailors
+app.get('/sailorinfo', (req, res) => {
+  // Retrieves all entered sailors
   SailorModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -26,9 +27,28 @@ app.get('/sailorinfo', (req, res) => { // Retrieves all entered sailors
   });
 });
 
+app.put('/timeslots/updateinspecs/:ilcaNum', async (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
+  const inspectionReqs = req.body.inspectionReqs;
+  const slotsAvailableByDay = req.body.slotsAvailableByDay;
+  TimeslotOptionModel.findOneAndUpdate(
+    { ilcaNum: ilcaNum },
+    {
+      inspectionReqs: inspectionReqs, 
+      slotsAvailableByDay: slotsAvailableByDay
+    },
+    { new: true, useFindAndModify: false },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    }
+  );
+});
 
-
-app.get('/timeslots/options', async (req, res) => { // Retrieves all inspection signups created by admin
+app.get('/timeslots/options', async (req, res) => {
+  // Retrieves all inspection signups created by admin
   TimeslotOptionModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -37,7 +57,8 @@ app.get('/timeslots/options', async (req, res) => { // Retrieves all inspection 
   });
 });
 
-app.post('/timeslots/created', async (req, res) => { // Posts a new inspection signup from the admin page
+app.post('/timeslots/created', async (req, res) => {
+  // Posts a new inspection signup from the admin page
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const inspectionReqs = req.body.inspectionReqs;
   const interval = req.body.interval;
@@ -67,7 +88,8 @@ app.post('/timeslots/created', async (req, res) => { // Posts a new inspection s
   res.end('Posted Timeslot');
 });
 
-app.put('/timeslots/update/:uuid', async (req, res) => { // Updates an inspection signup by UUID
+app.put('/timeslots/update/:uuid', async (req, res) => {
+  // Updates an inspection signup by UUID
   const uuid = req.params.uuid;
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const unavailableSlots = req.body.unavailableSlots;
@@ -77,7 +99,7 @@ app.put('/timeslots/update/:uuid', async (req, res) => { // Updates an inspectio
     {
       slotsAvailableByDay: slotsAvailableByDay,
       unavailableSlots: unavailableSlots,
-      inspectionReqs: inspectionReqs
+      inspectionReqs: inspectionReqs,
     },
     { new: true, useFindAndModify: false },
     (err, result) => {
@@ -89,7 +111,8 @@ app.put('/timeslots/update/:uuid', async (req, res) => { // Updates an inspectio
   );
 });
 
-app.post('/insertsailor', async (req, res) => { // Adds a new sailor to the currently entered sailors list
+app.post('/insertsailor', async (req, res) => {
+  // Adds a new sailor to the currently entered sailors list
   const sailorID = req.body.sailorID;
   const name = req.body.name;
   const sailNumber = req.body.sailNumber;
