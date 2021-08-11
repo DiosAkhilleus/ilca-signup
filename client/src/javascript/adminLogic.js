@@ -10,6 +10,7 @@ export const getSignupByEventNum = (ilcaNum) => {
 };
 
 export const updateSailorInspection = (
+  // Updates the DB by changing a sailor's inspection time and date to the newly modified ones, as well as updating the slots remaining for the 'from' time as well as the 'to' time
   sailorID,
   timeFrom,
   timeTo,

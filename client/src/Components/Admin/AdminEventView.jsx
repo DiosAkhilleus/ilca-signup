@@ -7,17 +7,18 @@ import Button from '@material-ui/core/Button';
 import Day from './Day';
 
 const ViewEvent = () => {
-  const { ilcaNum } = useParams();
-  const [currentSignup, setCurrentSignup] = useState({});
-  const [dates, setDates] = useState([]);
-  const [slotsByDay, setSlotsByDay] = useState({});
-  const [registered, setRegistered] = useState([]);
-  const [moveToggle, setMoveToggle] = useState(false);
-  const [toggledTime, setToggledTime] = useState(0);
-  const [toggledDate, setToggledDate] = useState('');
-  const [sailorToMove, setSailorToMove] = useState('');
+  const { ilcaNum } = useParams(); // The event number, used to retrieve the correct event from the DB
+  const [currentSignup, setCurrentSignup] = useState({}); // The event matching the ilcaNum from params
+  const [dates, setDates] = useState([]); // The set of dates in the event
+  const [slotsByDay, setSlotsByDay] = useState({}); // The slotsAvailableByDay object from the event's DB entry
+  const [registered, setRegistered] = useState([]); // The current list of people registered for equipment inspection
+  const [moveToggle, setMoveToggle] = useState(false); // Whether or not a sailor has been toggle by the admin for moving
+  const [toggledTime, setToggledTime] = useState(0); // The sailor-toggled-to-move's original inspection time
+  const [toggledDate, setToggledDate] = useState(''); // The sailor-toggled-to-move's original inspection date
+  const [sailorToMove, setSailorToMove] = useState(''); // The sailor-toggled-to-move's sailorID, e.g. 'AUTAM6'
 
   useEffect(() => {
+    // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
       setCurrentSignup(results[0]);
     });
@@ -34,31 +35,47 @@ const ViewEvent = () => {
   }, [currentSignup]);
 
   const toggleSailorMove = (sailorID, time, day) => {
-      setMoveToggle(true);
-      setSailorToMove(sailorID);
-      setToggledTime(time);
-      setToggledDate(day);
-    console.log(sailorID, time);
+    // Toggles whether or not a sailor is being moved by admin to a different time/day
+    setMoveToggle(true);
+    setSailorToMove(sailorID);
+    setToggledTime(time);
+    setToggledDate(day);
   };
 
-  const unToggleSailorMove = (sailorID) => {
+  const unToggleSailorMove = () => {
+    // Untoggles sailor movement
     setMoveToggle(false);
     setSailorToMove('');
-  }
+  };
 
   const moveSailorInDB = (sailorID, timeTo, day, slotsIndex) => {
-    updateSailorInspection(sailorID, toggledTime, timeTo, day, registered, ilcaNum, slotsByDay, slotsIndex);
+    updateSailorInspection( // Put request to DB updating both the sailor's inspection time/day and the slots available for the time 'from' and time 'to'
+      sailorID,
+      toggledTime,
+      timeTo,
+      day,
+      registered,
+      ilcaNum,
+      slotsByDay,
+      slotsIndex
+    );
     setMoveToggle(false);
     setSailorToMove('');
-    // setTimeout(window.location.reload(), 500)
-  }
+  };
 
   const getRegistered = (time, date) => {
     return registered
       .filter((item) => item.time === time && item.day === date)
       .map((el, ind) => (
         <div className="reg-sailor" key={ind}>
-          <strong>{el.sailorID}</strong>
+          {el.sailorID === sailorToMove ? (
+            <strong style={{ color: 'orange' }}>
+              <i>{el.sailorID}</i>
+            </strong>
+          ) : (
+            <strong>{el.sailorID}</strong>
+          )}
+
           {moveToggle === false ? (
             <Button
               variant="contained"

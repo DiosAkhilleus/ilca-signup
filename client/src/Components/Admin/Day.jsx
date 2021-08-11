@@ -11,9 +11,10 @@ const Day = ({
   toggledDate,
   unToggle,
   sailorToMove,
-  moveSailorInDB
+  moveSailorInDB,
 }) => {
   const changeTimeFormat = (time) => {
+    // Modifies time format for 'HH:MM' display. Possibly a better way to do this, but not sure.
     let div = time / 60;
     let minutes = time % 60;
     let hours = Math.floor(div);
@@ -44,7 +45,6 @@ const Day = ({
                 {
                   <div className="admin-reg-sailors-container">
                     {changeTimeFormat(info[0])}{' '}
-                    {/* sets the received time to 'HH:MM' format */}
                     <div className="reg-sailor-flex">
                       {getRegistered(info[0], date)}
                     </div>
@@ -65,7 +65,8 @@ const Day = ({
                       ''
                     )}
                     {moveToggle === true &&
-                    (info[0] !== toggledTime || date !== toggledDate) && info[1] > 0 ? (
+                    (info[0] !== toggledTime || date !== toggledDate) &&
+                    info[1] > 0 ? (
                       <Button
                         variant="contained"
                         style={{
@@ -73,7 +74,9 @@ const Day = ({
                           color: 'white',
                           marginBottom: 10,
                         }}
-                        onClick={() => {moveSailorInDB(sailorToMove, info[0], date, ind)}} // function params are sailorID, time, and date to which the sailor will be moved
+                        onClick={() => {
+                          moveSailorInDB(sailorToMove, info[0], date, ind);
+                        }} // function params are sailorID, time, and date to which the sailor will be moved
                       >
                         Place Here
                       </Button>
