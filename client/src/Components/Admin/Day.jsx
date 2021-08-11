@@ -21,6 +21,7 @@ const Day = ({ date, slotsByDay, getRegistered }) => {
           textAlign: 'center',
           margin: 10,
           borderBottom: '2px solid black',
+          paddingBottom: 10
         }}
       >
         {date}
@@ -31,9 +32,11 @@ const Day = ({ date, slotsByDay, getRegistered }) => {
               <div className="admin-slot" key={ind}>
                 {
                   <div className="admin-reg-sailors-container">
-                    {changeTimeFormat(info[0])}{' '}
+                    {changeTimeFormat(info[0])}
                     <div className='reg-sailor-flex'>{getRegistered(info[0], date)}</div>
+                    <div>Slots Available: {info[1]}</div>
                   </div>
+                  
                 }
               </div>
             ))

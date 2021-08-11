@@ -30,14 +30,14 @@ const ViewEvent = () => {
   const getRegistered = (time, date) => {
     return registered
       .filter((item) => item.time === time && item.day === date)
-      .map((el, ind) => <div className="reg-sailor" key={ind}>{el.sailorID}</div>);
+      .map((el, ind) => <div className="reg-sailor" key={ind}><strong>{el.sailorID}</strong></div>);
   };
 
   return (
     <div>
       <Link to="/admin">Back to Admin</Link>
       <div>
-        <div className="title">
+        <div className="admin-event-title">
           {currentSignup.eventTitle ? (
             <strong>
               <div>{currentSignup.eventTitle}</div>
@@ -55,7 +55,7 @@ const ViewEvent = () => {
             </div>
           ))
         ) : (
-          <div>No Sailors Currently Signup Up</div>
+          <div>No Sailors Currently Signed Up</div>
         )}
       </div>
       <br />
