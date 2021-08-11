@@ -291,7 +291,7 @@ const TimeslotPost = () => {
         </div>
         <div className="timeslot">
           <h3>Click individual slots below to make them unavailable</h3>
-          <hr style={{ height: 2, backgroundColor: 'grey', border: 'none' }} />
+          {/* <hr style={{ height: 2, backgroundColor: 'grey', border: 'none' }} /> */}
           {Object.keys(slotsAvailableByDay).map((el, index) => (
             <div key={index} className="admin-slot-container">
               <div style={{ textAlign: 'center', marginBottom: 10 }}>
