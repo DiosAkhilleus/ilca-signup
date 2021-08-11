@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getSignupByEventNum } from '../../javascript/adminLogic';
+import Day from './Day';
 
 const ViewEvent = () => {
   const { ilcaNum } = useParams();
@@ -26,6 +27,12 @@ const ViewEvent = () => {
     }
   }, [currentSignup]);
 
+  const getRegistered = (time, date) => {
+    return registered
+      .filter((item) => item.time === time && item.day === date)
+      .map((el, ind) => <div className="reg-sailor" key={ind}>{el.sailorID}</div>);
+  };
+
   return (
     <div>
       <Link to="/admin">Back to Admin</Link>
@@ -42,7 +49,7 @@ const ViewEvent = () => {
         <h3>Current Inspection Signups</h3>
         {registered.length > 0 ? (
           registered.map((el, index) => (
-            <div key={index}>
+            <div key={index} className="admin-day-container">
               {el.sailorID} – {el.name.familyName}, {el.name.firstName} –{' '}
               {el.day}
             </div>
@@ -55,14 +62,12 @@ const ViewEvent = () => {
       <div>
         {dates.length > 0
           ? dates.map((date, index) => (
-              <div key={index}>
-                {date}
-                {slotsByDay
-                  ? slotsByDay[date].entriesLeft.map((info, ind) => (
-                      <div>{info[0]}</div>
-                    ))
-                  : ''}
-              </div>
+              <Day
+                key={index}
+                date={date}
+                slotsByDay={slotsByDay}
+                getRegistered={getRegistered}
+              />
             ))
           : ''}
       </div>
