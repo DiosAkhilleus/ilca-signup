@@ -85,7 +85,12 @@ const ViewEvent = () => {
               Move
             </Button>
           ) : (
-            ''
+            <Button 
+              variant="contained"
+              disabled
+            >
+              Move
+            </Button>
           )}
         </div>
       ));
