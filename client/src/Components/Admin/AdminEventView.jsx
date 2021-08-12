@@ -109,7 +109,7 @@ const ViewEvent = () => {
             ''
           )}
         </div>
-        <h3>Current Inspection Signups</h3>
+        {/* <h3>Current Inspection Signups</h3>
         {registered.length > 0 ? (
           registered.map((el, index) => (
             <div key={index} className="admin-day-container">
@@ -119,7 +119,7 @@ const ViewEvent = () => {
           ))
         ) : (
           <div>No Sailors Currently Signed Up</div>
-        )}
+        )} */}
       </div>
       <br />
       <div>
