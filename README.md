@@ -17,5 +17,5 @@ The ILCA is the governing body for the Laser class of sailboats. The association
 ## Tech Used
 <b>Frontend:</b> *JavaScript, React, HTML, CSS*
 
-<b>Backend:</b> *Node, Express*
+<b>Backend:</b> *Node, Express, MongoDB*
 
