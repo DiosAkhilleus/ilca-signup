@@ -52,6 +52,7 @@ const ViewTimeslot = () => {
             selectedDates={selectedTimeslot.selectedDates} // The list of dates during which signups will take place
             eventTitle={selectedTimeslot.eventTitle} // The title of the event
             UUID={id} // The ID number used to search the DB for the corresponding event
+            inspectionReqs = {selectedTimeslot.inspectionReqs}
           />
         </div>
       )}

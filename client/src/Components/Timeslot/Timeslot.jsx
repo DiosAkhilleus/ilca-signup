@@ -25,6 +25,7 @@ const Timeslot = ({
   ilcaNum,
   slotsAvailableByDay,
   UUID,
+  inspectionReqs
 }) => {
   // Eventually most of these states will be replaced with props that come from a selected timeslot in the DB
   const [time, setTime] = useState(0); // The time selected by the user signing up for inspection
@@ -34,10 +35,12 @@ const Timeslot = ({
   const [sailorID, setSailorID] = useState(''); // The sailor's ID number
   const [currentSailor, setCurrentSailor] = useState({}); // Sailor selected from the Autocomplete list provided
   const [day, setDay] = useState(selectedDates[0] || '2021-01-01'); // The currently selected day from the dropdown list
+  const [inspectionReqIDs, setInspectionReqIDs] = useState([]);
 
   useEffect(() => {
     // Requests DB information on load to reflect the most recently entered list of sailors in the specific competition as well as the currently requested sailor equipment inspections
     getSailors(ilcaNum).then((sailors) => setCurrentEntries(sailors));
+    setInspectionReqIDs(inspectionReqs.map((req, ind) => req.sailorID))
     //eslint-disable-next-line
   }, []);
 
@@ -196,7 +199,7 @@ const Timeslot = ({
       <form className="signup-form">
         <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
           id="combo-box-demo"
-          options={currentEntries}
+          options={currentEntries.filter(sailor => inspectionReqIDs.indexOf(sailor.sailorID) < 0)}
           getOptionLabel={(option) => option.sailorID}
           getOptionSelected={(option) => option.sailorID}
           onInputChange={onInputChange}
