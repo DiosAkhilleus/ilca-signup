@@ -1,3 +1,6 @@
+
+// CURRENTLY NOT IN USE - CHANGES MADE AND NOW SAILOREVENTVIEW IS IN USE INSTEAD
+
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -13,14 +16,9 @@ const ViewTimeslot = () => {
 
   useEffect(() => {
     // Retrieves created timeslots on page load
-    setTimeslot();
+    getTimeslots().then((results) => handleIDSubmission(results));
     //eslint-disable-next-line
   }, []);
-
-  const setTimeslot = () => {
-    // Run on page load — sets current timeslots to those retrieved from the DB
-    getTimeslots().then((results) => handleIDSubmission(results));
-  };
 
   const handleIDSubmission = (timeslots) => {
     // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
