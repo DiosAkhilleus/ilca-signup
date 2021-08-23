@@ -84,7 +84,7 @@ const Day = ({
                     ) : (
                       ''
                     )}
-                    <div>Slots Available: {info[1]}</div>
+                    <div>Slots Available: <strong>{info[1]}</strong></div>
                   </div>
                 }
               </div>
