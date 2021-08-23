@@ -78,6 +78,7 @@ body {
   height: 80px;
   width: 95vw;
   padding:20px;
+  padding-bottom: 0;
   margin: auto;
   display: flex;
   justify-content: space-between;
@@ -314,12 +315,15 @@ body {
   flex-direction: column;
   flex-wrap: wrap;
   max-width: 200px;
-  margin: 20px;
+  min-width: 200px;
+  margin: 30px;
 }
 
 .admin-event-title {
   font-size: 30px;
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .event-header {
