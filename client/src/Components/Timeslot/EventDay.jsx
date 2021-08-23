@@ -48,7 +48,7 @@ const EventDay = ({
                       <div className="reg-sailor-flex">
                         {getRegistered(info[0], date)}
                       </div>
-                      <div>Slots Available: {info[1]}</div>
+                      <div style={{marginBottom: 10}}>Slots Available: <i>{info[1]}</i></div>
                       <div>
                         {info[1] > 0 ? (
                           currentSailor.name ? (
@@ -59,7 +59,7 @@ const EventDay = ({
                                   style={{ backgroundColor: 'orange' }}
                                   onClick={() => deselect(date, info)}
                                 >
-                                  Reset Placement
+                                  Cancel Placement
                                 </Button>
                               ) : (
                                 <Button variant="contained" disabled>
@@ -78,7 +78,7 @@ const EventDay = ({
                               </Button>
                             )
                           ) : (
-                            <Button variant="contained" color="primary">
+                            <Button variant="contained" color="primary" disabled>
                               Place Sailor Here
                             </Button>
                           )
