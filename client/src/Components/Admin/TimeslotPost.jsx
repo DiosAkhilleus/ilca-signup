@@ -200,10 +200,10 @@ const TimeslotPost = () => {
           src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
           alt="ILCA Logo"
         />
-        <div className="post-title">ILCA Inspection Signup Form Creation</div>
+        <div className="post-title"><i>ILCA</i> Inspection Signup Creator</div>
       </header>
       <div className="timeslot-post">
-        <Link className="link" to="/admin">
+        <Link style={{fontSize: 20, marginBottom: 20}} className="link" to="/admin">
           Back to admin
         </Link>
         
