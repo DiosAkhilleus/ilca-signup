@@ -10,6 +10,7 @@ import ViewTimeslot from './Components/Timeslot/ViewTimeslot.jsx';
 import AdminEventView from './Components/Admin/AdminEventView.jsx';
 import PostSailor from './Components/Sailor/PostSailor.jsx';
 import DisplaySailors from './Components/Sailor/DisplaySailors.jsx';
+import SailorEventView from './Components/Timeslot/SailorEventView';
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
         <Route exact path='/admin' component={Admin}/>
         <Route exact path='/admin/create' component={TimeslotPost} />
         <Route exact path='/timeslots' component={Timeslot} />
-        <Route path='/viewtimeslot/:id' children={<ViewTimeslot />}/>
+        <Route path='/viewtimeslot/:id' children={<SailorEventView />}/>
         <Route path='/edittimeslot/:id' children={Home}/>
         <Route path='/admin/event/:ilcaNum' children={<AdminEventView />}/>
         {/* <Route exact path='/viewtimeslot' component={ViewTimeslot}/> */}
