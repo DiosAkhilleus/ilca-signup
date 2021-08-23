@@ -25,7 +25,6 @@ export const postSailorToDB = (
 
 export const getSailors = (ilcaNum) => {
   // Retrieves the list of currentl registered sailors. This will probably be replaced with a different API call once that gets set up
-  console.log(ilcaNum);
   const res = Axios.get('http://localhost:3001/sailorinfo').then((response) => {
     return response.data;
   });
