@@ -312,10 +312,20 @@ body {
 .reg-sailor {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 200px;
+  margin: 20px;
 }
 
 .admin-event-title {
   font-size: 30px;
   text-align: center;
+}
+
+.event-header {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
