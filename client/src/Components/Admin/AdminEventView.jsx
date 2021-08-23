@@ -71,9 +71,14 @@ const ViewEvent = () => {
           {el.sailorID === sailorToMove ? (
             <strong style={{ color: 'orange' }}>
               <i>{el.sailorID}</i>
+              <i>{el.name.firstName} {el.name.familyName}</i>
             </strong>
-          ) : (
-            <strong>{el.sailorID}</strong>
+          ) : ( 
+            <strong>
+            <div>{el.sailorID}</div>
+            <div>{el.name.firstName} {el.name.familyName}</div>
+            </strong>
+
           )}
 
           {moveToggle === false ? (
