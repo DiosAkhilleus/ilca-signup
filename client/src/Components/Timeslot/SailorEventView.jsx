@@ -22,7 +22,6 @@ const SailorEventView = () => {
   const [inspectionReqIDs, setInspectionReqIDs] = useState([]);
   const [sailorID, setSailorID] = useState(''); // The sailor's ID number
   const [currentSailor, setCurrentSailor] = useState({}); // Sailor selected from the Autocomplete list provided
-  const [requestingInspection, setRequestingInspection] = useState(false); // Whether or not an inspection is in the process of being requested.
   const [selectedTime, setSelectedTime] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
@@ -34,8 +33,6 @@ const SailorEventView = () => {
     getTimeslots().then((results) => handleIDSubmission(results));
     //eslint-disable-next-line
   }, []);
-
-
 
   const handleIDSubmission = (timeslots) => {
     // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
@@ -55,8 +52,12 @@ const SailorEventView = () => {
       setDates(Object.keys(currentSignup.slotsAvailableByDay));
       setSlotsByDay(currentSignup.slotsAvailableByDay);
       setRegistered(currentSignup.inspectionReqs);
-      getSailors(currentSignup.ilcaNum).then((sailors) => setCurrentEntries(sailors));
-      setInspectionReqIDs(currentSignup.inspectionReqs.map((req, ind) => req.sailorID))
+      getSailors(currentSignup.ilcaNum).then((sailors) =>
+        setCurrentEntries(sailors)
+      );
+      setInspectionReqIDs(
+        currentSignup.inspectionReqs.map((req, ind) => req.sailorID)
+      );
     }
   }, [currentSignup]);
 
@@ -78,7 +79,9 @@ const SailorEventView = () => {
       .filter((item) => item.time === time && item.day === date)
       .map((el, ind) => (
         <div className="reg-sailor" key={ind}>
-          <strong>{el.name.firstName} {el.name.familyName}</strong>
+          <strong>
+            {el.name.firstName} {el.name.familyName}
+          </strong>
         </div>
       ));
   };
@@ -86,19 +89,20 @@ const SailorEventView = () => {
   const onInputChange = (event, value) => {
     // Sets the current sailorID based on the Autocomplete field's value
     setSailorID(value);
+    setIsSelected(false);
   };
 
   const setSelected = (date, info) => {
     setSelectedTime(info[0]);
     setIsSelected(true);
     setSelectedDate(date);
-  }
+  };
 
   const deselect = (date, info) => {
     setSelectedTime(0);
     setIsSelected(false);
-    setSelectedDate('')
-  }
+    setSelectedDate('');
+  };
 
   const submitInspectionReq = (e) => {
     // Submits an inspection request if all fields are filled out
@@ -151,7 +155,6 @@ const SailorEventView = () => {
           slotsByDay,
           inspectionReq
         );
-        setRequestingInspection(true); // Sets the requestingInspection property to true so that the display updates to reflect that information
         setTimeout(reloadPage, 500); // Refreshes the page after 500ms, to ensure that the correct data will be displayed and the frontend has a chance to catch up with the db information
       }
     );
@@ -160,7 +163,7 @@ const SailorEventView = () => {
 
   const reloadPage = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <div>
@@ -178,25 +181,35 @@ const SailorEventView = () => {
               justifyContent: 'space-around',
               width: '100%',
             }}
-            className='event-header'
+            className="event-header"
           >
             <img
               src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
               alt="ILCA Logo"
               style={{ width: 200 }}
             />
-            <i><h3 style={{fontSize: 40}}>Event: {currentSignup.eventTitle}</h3></i>
+            <i>
+              <h3 style={{ fontSize: 40, textAlign: 'center'}}>
+                Event: {currentSignup.eventTitle}
+              </h3>
+            </i>
             <img
               src="https://sailing.laserinternational.org/regattauploads/2021/4_7Y/Event_Logo.png"
               alt="Event Logo"
               style={{ width: 200 }}
             />
           </div>
-          <div style={{margin: 'auto', textAlign: 'center', fontSize: 20}}>1. Select a sailor from the dropdown menu <br />2. Select a timeslot <br />3. Click the submit button</div>
+          <div style={{ margin: 'auto', textAlign: 'center', fontSize: 20 }}>
+            1. Select a sailor from the dropdown menu <br />
+            2. Select a timeslot <br />
+            3. Click the submit button
+          </div>
           <form className="signup-form">
             <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
               id="combo-box-demo"
-              options={currentEntries.filter(sailor => inspectionReqIDs.indexOf(sailor.sailorID) < 0)}
+              options={currentEntries.filter(
+                (sailor) => inspectionReqIDs.indexOf(sailor.sailorID) < 0
+              )}
               getOptionLabel={(option) => option.sailorID}
               getOptionSelected={(option) => option.sailorID}
               onInputChange={onInputChange}
@@ -225,17 +238,36 @@ const SailorEventView = () => {
                 ''
               )} */}
             </div>
-            <Button
-              style={{ marginTop: 10, marginBottom: 40, backgroundColor: 'lightgreen', color: 'black' }}
-              variant="contained"
-              type="submit"
-              onClick={(e) => {
-                submitInspectionReq(e);
-                e.preventDefault();
-              }}
-            >
-              Submit Inspection Request
-            </Button>
+            {isSelected ? (
+              <Button
+                style={{
+                  marginTop: 10,
+                  marginBottom: 40,
+                  backgroundColor: 'lightgreen',
+                  color: 'black',
+                }}
+                variant="contained"
+                type="submit"
+                onClick={(e) => {
+                  submitInspectionReq(e);
+                  e.preventDefault();
+                }}
+              >
+                Submit Inspection Request
+              </Button>
+            ) : (
+              <Button
+                style={{
+                  marginTop: 10,
+                  marginBottom: 40,
+                }}
+                variant="contained"
+                type="submit"
+                disabled
+              >
+                Submit Inspection Request
+              </Button>
+            )}
           </form>
           {dates.length > 0
             ? dates.map((date, index) => (
