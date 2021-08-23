@@ -70,13 +70,13 @@ const ViewEvent = () => {
         <div className="reg-sailor" key={ind}>
           {el.sailorID === sailorToMove ? (
             <strong style={{ color: 'orange' }}>
-              <i>{el.sailorID}</i>
-              <i>{el.name.firstName} {el.name.familyName}</i>
+              <div><i>{el.sailorID}</i></div>
+              <div><i>{el.name.firstName[0]}. {el.name.familyName}</i></div>
             </strong>
           ) : ( 
             <strong>
             <div>{el.sailorID}</div>
-            <div>{el.name.firstName} {el.name.familyName}</div>
+            <div>{el.name.firstName[0]}. {el.name.familyName}</div>
             </strong>
 
           )}
@@ -102,8 +102,8 @@ const ViewEvent = () => {
   };
 
   return (
-    <div>
-      <Link to="/admin">Back to Admin</Link>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+      <Link style={{margin: 'auto', fontSize: 20, textAlign: 'center', marginTop: 20}} to="/admin">Back to Admin</Link>
       <div>
         <div className="admin-event-title">
           {currentSignup.eventTitle ? (
