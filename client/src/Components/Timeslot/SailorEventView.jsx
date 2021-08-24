@@ -6,11 +6,13 @@ import { getSailors } from '../../javascript/sailorLogic';
 import {
   getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
+  fetchEventDetails,
 } from '../../javascript/timeslotLogic';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import EventDay from './EventDay';
+import moment from 'moment';
 
 const SailorEventView = () => {
   const [currentSignup, setCurrentSignup] = useState({}); // The currently selected signup sheet, selected by matching the correct UUID
@@ -25,6 +27,7 @@ const SailorEventView = () => {
   const [selectedTime, setSelectedTime] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+  const [eventDetails, setEventDetails] = useState({});
 
   let { id } = useParams(); // Retrieves the id from the URL params in order to match it with a corresponding DB entry
 
@@ -33,6 +36,10 @@ const SailorEventView = () => {
     getTimeslots().then((results) => handleIDSubmission(results));
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    console.log(eventDetails);
+  }, [eventDetails]);
 
   const handleIDSubmission = (timeslots) => {
     // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
@@ -57,6 +64,11 @@ const SailorEventView = () => {
       );
       setInspectionReqIDs(
         currentSignup.inspectionReqs.map((req, ind) => req.sailorID)
+      );
+    }
+    if (currentSignup.ilcaNum) {
+      fetchEventDetails(currentSignup.ilcaNum).then((results) =>
+        setEventDetails(results)
       );
     }
   }, [currentSignup]);
@@ -167,7 +179,7 @@ const SailorEventView = () => {
 
   return (
     <div>
-      {active === false ? (
+      {active === false || !eventDetails.logo ? (
         <div className="timeslot-search-container">
           <h1>Loading Inspection Signup...</h1>
         </div>
@@ -189,15 +201,31 @@ const SailorEventView = () => {
               style={{ width: 200 }}
             />
             <i>
-              <h3 style={{ fontSize: 40, textAlign: 'center'}}>
+              <h3 style={{ fontSize: 40, textAlign: 'center' }}>
                 Event: {currentSignup.eventTitle}
               </h3>
             </i>
             <img
-              src="https://sailing.laserinternational.org/regattauploads/2021/4_7Y/Event_Logo.png"
+              src={eventDetails.logo}
               alt="Event Logo"
               style={{ width: 200 }}
             />
+          </div>
+          <div
+            style={{
+              margin: 'auto',
+              textAlign: 'center',
+              fontSize: 20,
+              marginBottom: 30,
+            }}
+          >
+            <strong>
+              {moment(eventDetails.startDate.date).format(
+                'dddd, MMMM Do, YYYY'
+              )}{' '}
+              —{' '}
+              {moment(eventDetails.endDate.date).format('dddd, MMMM Do, YYYY')}
+            </strong>
           </div>
           <div style={{ margin: 'auto', textAlign: 'center', fontSize: 20 }}>
             1. Select a sailor from the dropdown menu <br />
@@ -245,7 +273,7 @@ const SailorEventView = () => {
                   marginBottom: 40,
                   backgroundColor: 'lightgreen',
                   color: 'black',
-                  transition: '0.2s'
+                  transition: '0.2s',
                 }}
                 variant="contained"
                 type="submit"

@@ -36,7 +36,7 @@ const EventDay = ({
             paddingBottom: 10,
           }}
         >
-          {moment(date).format('MMM. DD, yyyy')}
+          {moment(date).format('MMMM DD, yyyy')}
         </h2>
         <div className="admin-day-slot-container">
           {slotsByDay
@@ -44,7 +44,7 @@ const EventDay = ({
                 <div className="admin-slot" key={ind}>
                   {
                     <div className="admin-reg-sailors-container">
-                      {changeTimeFormat(info[0])}{' '}
+                      {moment(date).format('dddd, MMMM DD, yyyy')} {changeTimeFormat(info[0])}{' '}
                       <div className="reg-sailor-flex">
                         {getRegistered(info[0], date)}
                       </div>
