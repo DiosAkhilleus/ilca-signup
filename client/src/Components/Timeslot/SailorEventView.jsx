@@ -37,10 +37,6 @@ const SailorEventView = () => {
     //eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    console.log(eventDetails);
-  }, [eventDetails]);
-
   const handleIDSubmission = (timeslots) => {
     // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
     const filteredTimeslots = timeslots.filter(
