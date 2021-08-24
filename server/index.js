@@ -4,9 +4,11 @@ const SailorModel = require('./models/Sailor');
 const SignupSheetModel = require('./models/SignupSheet');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
+const Axios = require('axios');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
+const MNKEY = process.env.MNKEY;
 
 app.use(express.json());
 app.use(cors());
@@ -55,6 +57,19 @@ app.get('/signups/options', async (req, res) => {
     }
     res.send(result);
   });
+});
+
+app.get('/events/details/:ilcaNum', (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
+  Axios.get(
+    `https://matthewniemann.com/igca/public/ajax/event-data/${ilcaNum}/${MNKEY}`
+  )
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      res.send(error);
+    });
 });
 
 app.post('/signups/created', async (req, res) => {

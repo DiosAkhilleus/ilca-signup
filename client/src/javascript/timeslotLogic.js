@@ -2,13 +2,10 @@ import Axios from 'axios';
 
 export const getCurrentlyScheduledInspections = (UUID) => {
   // Retrieves the full list of registered inspections
-  let currentReqs = getTimeslots().then(
-    (results) => {
-
-      let filteredResults = results.filter((element) => element.uuid === UUID);
-      return filteredResults[0].inspectionReqs;
-    }
-  );
+  let currentReqs = getTimeslots().then((results) => {
+    let filteredResults = results.filter((element) => element.uuid === UUID);
+    return filteredResults[0].inspectionReqs;
+  });
   return currentReqs;
 };
 
@@ -56,7 +53,7 @@ export const updateTimeslotByUUID = async (
   day,
   time,
   slotsAvailableByDay,
-  inspectionReq,
+  inspectionReq
 ) => {
   // Sends a PUT request to update a timeslot's information based on a new inspection request
   let correctDaySlots = slotsAvailableByDay[day].entriesLeft;
@@ -72,13 +69,24 @@ export const updateTimeslotByUUID = async (
     slotsAvailableByDay[day].unavailableSlots.push(correctDaySlots[index][0]);
   }
   slotsAvailableByDay[day].entriesLeft = correctDaySlots;
-  getTimeslots().then(
-    (results) =>
-      results.filter((element) => element.uuid === UUID)[0].inspectionReqs
-  ).then((currentReqs) => {
+  getTimeslots()
+    .then(
+      (results) =>
+        results.filter((element) => element.uuid === UUID)[0].inspectionReqs
+    )
+    .then((currentReqs) => {
       Axios.put(`http://localhost:3001/signups/update/${UUID}`, {
-      slotsAvailableByDay: slotsAvailableByDay,
-      inspectionReqs: [...currentReqs, inspectionReq]
+        slotsAvailableByDay: slotsAvailableByDay,
+        inspectionReqs: [...currentReqs, inspectionReq],
+      });
     });
-  });
+};
+
+export const fetchEventDetails = (ilcaNum) => {
+  const res = Axios.get(`http://localhost:3001/events/details/${ilcaNum}`).then(
+    (response) => {
+      return response.data;
+    }
+  );
+  return res;
 };
