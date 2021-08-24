@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const SailorModel = require('./models/Sailor');
-const TimeslotOptionModel = require('./models/TimeslotOptions');
+const SignupSheetModel = require('./models/SignupSheet');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
 require('dotenv').config();
@@ -27,15 +27,15 @@ app.get('/sailorinfo', (req, res) => {
   });
 });
 
-app.put('/timeslots/updateinspecs/:ilcaNum', async (req, res) => {
+app.put('/signups/updateinspecs/:ilcaNum', async (req, res) => {
   const ilcaNum = req.params.ilcaNum;
   const inspectionReqs = req.body.inspectionReqs;
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
-  TimeslotOptionModel.findOneAndUpdate(
+  SignupSheetModel.findOneAndUpdate(
     { ilcaNum: ilcaNum },
     {
-      inspectionReqs: inspectionReqs, 
-      slotsAvailableByDay: slotsAvailableByDay
+      inspectionReqs: inspectionReqs,
+      slotsAvailableByDay: slotsAvailableByDay,
     },
     { new: true, useFindAndModify: false },
     (err, result) => {
@@ -47,9 +47,9 @@ app.put('/timeslots/updateinspecs/:ilcaNum', async (req, res) => {
   );
 });
 
-app.get('/timeslots/options', async (req, res) => {
+app.get('/signups/options', async (req, res) => {
   // Retrieves all inspection signups created by admin
-  TimeslotOptionModel.find({}, (err, result) => {
+  SignupSheetModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
     }
@@ -57,7 +57,7 @@ app.get('/timeslots/options', async (req, res) => {
   });
 });
 
-app.post('/timeslots/created', async (req, res) => {
+app.post('/signups/created', async (req, res) => {
   // Posts a new inspection signup from the admin page
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const inspectionReqs = req.body.inspectionReqs;
@@ -68,7 +68,7 @@ app.post('/timeslots/created', async (req, res) => {
   const timeFrom = req.body.timeFrom;
   const timeTo = req.body.timeTo;
   const uuid = req.body.uuid;
-  const timeslot = new TimeslotOptionModel({
+  const timeslot = new SignupSheetModel({
     slotsAvailableByDay: slotsAvailableByDay,
     inspectionReqs: inspectionReqs,
     interval: interval,
@@ -88,13 +88,13 @@ app.post('/timeslots/created', async (req, res) => {
   res.end('Posted Timeslot');
 });
 
-app.put('/timeslots/update/:uuid', async (req, res) => {
+app.put('/signups/update/:uuid', async (req, res) => {
   // Updates an inspection signup by UUID
   const uuid = req.params.uuid;
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const unavailableSlots = req.body.unavailableSlots;
   const inspectionReqs = req.body.inspectionReqs;
-  TimeslotOptionModel.findOneAndUpdate(
+  SignupSheetModel.findOneAndUpdate(
     { uuid: uuid },
     {
       slotsAvailableByDay: slotsAvailableByDay,
@@ -135,6 +135,20 @@ app.post('/insertsailor', async (req, res) => {
   }
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end('Posted User');
+});
+
+app.delete('/signups/delete/:ilcaNum', async (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
+  SignupSheetModel.findOneAndRemove(
+    { ilcaNum: ilcaNum },
+    { useFindAndModify: false },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    }
+  );
 });
 
 app.listen(PORT, () => {
