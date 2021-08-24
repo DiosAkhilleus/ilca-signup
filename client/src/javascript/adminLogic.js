@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 export const getSignupByEventNum = (ilcaNum) => {
-  const res = Axios.get('http://localhost:3001/timeslots/options').then(
+  const res = Axios.get('http://localhost:3001/signups/options').then(
     (response) => {
       return response.data.filter((signup) => signup.ilcaNum === ilcaNum);
     }
@@ -43,8 +43,12 @@ export const updateSailorInspection = (
   let replacementSlotsObj = Object.assign(slotsByDay, {});
   replacementSlotsObj[day].entriesLeft = replacementEntriesLeft;
 
-  Axios.put(`http://localhost:3001/timeslots/updateinspecs/${ilcaNum}`, {
+  Axios.put(`http://localhost:3001/signups/updateinspecs/${ilcaNum}`, {
     inspectionReqs: inspectionReqs,
     slotsAvailableByDay: replacementSlotsObj,
   });
+};
+
+export const removeSignupByEventNum = (ilcaNum) => {
+  Axios.delete(`http://localhost:3001/signups/delete/${ilcaNum}`);
 };

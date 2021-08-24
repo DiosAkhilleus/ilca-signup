@@ -24,7 +24,7 @@ export const postCreatedTimeslotToDB = (
   timeTo,
   uuid
 ) => {
-  Axios.post('http://localhost:3001/timeslots/created/', {
+  Axios.post('http://localhost:3001/signups/created/', {
     slotsAvailableByDay: slotsAvailableByDay,
     inspectionReqs: inspectionReqs,
     interval: interval,
@@ -36,14 +36,14 @@ export const postCreatedTimeslotToDB = (
     uuid: uuid,
   }).then(
     alert(
-      `Timeslot Posted. Your unique identifier for your created timeslot is ${uuid}`
+      `Timeslot Posted. The link to the timeslot can be found in the admin page for the Event: ${eventTitle}`
     )
   );
 };
 
 export const getTimeslots = () => {
   // Retrieves all currently created timeslots
-  const res = Axios.get('http://localhost:3001/timeslots/options').then(
+  const res = Axios.get('http://localhost:3001/signups/options').then(
     (response) => {
       return response.data;
     }
@@ -76,7 +76,7 @@ export const updateTimeslotByUUID = async (
     (results) =>
       results.filter((element) => element.uuid === UUID)[0].inspectionReqs
   ).then((currentReqs) => {
-      Axios.put(`http://localhost:3001/timeslots/update/${UUID}`, {
+      Axios.put(`http://localhost:3001/signups/update/${UUID}`, {
       slotsAvailableByDay: slotsAvailableByDay,
       inspectionReqs: [...currentReqs, inspectionReq]
     });
