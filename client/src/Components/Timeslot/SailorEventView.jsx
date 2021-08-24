@@ -245,6 +245,7 @@ const SailorEventView = () => {
                   marginBottom: 40,
                   backgroundColor: 'lightgreen',
                   color: 'black',
+                  transition: '0.2s'
                 }}
                 variant="contained"
                 type="submit"
