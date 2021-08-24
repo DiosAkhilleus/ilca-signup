@@ -115,7 +115,13 @@ const TimeslotPost = () => {
         uuid
       );
     }
+    setTimeout(reload, 500);
   };
+
+  const reload = () => {
+    window.location.reload();
+  }
+
   //eslint-disable-next-line
   Date.prototype.addDays = function (days) {
     // Function added from outside source that adds a method to Date. Probably not best practice.
@@ -345,12 +351,12 @@ const TimeslotPost = () => {
             <div style={{ fontSize: 18 }}>
               {/* The unique identifier for your created timesheet is: {UUID} */}
               The link to your newly created timesheet is{' '}
-              <strong>localhost:3000/viewtimeslot/{UUID}</strong>
+              <strong>localhost:3000/signup/{UUID}</strong>
             </div>
             <br />
             <div style={{ marginBottom: 15, fontSize: 18 }}>
               Save this link somewhere to send to sailors. It will be their only
-              way to access the signup you created.
+              way to access the signup you created. This link is also available on this event's admin page
             </div>
           </div>
         ) : (
