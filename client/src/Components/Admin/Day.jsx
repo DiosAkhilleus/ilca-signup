@@ -45,7 +45,7 @@ const Day = ({
               <div className="admin-slot" key={ind}>
                 {
                   <div className="admin-reg-sailors-container">
-                    {changeTimeFormat(info[0])}{' '}
+                  {moment(date).format('dddd, MMMM DD, yyyy')}{changeTimeFormat(info[0])}{' '}
                     <div className="reg-sailor-flex">
                       {getRegistered(info[0], date)}
                     </div>
@@ -60,7 +60,7 @@ const Day = ({
                         }}
                         onClick={() => unToggle()}
                       >
-                        Cancel Move
+                        Cancel Edit
                       </Button>
                     ) : (
                       ''
