@@ -2,7 +2,10 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getSignupByEventNum } from '../../javascript/adminLogic';
-import { updateSailorInspection } from '../../javascript/adminLogic';
+import {
+  updateSailorInspection,
+  removeSignupByEventNum,
+} from '../../javascript/adminLogic';
 import Button from '@material-ui/core/Button';
 import Day from './Day';
 
@@ -49,7 +52,8 @@ const ViewEvent = () => {
   };
 
   const moveSailorInDB = (sailorID, timeTo, day, slotsIndex) => {
-    updateSailorInspection( // Put request to DB updating both the sailor's inspection time/day and the slots available for the time 'from' and time 'to'
+    updateSailorInspection(
+      // Put request to DB updating both the sailor's inspection time/day and the slots available for the time 'from' and time 'to'
       sailorID,
       toggledTime,
       timeTo,
@@ -70,15 +74,22 @@ const ViewEvent = () => {
         <div className="reg-sailor" key={ind}>
           {el.sailorID === sailorToMove ? (
             <strong style={{ color: 'orange' }}>
-              <div><i>{el.sailorID}</i></div>
-              <div><i>{el.name.firstName[0]}. {el.name.familyName}</i></div>
+              <div>
+                <i>{el.sailorID}</i>
+              </div>
+              <div>
+                <i>
+                  {el.name.firstName[0]}. {el.name.familyName}
+                </i>
+              </div>
             </strong>
-          ) : ( 
+          ) : (
             <strong>
-            <div>{el.sailorID}</div>
-            <div>{el.name.firstName[0]}. {el.name.familyName}</div>
+              <div>{el.sailorID}</div>
+              <div>
+                {el.name.firstName[0]}. {el.name.familyName}
+              </div>
             </strong>
-
           )}
 
           {moveToggle === false ? (
@@ -90,10 +101,7 @@ const ViewEvent = () => {
               Move
             </Button>
           ) : (
-            <Button 
-              variant="contained"
-              disabled
-            >
+            <Button variant="contained" disabled>
               Move
             </Button>
           )}
@@ -101,10 +109,37 @@ const ViewEvent = () => {
       ));
   };
 
+  const deleteSheet = (e) => {
+    removeSignupByEventNum(ilcaNum);
+    setTimeout(redirToAdmin, 500);
+    e.preventDefault();
+  };
+
+  const redirToAdmin = () => {
+    window.location.href = '/admin';
+  };
+
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <Link style={{margin: 'auto', fontSize: 20, textAlign: 'center', marginTop: 20}} to="/admin">Back to Admin</Link>
-      <div>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Link
+        style={{
+          margin: 'auto',
+          fontSize: 20,
+          textAlign: 'center',
+          marginTop: 20,
+          marginBottom: 30,
+        }}
+        to="/admin"
+      >
+        Back to Admin
+      </Link>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
         <div className="admin-event-title">
           {currentSignup.eventTitle ? (
             <strong>
@@ -114,17 +149,7 @@ const ViewEvent = () => {
             ''
           )}
         </div>
-        {/* <h3>Current Inspection Signups</h3>
-        {registered.length > 0 ? (
-          registered.map((el, index) => (
-            <div key={index} className="admin-day-container">
-              {el.sailorID} – {el.name.familyName}, {el.name.firstName} –{' '}
-              {el.day}
-            </div>
-          ))
-        ) : (
-          <div>No Sailors Currently Signed Up</div>
-        )} */}
+          <Link to={`/signup/${currentSignup.uuid}`} style={{marginBottom: 20}}>Link To Sailor Signup</Link>
       </div>
       <br />
       <div>
@@ -145,6 +170,18 @@ const ViewEvent = () => {
             ))
           : ''}
       </div>
+      <Button
+        style={{
+          backgroundColor: 'rgb(194, 60, 75, 1)',
+          color: 'ivory',
+          maxWidth: 300,
+          margin: 'auto',
+          marginBottom: 30,
+        }}
+        onClick={(e) => deleteSheet(e)}
+      >
+        Delete This Signup Sheet
+      </Button>
     </div>
   );
 };
