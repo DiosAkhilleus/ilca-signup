@@ -98,11 +98,15 @@ const ViewEvent = () => {
               color="primary"
               onClick={() => toggleSailorMove(el.sailorID, el.time, el.day)}
             >
-              Move
+              Edit
+            </Button>
+          ) : el.sailorID === sailorToMove ? (
+            <Button variant="contained" style={{backgroundColor: 'rgb(194, 60, 75)', color: 'white'}}>
+              Delete Sailor
             </Button>
           ) : (
             <Button variant="contained" disabled>
-              Move
+              Edit
             </Button>
           )}
         </div>
@@ -149,7 +153,9 @@ const ViewEvent = () => {
             ''
           )}
         </div>
-          <Link to={`/signup/${currentSignup.uuid}`} style={{marginBottom: 20}}>Link To Sailor Signup</Link>
+        <Link to={`/signup/${currentSignup.uuid}`} style={{ marginBottom: 20 }}>
+          Link To Sailor Signup
+        </Link>
       </div>
       <br />
       <div>
