@@ -7,6 +7,7 @@ import {
   getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
   fetchEventDetails,
+  fetchSailorDetails,
 } from '../../javascript/timeslotLogic';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -66,13 +67,18 @@ const SailorEventView = () => {
       fetchEventDetails(currentSignup.ilcaNum).then((results) =>
         setEventDetails(results)
       );
+      fetchSailorDetails(currentSignup.ilcaNum).then((results) =>
+        setCurrentEntries(results)
+      );
     }
   }, [currentSignup]);
 
   useEffect(() => {
     // Every time sailorID updates, if that sailorID matches one in the currentEntries, currentSailor will update to reflect that selected sailor from the entries list
+    console.log(sailorID);
+
     const selectedSailor = currentEntries.filter(
-      (entry) => entry.sailorID === sailorID
+      (entry) => entry.isaf === sailorID
     );
     if (selectedSailor.length > 0) {
       setCurrentSailor(selectedSailor[0]);
@@ -96,7 +102,12 @@ const SailorEventView = () => {
 
   const onInputChange = (event, value) => {
     // Sets the current sailorID based on the Autocomplete field's value
-    setSailorID(value);
+    console.log(value);
+    if (value) {
+      setSailorID(value.isaf);
+    } else {
+      setSailorID('');
+    }
     setIsSelected(false);
   };
 
@@ -232,11 +243,11 @@ const SailorEventView = () => {
             <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
               id="combo-box-demo"
               options={currentEntries.filter(
-                (sailor) => inspectionReqIDs.indexOf(sailor.sailorID) < 0
+                (sailor) => inspectionReqIDs.indexOf(sailor.isaf) < 0
               )}
-              getOptionLabel={(option) => option.sailorID}
-              getOptionSelected={(option) => option.sailorID}
-              onInputChange={onInputChange}
+              getOptionLabel={(option) => (`${option.isaf} – ${option.firstName} ${option.familyName}`)}
+              getOptionSelected={(option) => option.isaf}
+              onChange={onInputChange}
               style={{ width: 300 }}
               renderInput={(params) => (
                 <TextField
@@ -248,12 +259,12 @@ const SailorEventView = () => {
               )}
             />
             <div>
-              {!currentSailor.sailorID ? (
+              {!currentSailor.isaf ? (
                 <h3>Please Select Sailor</h3>
               ) : (
                 <h3>
-                  {currentSailor.sailorID} - {currentSailor.name.firstName}{' '}
-                  {currentSailor.name.familyName}
+                  {currentSailor.isaf} - {currentSailor.firstName}{' '}
+                  {currentSailor.familyName}
                 </h3>
               )}
               {/* {requestingInspection === true ? (

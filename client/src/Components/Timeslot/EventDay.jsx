@@ -25,6 +25,7 @@ const EventDay = ({
       </div>
     );
   };
+  console.log(currentSailor);
   return (
     <div>
       <div className="admin-day">
@@ -51,7 +52,7 @@ const EventDay = ({
                       <div style={{marginBottom: 10}}>Slots Available: <i>{info[1]}</i></div>
                       <div>
                         {info[1] > 0 ? (
-                          currentSailor.name ? (
+                          currentSailor.firstName ? (
                             isSelected === true ? (
                               info[0] === selectedTime ? (
                                 <Button
@@ -63,8 +64,8 @@ const EventDay = ({
                                 </Button>
                               ) : (
                                 <Button variant="contained" disabled>
-                                  Place {currentSailor.name.firstName}{' '}
-                                  {currentSailor.name.familyName} Here
+                                  Place {currentSailor.firstName}{' '}
+                                  {currentSailor.familyName} Here
                                 </Button>
                               )
                             ) : (
@@ -73,8 +74,8 @@ const EventDay = ({
                                 color="primary"
                                 onClick={() => setSelected(date, info)}
                               >
-                                Place {currentSailor.name.firstName}{' '}
-                                {currentSailor.name.familyName} Here
+                                Place {currentSailor.firstName}{' '}
+                                {currentSailor.familyName} Here
                               </Button>
                             )
                           ) : (
