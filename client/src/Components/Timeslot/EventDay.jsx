@@ -12,7 +12,7 @@ const EventDay = ({
   selectedTime,
   isSelected,
   deselect,
-  submitInspectionReq
+  submitInspectionReq,
 }) => {
   const changeTimeFormat = (time) => {
     // Modifies time format for 'HH:MM' display. Possibly a better way to do this, but not sure.
@@ -58,32 +58,46 @@ const EventDay = ({
                           currentSailor.firstName ? (
                             isSelected === true ? (
                               info[0] === selectedTime ? (
-                                <div className='submission-cancellation-button-container'>
+                                <div className="submission-cancellation-button-container">
                                   <Button
-                                    className='submission-cancellation-button'
+                                    className="submission-cancellation-button"
                                     variant="contained"
-                                    style={{ backgroundColor: 'rgb(194, 60, 75)', color: 'white', marginRight: 10, width: 180 }}
+                                    style={{
+                                      backgroundColor: 'rgb(194, 60, 75)',
+                                      color: 'white',
+                                      marginRight: 10,
+                                      width: 180,
+                                    }}
                                     onClick={() => deselect(date, info)}
                                   >
                                     Cancel Placement
                                   </Button>
                                   <Button
-                                    className='submission-cancellation-button'
+                                    className="submission-cancellation-button"
                                     variant="contained"
-                                    style={{ backgroundColor: 'lightgreen', marginLeft: 10, width: 180 }}
+                                    style={{
+                                      backgroundColor: 'lightgreen',
+                                      marginLeft: 10,
+                                      width: 180,
+                                    }}
                                     onClick={(e) => submitInspectionReq(e)}
                                   >
                                     Submit Request
                                   </Button>
                                 </div>
                               ) : (
-                                <Button variant="contained" disabled>
+                                <Button
+                                  className="submission-cancellation-button"
+                                  variant="contained"
+                                  disabled
+                                >
                                   Place {currentSailor.firstName}{' '}
                                   {currentSailor.familyName} Here
                                 </Button>
                               )
                             ) : (
                               <Button
+                                className="submission-cancellation-button"
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setSelected(date, info)}
