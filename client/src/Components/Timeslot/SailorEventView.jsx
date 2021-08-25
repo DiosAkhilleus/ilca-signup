@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTimeslots } from '../../javascript/timeslotLogic';
-import { getSailors } from '../../javascript/sailorLogic';
 import {
   getCurrentlyScheduledInspections,
   updateTimeslotByUUID,
@@ -56,9 +55,6 @@ const SailorEventView = () => {
       setDates(Object.keys(currentSignup.slotsAvailableByDay));
       setSlotsByDay(currentSignup.slotsAvailableByDay);
       setRegistered(currentSignup.inspectionReqs);
-      getSailors(currentSignup.ilcaNum).then((sailors) =>
-        setCurrentEntries(sailors)
-      );
       setInspectionReqIDs(
         currentSignup.inspectionReqs.map((req, ind) => req.sailorID)
       );
@@ -75,8 +71,6 @@ const SailorEventView = () => {
 
   useEffect(() => {
     // Every time sailorID updates, if that sailorID matches one in the currentEntries, currentSailor will update to reflect that selected sailor from the entries list
-    console.log(sailorID);
-
     const selectedSailor = currentEntries.filter(
       (entry) => entry.isaf === sailorID
     );
@@ -102,7 +96,6 @@ const SailorEventView = () => {
 
   const onInputChange = (event, value) => {
     // Sets the current sailorID based on the Autocomplete field's value
-    console.log(value);
     if (value) {
       setSailorID(value.isaf);
     } else {
