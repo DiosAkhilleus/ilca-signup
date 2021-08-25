@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import AdjustEntries from '../Timeslot/AdjustEntries.jsx';
-import { postCreatedTimeslotToDB } from '../../javascript/timeslotLogic';
+import { postCreatedTimeslotToDB, fetchEventDetails } from '../../javascript/timeslotLogic';
 import { v4 as uuidv4 } from 'uuid';
 import '../../App.css';
 import 'rc-time-picker/assets/index.css';
@@ -23,9 +23,7 @@ const TimeslotPost = () => {
   const [interval, setInterval] = useState(30); // The time interval between signup time options
   const [selectedDates, setSelectedDates] = useState([]); // An array representing the dates during which the event will take place
   const [entryLimit, setEntryLimit] = useState(0); // The initial entry limit for all time options, though each time option can later be individually adjusted
-  const [eventTitle, setEventTitle] = useState(''); // The title for the event
   const [ilcaNum, setILCANum] = useState(''); // The number designation for the particular event, which will be used in the future for an API call requesting event information
-  const [UUID, setUUID] = useState(''); // The UUID that will be created, then used for searching the DB for the correct inspection signup
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({}); // This is the object that will represent all the information for each day, including unavailable slots and number of signups left per time option
   const [timeFrom, setTimeFrom] = useState(510); // The start time for each day of inspection signup
   const [startValue, setStartValue] = useState(moment('2021-01-01 08:30')); // The initial time for the starting time selector
@@ -39,6 +37,8 @@ const TimeslotPost = () => {
       key: 'selection',
     },
   ]);
+
+  
 
   useEffect(() => {
     // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
@@ -84,38 +84,27 @@ const TimeslotPost = () => {
 
   const handleTimeslotPost = () => {
     // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
-
-    let uuid = uuidv4(); // creates unique ID for the DB entry
-    let inspectionReqs = [];
-    setUUID(uuid);
-    if (entryLimit === 0 || eventTitle === '') {
-      alert('Please fill out all fields');
+    if (ilcaNum !== '' && entryLimit !== 0 && selectedDates.length) {
+      let uuid = uuidv4(); // creates unique ID for the DB entry
+      let inspectionReqs = [];
+      fetchEventDetails(ilcaNum).then((details) => {
+        postCreatedTimeslotToDB(
+          // Creates a POST request, adding a new inspection signup entry to the DB
+          slotsAvailableByDay,
+          inspectionReqs,
+          interval,
+          selectedDates,
+          details.title,
+          ilcaNum,
+          timeFrom,
+          timeTo,
+          uuid
+        );
+        setTimeout(reload, 500);
+      });
     } else {
-      console.log(
-        slotsAvailableByDay,
-        inspectionReqs,
-        interval,
-        selectedDates,
-        eventTitle,
-        ilcaNum,
-        timeFrom,
-        timeTo,
-        uuid
-      );
-      postCreatedTimeslotToDB(
-        // Creates a POST request, adding a new inspection signup entry to the DB
-        slotsAvailableByDay,
-        inspectionReqs,
-        interval,
-        selectedDates,
-        eventTitle,
-        ilcaNum,
-        timeFrom,
-        timeTo,
-        uuid
-      );
+      alert('Please fill out all fields');
     }
-    setTimeout(reload, 500);
   };
 
   const reload = () => {
@@ -149,7 +138,6 @@ const TimeslotPost = () => {
       // If the value only includes numbers or has a string value of ''
       setEntryLimit(parseInt(val));
     }
-    console.log(slotsAvailableByDay);
   };
 
   const setDateObj = (days) => {
@@ -171,14 +159,12 @@ const TimeslotPost = () => {
 
   const handleSetUnavailable = (el, slot) => {
     // Controls the effects of setting a slot unavailable by clicking on the slot;
-    // console.log(el);
     let replacementObj = Object.assign({}, slotsAvailableByDay); // new placeholder object matching slotsAvailableByDay
     replacementObj[el].unavailableSlots = [
       // adds the selected slot to that day's unavailable slots array
       ...replacementObj[el].unavailableSlots,
       slot,
     ];
-    console.log(replacementObj, replacementObj[el]);
     replacementObj[el].entriesLeft = replacementObj[el].entriesLeft.map(
       (item, index) => {
         if (replacementObj[el].unavailableSlots.indexOf(item[0]) > -1) {
@@ -192,7 +178,6 @@ const TimeslotPost = () => {
 
   const resetUnavailable = (el) => {
     // Resets the unavailable slots for the selected day
-    console.log(el);
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     replacementObj[el].unavailableSlots = [];
     setSlotsAvailableByDay(replacementObj);
@@ -224,15 +209,6 @@ const TimeslotPost = () => {
           />
           <div className="timeslot-details-group">
             <div className="timeslot-option-flex">
-              <TextField
-                className="event-detail-form"
-                id="filled"
-                variant="filled"
-                label="Event Title"
-                type="text"
-                value={eventTitle}
-                onChange={(e) => setEventTitle(e.target.value)}
-              />
               <TextField
                 className="event-detail-form"
                 id="filled"
@@ -346,22 +322,6 @@ const TimeslotPost = () => {
         >
           Submit Timeslot Sheet
         </Button>
-        {UUID !== '' ? (
-          <div>
-            <div style={{ fontSize: 18 }}>
-              {/* The unique identifier for your created timesheet is: {UUID} */}
-              The link to your newly created timesheet is{' '}
-              <strong>localhost:3000/signup/{UUID}</strong>
-            </div>
-            <br />
-            <div style={{ marginBottom: 15, fontSize: 18 }}>
-              Save this link somewhere to send to sailors. It will be their only
-              way to access the signup you created. This link is also available on this event's admin page
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
         <hr
           style={{ border: '1px solid black', width: '100%', marginBottom: 40 }}
         />
