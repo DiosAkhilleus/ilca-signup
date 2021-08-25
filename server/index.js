@@ -62,8 +62,19 @@ app.get('/signups/options', async (req, res) => {
 
 app.get('/events/details/:ilcaNum', (req, res) => {
   const ilcaNum = req.params.ilcaNum;
+  Axios.get(`${MNURL}/${ilcaNum}/${MNKEY}`)
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+app.get('/events/sailors/:ilcaNum', (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
   Axios.get(
-    `${MNURL}/${ilcaNum}/${MNKEY}`
+    `https://www.matthewniemann.com/igca/public/ajax/event-applicants/${ilcaNum}/${MNKEY}`
   )
     .then((response) => {
       res.json(response.data);

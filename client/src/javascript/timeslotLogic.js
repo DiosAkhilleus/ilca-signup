@@ -90,3 +90,12 @@ export const fetchEventDetails = (ilcaNum) => {
   );
   return res;
 };
+
+export const fetchSailorDetails = (ilcaNum) => {
+  const res = Axios.get(`http://localhost:3001/events/sailors/${ilcaNum}`).then(
+    (response) => {
+      return response.data;
+    }
+  );
+  return res;
+};
