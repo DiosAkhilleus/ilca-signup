@@ -8,6 +8,7 @@ import {
 } from '../../javascript/adminLogic';
 import Button from '@material-ui/core/Button';
 import Day from './Day';
+import { fetchEventDetails } from '../../javascript/timeslotLogic';
 
 const ViewEvent = () => {
   const { ilcaNum } = useParams(); // The event number, used to retrieve the correct event from the DB
@@ -19,12 +20,14 @@ const ViewEvent = () => {
   const [toggledTime, setToggledTime] = useState(0); // The sailor-toggled-to-move's original inspection time
   const [toggledDate, setToggledDate] = useState(''); // The sailor-toggled-to-move's original inspection date
   const [sailorToMove, setSailorToMove] = useState(''); // The sailor-toggled-to-move's sailorID, e.g. 'AUTAM6'
+  const [eventDetails, setEventDetails] = useState({});
 
   useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
       setCurrentSignup(results[0]);
     });
+    fetchEventDetails(ilcaNum).then((details) => setEventDetails(details));
     //eslint-disable-next-line
   }, []);
 
@@ -101,7 +104,10 @@ const ViewEvent = () => {
               Edit
             </Button>
           ) : el.sailorID === sailorToMove ? (
-            <Button variant="contained" style={{backgroundColor: 'rgb(194, 60, 75)', color: 'white'}}>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: 'rgb(194, 60, 75)', color: 'white' }}
+            >
               Delete Sailor
             </Button>
           ) : (
@@ -125,69 +131,95 @@ const ViewEvent = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Link
-        style={{
-          margin: 'auto',
-          fontSize: 20,
-          textAlign: 'center',
-          marginTop: 20,
-          marginBottom: 30,
-        }}
-        to="/admin"
-      >
-        Back to Admin
-      </Link>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <div className="admin-event-title">
-          {currentSignup.eventTitle ? (
-            <strong>
-              <div>{currentSignup.eventTitle}</div>
-            </strong>
-          ) : (
-            ''
-          )}
+      {eventDetails.logo ? (
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              width: '100%',
+            }}
+            className="event-header"
+          >
+            <img
+              src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
+              alt="ILCA Logo"
+              style={{ width: 200 }}
+            />
+            <i>
+              <h3 style={{ fontSize: 30, textAlign: 'center' }}>
+                {eventDetails.title}
+              </h3>
+            </i>
+            <img
+              src={eventDetails.logo}
+              alt="Event Logo"
+              style={{ width: 200 }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Link
+              style={{
+                margin: 'auto',
+                fontSize: 20,
+                textAlign: 'center',
+                marginTop: 20,
+                marginBottom: 30,
+              }}
+              to="/admin"
+            >
+              Back to Admin
+            </Link>
+            <Link
+              to={`/signup/${currentSignup.uuid}`}
+              style={{ marginBottom: 20 }}
+            >
+              Link To Sailor Signup
+            </Link>
+          </div>
+          <br />
+          <div>
+            {dates.length > 0
+              ? dates.map((date, index) => (
+                  <Day
+                    key={index}
+                    date={date}
+                    slotsByDay={slotsByDay}
+                    getRegistered={getRegistered}
+                    moveToggle={moveToggle}
+                    toggledTime={toggledTime}
+                    toggledDate={toggledDate}
+                    unToggle={unToggleSailorMove}
+                    sailorToMove={sailorToMove}
+                    moveSailorInDB={moveSailorInDB}
+                  />
+                ))
+              : ''}
+          </div>
+          <Button
+            style={{
+              backgroundColor: 'rgb(194, 60, 75, 1)',
+              color: 'ivory',
+              maxWidth: 300,
+              margin: 'auto',
+              marginBottom: 30,
+            }}
+            onClick={(e) => deleteSheet(e)}
+          >
+            Delete This Signup Sheet
+          </Button>
         </div>
-        <Link to={`/signup/${currentSignup.uuid}`} style={{ marginBottom: 20 }}>
-          Link To Sailor Signup
-        </Link>
-      </div>
-      <br />
-      <div>
-        {dates.length > 0
-          ? dates.map((date, index) => (
-              <Day
-                key={index}
-                date={date}
-                slotsByDay={slotsByDay}
-                getRegistered={getRegistered}
-                moveToggle={moveToggle}
-                toggledTime={toggledTime}
-                toggledDate={toggledDate}
-                unToggle={unToggleSailorMove}
-                sailorToMove={sailorToMove}
-                moveSailorInDB={moveSailorInDB}
-              />
-            ))
-          : ''}
-      </div>
-      <Button
-        style={{
-          backgroundColor: 'rgb(194, 60, 75, 1)',
-          color: 'ivory',
-          maxWidth: 300,
-          margin: 'auto',
-          marginBottom: 30,
-        }}
-        onClick={(e) => deleteSheet(e)}
-      >
-        Delete This Signup Sheet
-      </Button>
+      ) : (
+        'Loading Event Information'
+      )}
     </div>
   );
 };
