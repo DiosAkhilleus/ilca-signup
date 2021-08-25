@@ -12,6 +12,7 @@ const EventDay = ({
   selectedTime,
   isSelected,
   deselect,
+  submitInspectionReq
 }) => {
   const changeTimeFormat = (time) => {
     // Modifies time format for 'HH:MM' display. Possibly a better way to do this, but not sure.
@@ -25,7 +26,6 @@ const EventDay = ({
       </div>
     );
   };
-  console.log(currentSailor);
   return (
     <div>
       <div className="admin-day">
@@ -45,23 +45,37 @@ const EventDay = ({
                 <div className="admin-slot" key={ind}>
                   {
                     <div className="admin-reg-sailors-container">
-                      {moment(date).format('dddd, MMMM DD, yyyy')} {changeTimeFormat(info[0])}{' '}
+                      {moment(date).format('dddd, MMMM DD, yyyy')}{' '}
+                      {changeTimeFormat(info[0])}{' '}
                       <div className="reg-sailor-flex">
                         {getRegistered(info[0], date)}
                       </div>
-                      <div style={{marginBottom: 10}}>Slots Available: <i>{info[1]}</i></div>
+                      <div style={{ marginBottom: 10 }}>
+                        Slots Available: <i>{info[1]}</i>
+                      </div>
                       <div>
                         {info[1] > 0 ? (
                           currentSailor.firstName ? (
                             isSelected === true ? (
                               info[0] === selectedTime ? (
-                                <Button
-                                  variant="contained"
-                                  style={{ backgroundColor: 'orange' }}
-                                  onClick={() => deselect(date, info)}
-                                >
-                                  Cancel Placement
-                                </Button>
+                                <div className='submission-cancellation-button-container'>
+                                  <Button
+                                    className='submission-cancellation-button'
+                                    variant="contained"
+                                    style={{ backgroundColor: 'rgb(194, 60, 75)', color: 'white', marginRight: 10, width: 180 }}
+                                    onClick={() => deselect(date, info)}
+                                  >
+                                    Cancel Placement
+                                  </Button>
+                                  <Button
+                                    className='submission-cancellation-button'
+                                    variant="contained"
+                                    style={{ backgroundColor: 'lightgreen', marginLeft: 10, width: 180 }}
+                                    onClick={(e) => submitInspectionReq(e)}
+                                  >
+                                    Submit Request
+                                  </Button>
+                                </div>
                               ) : (
                                 <Button variant="contained" disabled>
                                   Place {currentSailor.firstName}{' '}
@@ -79,7 +93,11 @@ const EventDay = ({
                               </Button>
                             )
                           ) : (
-                            <Button variant="contained" color="primary" disabled>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              disabled
+                            >
                               Place Sailor Here
                             </Button>
                           )

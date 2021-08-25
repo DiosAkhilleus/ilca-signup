@@ -10,7 +10,6 @@ import {
 } from '../../javascript/timeslotLogic';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import EventDay from './EventDay';
 import moment from 'moment';
 
@@ -118,12 +117,13 @@ const SailorEventView = () => {
 
   const submitInspectionReq = (e) => {
     // Submits an inspection request if all fields are filled out
+    console.log(sailorID, selectedTime, selectedDate);
     if (sailorID === '' || selectedTime === 0 || selectedDate === '') {
       alert('please enter Sailor ID and select a day and timeslot');
       return;
     }
     if (
-      currentEntries.filter((entry) => entry.sailorID === sailorID).length === 0 // If a sailor with the given ID is not registered for the specific event this is for
+      currentEntries.filter((entry) => entry.isaf === sailorID).length === 0 // If a sailor with the given ID is not registered for the specific event this is for
     ) {
       alert(
         `Sailor with ID: "${sailorID}" not found in current race entries. Sailor must be entered to request inspection`
@@ -144,10 +144,11 @@ const SailorEventView = () => {
           return;
         }
         const sailorEntry = currentEntries.filter(
-          (entry) => entry.sailorID === sailorID
+          (entry) => entry.isaf === sailorID
         );
-        let firstName = sailorEntry[0].name.firstName;
-        let familyName = sailorEntry[0].name.familyName;
+        let firstName = sailorEntry[0].firstName;
+        let familyName = sailorEntry[0].familyName;
+        console.log(firstName, familyName);
         let inspectionReq = {
           // This is the format of the inspection request, so that the information can later be displayed publicly or on the admin page
           eventTitle: currentSignup.eventTitle,
@@ -202,7 +203,7 @@ const SailorEventView = () => {
             />
             <i>
               <h3 style={{ fontSize: 40, textAlign: 'center' }}>
-                Event: {currentSignup.eventTitle}
+                {eventDetails.title}
               </h3>
             </i>
             <img
@@ -210,6 +211,15 @@ const SailorEventView = () => {
               alt="Event Logo"
               style={{ width: 200 }}
             />
+          </div>
+          <div style={{
+              margin: 'auto',
+              textAlign: 'center',
+              fontSize: 20,
+              marginBottom: 30,
+            }}
+            >
+            {`${eventDetails.country}, ${eventDetails.city}`}
           </div>
           <div
             style={{
@@ -266,37 +276,6 @@ const SailorEventView = () => {
                 ''
               )} */}
             </div>
-            {isSelected ? (
-              <Button
-                style={{
-                  marginTop: 10,
-                  marginBottom: 40,
-                  backgroundColor: 'lightgreen',
-                  color: 'black',
-                  transition: '0.2s',
-                }}
-                variant="contained"
-                type="submit"
-                onClick={(e) => {
-                  submitInspectionReq(e);
-                  e.preventDefault();
-                }}
-              >
-                Submit Inspection Request
-              </Button>
-            ) : (
-              <Button
-                style={{
-                  marginTop: 10,
-                  marginBottom: 40,
-                }}
-                variant="contained"
-                type="submit"
-                disabled
-              >
-                Submit Inspection Request
-              </Button>
-            )}
           </form>
           {dates.length > 0
             ? dates.map((date, index) => (
@@ -310,6 +289,7 @@ const SailorEventView = () => {
                   selectedTime={selectedTime}
                   isSelected={isSelected}
                   deselect={deselect}
+                  submitInspectionReq={submitInspectionReq}
                 />
               ))
             : ''}
