@@ -9,7 +9,8 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 const MNKEY = process.env.MNKEY;
-const MNURL = process.env.MNURL;
+const EDURL = process.env.EDURL;
+const SDURL = process.env.SDURL;
 
 app.use(express.json());
 app.use(cors());
@@ -62,7 +63,7 @@ app.get('/signups/options', async (req, res) => {
 
 app.get('/events/details/:ilcaNum', (req, res) => {
   const ilcaNum = req.params.ilcaNum;
-  Axios.get(`${MNURL}/${ilcaNum}/${MNKEY}`)
+  Axios.get(`${EDURL}/${ilcaNum}/${MNKEY}`)
     .then((response) => {
       res.json(response.data);
     })
@@ -74,7 +75,7 @@ app.get('/events/details/:ilcaNum', (req, res) => {
 app.get('/events/sailors/:ilcaNum', (req, res) => {
   const ilcaNum = req.params.ilcaNum;
   Axios.get(
-    `https://www.matthewniemann.com/igca/public/ajax/event-applicants/${ilcaNum}/${MNKEY}`
+    `${SDURL}/${ilcaNum}/${MNKEY}`
   )
     .then((response) => {
       res.json(response.data);
