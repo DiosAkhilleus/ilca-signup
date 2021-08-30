@@ -13,6 +13,7 @@ const EventDay = ({
   isSelected,
   deselect,
   submitInspectionReq,
+  selectedDate
 }) => {
   const changeTimeFormat = (time) => {
     // Modifies time format for 'HH:MM' display. Possibly a better way to do this, but not sure.
@@ -41,7 +42,7 @@ const EventDay = ({
         </h2>
         <div className="admin-day-slot-container">
           {slotsByDay
-            ? slotsByDay[date].entriesLeft.map((info, ind) => (
+            ? slotsByDay[date].entriesLeft.map((info, ind, array) => (
                 <div className="admin-slot" key={ind}>
                   {
                     <div className="admin-reg-sailors-container">
@@ -57,7 +58,7 @@ const EventDay = ({
                         {info[1] > 0 ? (
                           currentSailor.firstName ? (
                             isSelected === true ? (
-                              info[0] === selectedTime ? (
+                              info[0] === selectedTime && date === selectedDate ? (
                                 <div className="submission-cancellation-button-container">
                                   <Button
                                     className="submission-cancellation-button"
@@ -111,6 +112,7 @@ const EventDay = ({
                               variant="contained"
                               color="primary"
                               disabled
+                              style={{marginBottom: 5, marginTop: 5}}
                             >
                               Place Sailor Here
                             </Button>

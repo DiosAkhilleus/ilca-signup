@@ -288,6 +288,7 @@ const SailorEventView = () => {
                   currentSailor={currentSailor}
                   setSelected={setSelected}
                   selectedTime={selectedTime}
+                  selectedDate={selectedDate}
                   isSelected={isSelected}
                   deselect={deselect}
                   submitInspectionReq={submitInspectionReq}
