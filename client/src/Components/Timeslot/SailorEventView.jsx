@@ -202,8 +202,8 @@ const SailorEventView = () => {
               style={{ width: 200 }}
             />
             <i>
-              <h3 style={{ fontSize: 40, textAlign: 'center' }}>
-                {eventDetails.title}
+              <h3 style={{ fontSize: 30, textAlign: 'center' }}>
+                Equipment Inspection Signup
               </h3>
             </i>
             <img
@@ -219,7 +219,8 @@ const SailorEventView = () => {
               marginBottom: 30,
             }}
             >
-            {`${eventDetails.country}, ${eventDetails.city}`}
+            <h4>{eventDetails.title}</h4>
+            <h5>{`${eventDetails.country}, ${eventDetails.city}`}</h5>
           </div>
           <div
             style={{
