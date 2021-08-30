@@ -42,7 +42,7 @@ const EventDay = ({
         </h2>
         <div className="admin-day-slot-container">
           {slotsByDay
-            ? slotsByDay[date].entriesLeft.map((info, ind, array) => (
+            ? slotsByDay[date].entriesLeft.map((info, ind) => (
                 <div className="admin-slot" key={ind}>
                   {
                     <div className="admin-reg-sailors-container">
