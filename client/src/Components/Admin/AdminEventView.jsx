@@ -5,6 +5,7 @@ import { getSignupByEventNum } from '../../javascript/adminLogic';
 import {
   updateSailorInspection,
   removeSignupByEventNum,
+  removeSailorFromEvent,
 } from '../../javascript/adminLogic';
 import Button from '@material-ui/core/Button';
 import Day from './Day';
@@ -70,6 +71,17 @@ const ViewEvent = () => {
     setSailorToMove('');
   };
 
+  const handleRemoveSailor = () => {
+    removeSailorFromEvent(ilcaNum, sailorToMove);
+    setTimeout(reloadPage, 500);
+  }
+
+  const reloadPage = () => {
+    window.location.reload();
+  }
+
+  
+
   const getRegistered = (time, date) => {
     return registered
       .filter((item) => item.time === time && item.day === date)
@@ -107,6 +119,7 @@ const ViewEvent = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: 'rgb(194, 60, 75)', color: 'white' }}
+              onClick={() => handleRemoveSailor()}
             >
               Delete Sailor
             </Button>
@@ -130,7 +143,7 @@ const ViewEvent = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       {eventDetails.logo ? (
         <div>
           <div
@@ -204,18 +217,20 @@ const ViewEvent = () => {
                 ))
               : ''}
           </div>
-          <Button
-            style={{
-              backgroundColor: 'rgb(194, 60, 75, 1)',
-              color: 'ivory',
-              maxWidth: 300,
-              margin: 'auto',
-              marginBottom: 30,
-            }}
-            onClick={(e) => deleteSheet(e)}
-          >
-            Delete This Signup Sheet
-          </Button>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Button
+              style={{
+                backgroundColor: 'rgb(194, 60, 75, 1)',
+                color: 'ivory',
+                maxWidth: 300,
+                margin: 'auto !important',
+                marginBottom: 30,
+              }}
+              onClick={(e) => deleteSheet(e)}
+            >
+              Delete This Signup Sheet
+            </Button>
+          </div>
         </div>
       ) : (
         'Loading Event Information'
