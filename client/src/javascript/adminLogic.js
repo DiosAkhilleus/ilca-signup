@@ -52,3 +52,13 @@ export const updateSailorInspection = (
 export const removeSignupByEventNum = (ilcaNum) => {
   Axios.delete(`http://localhost:3001/signups/delete/${ilcaNum}`);
 };
+
+export const removeSailorFromEvent = (ilcaNum, sailorID) => {
+  getSignupByEventNum(ilcaNum).then(results => {
+    const signup = results[0];
+    const newInspectionReqs = signup.inspectionReqs.filter(el => el.sailorID !== sailorID);
+    Axios.put(`http://localhost:3001/signups/removesailor/${sailorID}/${ilcaNum}`, {
+      inspectionReqs: newInspectionReqs
+    });
+  })
+}

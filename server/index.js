@@ -51,6 +51,24 @@ app.put('/signups/updateinspecs/:ilcaNum', async (req, res) => {
   );
 });
 
+app.put('/signups/removesailor/:sailorID/:ilcaNum', async (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
+  const inspectionReqs = req.body.inspectionReqs;
+  SignupSheetModel.findOneAndUpdate(
+    { ilcaNum: ilcaNum },
+    {
+      inspectionReqs: inspectionReqs,
+    },
+    { new: true, useFindAndModify: false },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
 app.get('/signups/options', async (req, res) => {
   // Retrieves all inspection signups created by admin
   SignupSheetModel.find({}, (err, result) => {
@@ -74,9 +92,7 @@ app.get('/events/details/:ilcaNum', (req, res) => {
 
 app.get('/events/sailors/:ilcaNum', (req, res) => {
   const ilcaNum = req.params.ilcaNum;
-  Axios.get(
-    `${SDURL}/${ilcaNum}/${MNKEY}`
-  )
+  Axios.get(`${SDURL}/${ilcaNum}/${MNKEY}`)
     .then((response) => {
       res.json(response.data);
     })
