@@ -25,7 +25,6 @@ function App() {
         <Route path='/signup/:id' children={<SailorEventView />}/>
         <Route path='/edittimeslot/:id' children={Home}/>
         <Route path='/admin/event/:ilcaNum' children={<AdminEventView />}/>
-        {/* <Route exact path='/viewtimeslot' component={ViewTimeslot}/> */}
         <Route exact path='/postsailor' component={PostSailor} />
         <Route exact path='/displaysailors' component={DisplaySailors} />
         <Route path='/' component={NotFound}/>
