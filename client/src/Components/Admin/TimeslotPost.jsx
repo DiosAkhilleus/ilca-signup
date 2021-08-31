@@ -88,21 +88,25 @@ const TimeslotPost = () => {
       let uuid = uuidv4(); // creates unique ID for the DB entry
       let inspectionReqs = [];
       fetchEventDetails(ilcaNum).then((details) => {
-        postCreatedTimeslotToDB(
-          // Creates a POST request, adding a new inspection signup entry to the DB
-          slotsAvailableByDay,
-          inspectionReqs,
-          interval,
-          selectedDates,
-          details.title,
-          details.city,
-          details.country,
-          ilcaNum,
-          timeFrom,
-          timeTo,
-          uuid
-        );
-        setTimeout(reload, 500);
+        if (details.title) {
+          postCreatedTimeslotToDB(
+            // Creates a POST request, adding a new inspection signup entry to the DB
+            slotsAvailableByDay,
+            inspectionReqs,
+            interval,
+            selectedDates,
+            details.title,
+            details.city,
+            details.country,
+            ilcaNum,
+            timeFrom,
+            timeTo,
+            uuid
+          );
+          setTimeout(reload, 500);
+        } else {
+          alert('The Event ID entered does not match any existing events');
+        }
       });
     } else {
       alert('Please fill out all fields');
