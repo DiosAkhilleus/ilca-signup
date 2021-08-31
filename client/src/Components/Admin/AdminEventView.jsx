@@ -74,13 +74,11 @@ const ViewEvent = () => {
   const handleRemoveSailor = () => {
     removeSailorFromEvent(ilcaNum, sailorToMove);
     setTimeout(reloadPage, 500);
-  }
+  };
 
   const reloadPage = () => {
     window.location.reload();
-  }
-
-  
+  };
 
   const getRegistered = (time, date) => {
     return registered
@@ -143,7 +141,13 @@ const ViewEvent = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
       {eventDetails.logo ? (
         <div>
           <div
@@ -217,7 +221,13 @@ const ViewEvent = () => {
                 ))
               : ''}
           </div>
-          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <Button
               style={{
                 backgroundColor: 'rgb(194, 60, 75, 1)',
@@ -233,7 +243,7 @@ const ViewEvent = () => {
           </div>
         </div>
       ) : (
-        'Loading Event Information'
+        <div style={{margin: 'auto', marginTop: '25%', fontSize: 40}}>Loading...</div>
       )}
     </div>
   );
