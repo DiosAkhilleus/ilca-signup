@@ -95,6 +95,8 @@ const TimeslotPost = () => {
           interval,
           selectedDates,
           details.title,
+          details.city,
+          details.country,
           ilcaNum,
           timeFrom,
           timeTo,
