@@ -21,6 +21,14 @@ const SignupSheetSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  hostCity: {
+    type: String, 
+    required: true
+  }, 
+  hostCountry: {
+    type: String,
+    required: true
+  },
   ilcaNum: {
     type: String,
     required: true

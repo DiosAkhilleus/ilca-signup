@@ -108,6 +108,8 @@ app.post('/signups/created', async (req, res) => {
   const interval = req.body.interval;
   const selectedDates = req.body.selectedDates;
   const eventTitle = req.body.eventTitle;
+  const hostCity = req.body.hostCity;
+  const hostCountry = req.body.hostCountry;
   const ilcaNum = req.body.ilcaNum;
   const timeFrom = req.body.timeFrom;
   const timeTo = req.body.timeTo;
@@ -118,6 +120,8 @@ app.post('/signups/created', async (req, res) => {
     interval: interval,
     selectedDates: selectedDates,
     eventTitle: eventTitle,
+    hostCity: hostCity, 
+    hostCountry: hostCountry,
     ilcaNum: ilcaNum,
     timeFrom: timeFrom,
     timeTo: timeTo,
