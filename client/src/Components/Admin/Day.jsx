@@ -45,7 +45,8 @@ const Day = ({
               <div className="admin-slot" key={ind}>
                 {
                   <div className="admin-reg-sailors-container">
-                  {moment(date).format('dddd, MMMM DD, yyyy')}{changeTimeFormat(info[0])}{' '}
+                    {moment(date).format('dddd, MMMM DD, yyyy')}
+                    {changeTimeFormat(info[0])}{' '}
                     <div className="reg-sailor-flex">
                       {getRegistered(info[0], date)}
                     </div>
@@ -81,10 +82,16 @@ const Day = ({
                       >
                         Place Here
                       </Button>
+                    ) : info[0] !== toggledTime ? (
+                      <Button variant="contained" disabled style={{marginBottom: 10}}>
+                        Place Here
+                      </Button>
                     ) : (
                       ''
                     )}
-                    <div>Slots Available: <strong>{info[1]}</strong></div>
+                    <div>
+                      Slots Available: <strong>{info[1]}</strong>
+                    </div>
                   </div>
                 }
               </div>

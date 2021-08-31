@@ -53,6 +53,7 @@ const ViewEvent = () => {
     // Untoggles sailor movement
     setMoveToggle(false);
     setSailorToMove('');
+    setToggledTime(0);
   };
 
   const moveSailorInDB = (sailorID, timeTo, day, slotsIndex) => {
@@ -69,6 +70,7 @@ const ViewEvent = () => {
     );
     setMoveToggle(false);
     setSailorToMove('');
+    setToggledTime(0);
   };
 
   const handleRemoveSailor = () => {
