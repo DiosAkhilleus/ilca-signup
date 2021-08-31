@@ -60,7 +60,7 @@ const Admin = () => {
                   width: 200,
                   marginLeft: 'auto',
                   marginRight: 'auto',
-                  marginBottom: 30,
+                  marginBottom: 20,
                   backgroundColor: 'rgb(2, 114, 186)'
                 }}
               >
