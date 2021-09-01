@@ -11,8 +11,12 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
+import DatePicker from 'react-date-picker';
 import AdjustEntries from '../Timeslot/AdjustEntries.jsx';
-import { postCreatedTimeslotToDB, fetchEventDetails } from '../../javascript/timeslotLogic';
+import {
+  postCreatedTimeslotToDB,
+  fetchEventDetails,
+} from '../../javascript/timeslotLogic';
 import { v4 as uuidv4 } from 'uuid';
 import '../../App.css';
 import 'rc-time-picker/assets/index.css';
@@ -21,6 +25,7 @@ import 'react-date-range/dist/theme/default.css';
 
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30); // The time interval between signup time options
+  const [shutoffDate, setShutoffDate] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState([]); // An array representing the dates during which the event will take place
   const [entryLimit, setEntryLimit] = useState(0); // The initial entry limit for all time options, though each time option can later be individually adjusted
   const [ilcaNum, setILCANum] = useState(''); // The number designation for the particular event, which will be used in the future for an API call requesting event information
@@ -38,7 +43,10 @@ const TimeslotPost = () => {
     },
   ]);
 
-  
+  useEffect(() => {
+    console.log(shutoffDate);
+    console.log(moment(shutoffDate).format('YYYY-MM-DD'));
+  }, [shutoffDate]);
 
   useEffect(() => {
     // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
@@ -95,6 +103,7 @@ const TimeslotPost = () => {
             inspectionReqs,
             interval,
             selectedDates,
+            shutoffDate,
             details.title,
             details.city,
             details.country,
@@ -115,7 +124,7 @@ const TimeslotPost = () => {
 
   const reload = () => {
     window.location.reload();
-  }
+  };
 
   //eslint-disable-next-line
   Date.prototype.addDays = function (days) {
@@ -197,13 +206,19 @@ const TimeslotPost = () => {
           src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
           alt="ILCA Logo"
         />
-        <div className="post-title"><i>ILCA</i> Inspection Signup Creator</div>
+        <div className="post-title">
+          <i>ILCA</i> Inspection Signup Creator
+        </div>
       </header>
       <div className="timeslot-post">
-        <Link style={{fontSize: 20, marginBottom: 20}} className="link" to="/admin">
+        <Link
+          style={{ fontSize: 20, marginBottom: 20 }}
+          className="link"
+          to="/admin"
+        >
           Back to admin
         </Link>
-        
+
         <div className="timeslot-options-container">
           <DateRange
             className="calendar"
@@ -255,7 +270,7 @@ const TimeslotPost = () => {
           <div className="start-end-times">
             <div className="start-end-group-container">
               <div className="start-end-group">
-                <div className="label">Start Time</div>
+                <div className="label"><strong>Start Time</strong></div>
                 <TimePicker
                   showSecond={false}
                   allowEmpty={false}
@@ -265,7 +280,7 @@ const TimeslotPost = () => {
                 />
               </div>
               <div className="start-end-group">
-                <div className="label">End Time</div>
+                <div className="label"><strong>End Time</strong></div>
                 <TimePicker
                   showSecond={false}
                   allowEmpty={false}
@@ -274,9 +289,16 @@ const TimeslotPost = () => {
                   onChange={(value) => setEndValue(moment(value._d))}
                 />
               </div>
+              <div className="start-end-group">
+                <div className="label"><strong>Signup End Date</strong></div>
+                <DatePicker value={shutoffDate} onChange={setShutoffDate}/>
+                <div><i>@</i></div>
+                  <strong>{moment(shutoffDate).format('HH:mm')}</strong>
+              </div>
             </div>
           </div>
         </div>
+
         <div className="timeslot">
           <h3>Click individual slots below to make them unavailable</h3>
           {/* <hr style={{ height: 2, backgroundColor: 'grey', border: 'none' }} /> */}
