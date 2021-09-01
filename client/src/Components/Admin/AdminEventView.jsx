@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getSignupByEventNum } from '../../javascript/adminLogic';
+import { fetchSailorDetails } from '../../javascript/timeslotLogic';
+import { CSVLink } from 'react-csv';
 import {
+  getSignupByEventNum,
   updateSailorInspection,
   removeSignupByEventNum,
   removeSailorFromEvent,
@@ -21,14 +23,22 @@ const ViewEvent = () => {
   const [toggledTime, setToggledTime] = useState(0); // The sailor-toggled-to-move's original inspection time
   const [toggledDate, setToggledDate] = useState(''); // The sailor-toggled-to-move's original inspection date
   const [sailorToMove, setSailorToMove] = useState(''); // The sailor-toggled-to-move's sailorID, e.g. 'AUTAM6'
-  const [eventDetails, setEventDetails] = useState({});
-
+  const [eventDetails, setEventDetails] = useState({}); // Event details retrieved from the event API call
+  const [sailorsRemainingUnsigned, setSailorsRemainingUnsigned] = useState([]); // Sets list of sailors registered for the event, but not signed up for inspection
+  //eslint-disable-next-line
+  const [csvHeaders, setCSVHeader] = useState([
+    { label: 'Sailor ID', key: 'sailorID' },
+    { label: 'First Name', key: 'firstName' },
+    { label: 'Family Name', key: 'familyName' },
+  ]);
   useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
       setCurrentSignup(results[0]);
     });
-    fetchEventDetails(ilcaNum).then((details) => setEventDetails(details));
+    fetchEventDetails(ilcaNum).then((details) => {
+      setEventDetails(details);
+    });
     //eslint-disable-next-line
   }, []);
 
@@ -40,6 +50,21 @@ const ViewEvent = () => {
       setRegistered(currentSignup.inspectionReqs);
     }
   }, [currentSignup]);
+
+  useEffect(() => {
+    fetchSailorDetails(ilcaNum).then((sailors) => {
+      const registeredSailorIDs = registered.map((el) => el.sailorID); // Creates array of all sailor IDs currently registered for inspection
+      let filteredSailors = sailors
+        .filter((sailor) => registeredSailorIDs.indexOf(sailor.isaf) < 0)
+        .map((el) => {
+          el.sailorID = el.isaf;
+          delete el.isaf;
+          return el;
+        }); // Filters the sailors registered for the event against those currently signed up for inspectio
+      setSailorsRemainingUnsigned(filteredSailors);
+    });
+    //eslint-disable-next-line
+  }, [registered]);
 
   const toggleSailorMove = (sailorID, time, day) => {
     // Toggles whether or not a sailor is being moved by admin to a different time/day
@@ -203,6 +228,13 @@ const ViewEvent = () => {
             >
               Link To Sailor Signup
             </Link>
+            <CSVLink
+              data={sailorsRemainingUnsigned}
+              headers={csvHeaders}
+              filename={`remaining_sailors_for_event_${ilcaNum}.csv`}
+            >
+              Download CSV of Sailors Not Registered For Inspection
+            </CSVLink>
           </div>
           <br />
           <div>
@@ -245,7 +277,9 @@ const ViewEvent = () => {
           </div>
         </div>
       ) : (
-        <div style={{margin: 'auto', marginTop: '25%', fontSize: 40}}>Loading...</div>
+        <div style={{ margin: 'auto', marginTop: '25%', fontSize: 40 }}>
+          Loading...
+        </div>
       )}
     </div>
   );

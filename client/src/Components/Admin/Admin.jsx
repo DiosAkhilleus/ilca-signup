@@ -28,7 +28,7 @@ const Admin = () => {
           alt="ILCA Logo"
           style={{ width: 200, margin: 30, marginBottom: 0}}
         />
-        <h1>ILCA Equipment Inspection Sign-Up Administration</h1>
+        <h1>Equipment Inspection Sign-Up Administration</h1>
       </div>
         
         {/* <Link className="link" to="/" style={{ marginTop: 40 }}>
