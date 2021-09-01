@@ -14,12 +14,6 @@ const Admin = () => {
 
   return (
     <div>
-      <img
-        src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
-        alt="ILCA Logo"
-        style={{ width: 200, margin: 30, position: 'absolute' }}
-      />
-
       <div
         style={{
           display: 'flex',
@@ -28,7 +22,15 @@ const Admin = () => {
           textAlign: 'center',
         }}
       >
-        <h1 style={{ marginTop: 60 }}>Admin Page</h1>
+      <div className='admin-header'>
+        <img
+          src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
+          alt="ILCA Logo"
+          style={{ width: 200, margin: 30, marginBottom: 0}}
+        />
+        <h1>ILCA Equipment Inspection Sign-Up Administration</h1>
+      </div>
+        
         {/* <Link className="link" to="/" style={{ marginTop: 40 }}>
           Back to Home
         </Link> */}
