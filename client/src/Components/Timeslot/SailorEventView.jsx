@@ -27,6 +27,8 @@ const SailorEventView = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [eventDetails, setEventDetails] = useState({});
+  //eslint-disable-next-line
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   let { id } = useParams(); // Retrieves the id from the URL params in order to match it with a corresponding DB entry
 
@@ -66,6 +68,8 @@ const SailorEventView = () => {
         setCurrentEntries(results)
       );
     }
+    console.log(currentSignup.shutoffDate, new Date());
+    console.log(new Date() < new Date(currentSignup.shutoffDate));
   }, [currentSignup]);
 
   useEffect(() => {
@@ -179,12 +183,16 @@ const SailorEventView = () => {
   };
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}>
       {active === false || !eventDetails.logo ? (
         <div className="timeslot-search-container">
           <h1>Loading Inspection Signup...</h1>
         </div>
-      ) : (
+      ) : currentDate < new Date(currentSignup.shutoffDate) ? (
         <div>
           <div
             style={{
@@ -212,13 +220,14 @@ const SailorEventView = () => {
               style={{ width: 200 }}
             />
           </div>
-          <div style={{
+          <div
+            style={{
               margin: 'auto',
               textAlign: 'center',
               fontSize: 20,
               marginBottom: 30,
             }}
-            >
+          >
             <h4>{eventDetails.title}</h4>
             <h5>{`${eventDetails.country}, ${eventDetails.city}`}</h5>
           </div>
@@ -249,7 +258,9 @@ const SailorEventView = () => {
               options={currentEntries.filter(
                 (sailor) => inspectionReqIDs.indexOf(sailor.isaf) < 0
               )}
-              getOptionLabel={(option) => (`${option.isaf} – ${option.firstName} ${option.familyName}`)}
+              getOptionLabel={(option) =>
+                `${option.isaf} – ${option.firstName} ${option.familyName}`
+              }
               getOptionSelected={(option) => option.isaf}
               onChange={onInputChange}
               style={{ width: 300 }}
@@ -296,6 +307,9 @@ const SailorEventView = () => {
               ))
             : ''}
         </div>
+      ) : (
+        <div style={{margin: 'auto', marginTop: '25%', fontSize: 40}}>Inspection Signup Has Expired</div>
+
       )}
     </div>
   );
