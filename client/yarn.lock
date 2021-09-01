@@ -9685,6 +9685,11 @@
     "merge-class-names" "^1.1.1"
     "prop-types" "^15.6.0"
 
+"react-csv@^2.0.3":
+  "integrity" "sha512-exyAdFLAxtuM4wNwLYrlKyPYLiJ7e0mv9tqPAd3kq+k1CiJFtznevR3yP0icv5q/y200w+lzNgi7TQn1Wrhu0w=="
+  "resolved" "https://registry.npmjs.org/react-csv/-/react-csv-2.0.3.tgz"
+  "version" "2.0.3"
+
 "react-date-picker@^8.3.2":
   "integrity" "sha512-lcuW8GD6yIfsoYQjdBDfVChY4GR9sDjcm3gr/Q/1g6QPrCWnsHFh/RBs7iy0MMe/yYCtmQM6kaoECBU0s6/FpQ=="
   "resolved" "https://registry.npmjs.org/react-date-picker/-/react-date-picker-8.3.2.tgz"
