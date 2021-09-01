@@ -107,6 +107,7 @@ app.post('/signups/created', async (req, res) => {
   const inspectionReqs = req.body.inspectionReqs;
   const interval = req.body.interval;
   const selectedDates = req.body.selectedDates;
+  const shutoffDate = req.body.shutoffDate;
   const eventTitle = req.body.eventTitle;
   const hostCity = req.body.hostCity;
   const hostCountry = req.body.hostCountry;
@@ -119,6 +120,7 @@ app.post('/signups/created', async (req, res) => {
     inspectionReqs: inspectionReqs,
     interval: interval,
     selectedDates: selectedDates,
+    shutoffDate: shutoffDate,
     eventTitle: eventTitle,
     hostCity: hostCity, 
     hostCountry: hostCountry,

@@ -17,6 +17,10 @@ const SignupSheetSchema = new mongoose.Schema({
     type: Array, 
     required: true
   },
+  shutoffDate: {
+    type: Date,
+    required: true
+  },
   eventTitle: {
     type: String,
     required: true
