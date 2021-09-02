@@ -27,7 +27,7 @@ const ViewEvent = () => {
   const [sailorsRemainingUnsigned, setSailorsRemainingUnsigned] = useState([]); // Sets list of sailors registered for the event, but not signed up for inspection
   //eslint-disable-next-line
   const [csvHeaders, setCSVHeader] = useState([
-    { label: 'Sailor ID', key: 'sailorID' },
+    { label: 'Sailor ID', key: 'isaf' },
     { label: 'First Name', key: 'firstName' },
     { label: 'Family Name', key: 'familyName' },
   ]);
@@ -55,12 +55,7 @@ const ViewEvent = () => {
     fetchSailorDetails(ilcaNum).then((sailors) => {
       const registeredSailorIDs = registered.map((el) => el.sailorID); // Creates array of all sailor IDs currently registered for inspection
       let filteredSailors = sailors
-        .filter((sailor) => registeredSailorIDs.indexOf(sailor.isaf) < 0)
-        .map((el) => {
-          el.sailorID = el.isaf;
-          delete el.isaf;
-          return el;
-        }); // Filters the sailors registered for the event against those currently signed up for inspectio
+        .filter((sailor) => registeredSailorIDs.indexOf(sailor.isaf) < 0); // Filters the sailors registered for the event against those currently signed up for inspectio
       setSailorsRemainingUnsigned(filteredSailors);
     });
     //eslint-disable-next-line
