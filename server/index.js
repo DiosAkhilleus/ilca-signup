@@ -111,6 +111,9 @@ app.post('/signups/created', async (req, res) => {
   const eventTitle = req.body.eventTitle;
   const hostCity = req.body.hostCity;
   const hostCountry = req.body.hostCountry;
+  const logoURL = req.body.logoURL;
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
   const ilcaNum = req.body.ilcaNum;
   const timeFrom = req.body.timeFrom;
   const timeTo = req.body.timeTo;
@@ -124,6 +127,9 @@ app.post('/signups/created', async (req, res) => {
     eventTitle: eventTitle,
     hostCity: hostCity, 
     hostCountry: hostCountry,
+    logoURL: logoURL,
+    startDate: startDate,
+    endDate: endDate,
     ilcaNum: ilcaNum,
     timeFrom: timeFrom,
     timeTo: timeTo,

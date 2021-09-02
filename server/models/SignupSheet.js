@@ -33,6 +33,18 @@ const SignupSheetSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  logoURL: {
+    type: String,
+    required: true
+  },
+  startDate: {
+    type: Date,
+    required: true
+  },
+  endDate: {
+    type: Date,
+    required: true
+  },
   ilcaNum: {
     type: String,
     required: true
