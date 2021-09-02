@@ -8,8 +8,11 @@ import {
   updateSailorInspection,
   removeSignupByEventNum,
   removeSailorFromEvent,
+  commitTimeChangeInDB,
 } from '../../javascript/adminLogic';
 import Button from '@material-ui/core/Button';
+import DatePicker from 'react-date-picker';
+import moment from 'moment';
 import Day from './Day';
 import { fetchEventDetails } from '../../javascript/timeslotLogic';
 
@@ -17,6 +20,7 @@ const ViewEvent = () => {
   const { ilcaNum } = useParams(); // The event number, used to retrieve the correct event from the DB
   const [currentSignup, setCurrentSignup] = useState({}); // The event matching the ilcaNum from params
   const [dates, setDates] = useState([]); // The set of dates in the event
+  const [shutoffDate, setShutoffDate] = useState({});
   const [slotsByDay, setSlotsByDay] = useState({}); // The slotsAvailableByDay object from the event's DB entry
   const [registered, setRegistered] = useState([]); // The current list of people registered for equipment inspection
   const [moveToggle, setMoveToggle] = useState(false); // Whether or not a sailor has been toggle by the admin for moving
@@ -48,14 +52,18 @@ const ViewEvent = () => {
       setDates(Object.keys(currentSignup.slotsAvailableByDay));
       setSlotsByDay(currentSignup.slotsAvailableByDay);
       setRegistered(currentSignup.inspectionReqs);
+      setShutoffDate(
+        new Date(moment(currentSignup.shutoffDate).format('M/D/YYYY'))
+      );
     }
   }, [currentSignup]);
 
   useEffect(() => {
     fetchSailorDetails(ilcaNum).then((sailors) => {
       const registeredSailorIDs = registered.map((el) => el.sailorID); // Creates array of all sailor IDs currently registered for inspection
-      let filteredSailors = sailors
-        .filter((sailor) => registeredSailorIDs.indexOf(sailor.isaf) < 0); // Filters the sailors registered for the event against those currently signed up for inspectio
+      let filteredSailors = sailors.filter(
+        (sailor) => registeredSailorIDs.indexOf(sailor.isaf) < 0
+      ); // Filters the sailors registered for the event against those currently signed up for inspectio
       setSailorsRemainingUnsigned(filteredSailors);
     });
     //eslint-disable-next-line
@@ -162,6 +170,17 @@ const ViewEvent = () => {
     window.location.href = '/admin';
   };
 
+  const handleDateChange = (date) => {
+    setShutoffDate(new Date(moment(date).format('M/D/YYYY')));
+  };
+
+  const handleSubmitDateChange = (shutoff) => {
+    shutoff.setHours(23);
+    shutoff.setMinutes(59);
+    commitTimeChangeInDB(shutoff, ilcaNum);
+    setTimeout(reloadPage, 500);
+  }
+
   return (
     <div
       style={{
@@ -230,6 +249,25 @@ const ViewEvent = () => {
             >
               Download CSV of Sailors Not Registered For Inspection
             </CSVLink>
+            <div className="admin-date-picker">
+              <strong style={{marginBottom: 6}}>Change Signup Cutoff Date</strong>
+              <DatePicker
+                value={shutoffDate}
+                onChange={(value) => handleDateChange(value)}
+              ></DatePicker>
+              <div style={{textAlign: 'center', marginTop: 5}}><strong>At 23:59 CST</strong></div>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: 'rgb(2, 114, 186)',
+                  color: 'white',
+                  marginTop: 10,
+                }}
+                onClick={() => handleSubmitDateChange(shutoffDate)}
+              >
+                Commit Time Change
+              </Button>
+            </div>
           </div>
           <br />
           <div>
