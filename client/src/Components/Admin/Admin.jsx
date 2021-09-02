@@ -50,10 +50,10 @@ const Admin = () => {
               <div style={{ marginTop: 10 }}>
                 <strong>{el.eventTitle}</strong>
               </div>
-              <div>
+              <div style={{marginTop: 10}}>
                 {el.hostCity}, {el.hostCountry}
               </div>
-              <div></div>
+              <img style={{maxWidth: 200, maxHeight: 100, margin: 15}} src={el.logoURL} alt="event logo" />
               <Button
                 variant="contained"
                 color="primary"
