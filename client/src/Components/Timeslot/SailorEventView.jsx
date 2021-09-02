@@ -64,12 +64,11 @@ const SailorEventView = () => {
       fetchEventDetails(currentSignup.ilcaNum).then((results) =>
         setEventDetails(results)
       );
-      fetchSailorDetails(currentSignup.ilcaNum).then((results) =>
-        setCurrentEntries(results)
-      );
+      fetchSailorDetails(currentSignup.ilcaNum).then((results) => {
+        let sorted = results.sort((a, b) => (a.isaf > b.isaf ? 1 : -1));
+        setCurrentEntries(sorted);
+      });
     }
-    console.log(currentSignup.shutoffDate, new Date());
-    console.log(new Date() < new Date(currentSignup.shutoffDate));
   }, [currentSignup]);
 
   useEffect(() => {
@@ -183,11 +182,13 @@ const SailorEventView = () => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
       {active === false || !eventDetails.logo ? (
         <div className="timeslot-search-container">
           <h1>Loading Inspection Signup...</h1>
@@ -209,17 +210,41 @@ const SailorEventView = () => {
               alt="ILCA Logo"
               style={{ width: 200 }}
             />
-            <i>
-              <h3 style={{ fontSize: 30, textAlign: 'center' }}>
-                Equipment Inspection Signup
-              </h3>
-            </i>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}
+            >
+              <i>
+                <h3
+                  style={{
+                    fontSize: 30,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                  }}
+                >
+                  {eventDetails.title}
+                </h3>
+              </i>
+              <h3 style={{ fontSize: 24 }}>Equipment Inspection Signup</h3>
+            </div>
             <img
               src={eventDetails.logo}
               alt="Event Logo"
               style={{ width: 200 }}
             />
           </div>
+          <hr
+            style={{
+              height: 2,
+              border: 0,
+              backgroundColor: 'grey',
+              marginTop: 20,
+            }}
+          />
           <div
             style={{
               margin: 'auto',
@@ -228,8 +253,7 @@ const SailorEventView = () => {
               marginBottom: 30,
             }}
           >
-            <h4>{eventDetails.title}</h4>
-            <h5>{`${eventDetails.country}, ${eventDetails.city}`}</h5>
+            <h3>{`${eventDetails.country}, ${eventDetails.city}`}</h3>
           </div>
           <div
             style={{
@@ -248,9 +272,12 @@ const SailorEventView = () => {
             </strong>
           </div>
           <div style={{ margin: 'auto', textAlign: 'center', fontSize: 20 }}>
-            1. Select a sailor from the dropdown menu <br />
-            2. Select a timeslot <br />
+            1. Begin typing a sailor's name or sailor ID in the form below <br />
+            2. Select the timeslot you'd like to have for equipment inspection <br />
             3. Click the submit button
+                <br />
+                <br />
+            <strong>If you submitted a time but would like to change it, please contact the ILCA office</strong>
           </div>
           <form className="signup-form">
             <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
@@ -308,8 +335,9 @@ const SailorEventView = () => {
             : ''}
         </div>
       ) : (
-        <div style={{margin: 'auto', marginTop: '25%', fontSize: 40}}>Inspection Signup Has Expired</div>
-
+        <div style={{ margin: 'auto', marginTop: '25%', fontSize: 40 }}>
+          Inspection Signup Has Expired
+        </div>
       )}
     </div>
   );
