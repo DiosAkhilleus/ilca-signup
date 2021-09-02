@@ -193,7 +193,7 @@ const SailorEventView = () => {
         <div className="timeslot-search-container">
           <h1>Loading Inspection Signup...</h1>
         </div>
-      ) : currentDate < new Date(currentSignup.shutoffDate) ? (
+      ) : 
         <div>
           <div
             style={{
@@ -279,6 +279,7 @@ const SailorEventView = () => {
                 <br />
             <strong>If you submitted a time but would like to change it, please contact the ILCA office</strong>
           </div>
+          {currentDate < new Date(currentSignup.shutoffDate) ? (
           <form className="signup-form">
             <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
               id="combo-box-demo"
@@ -316,6 +317,7 @@ const SailorEventView = () => {
               )} */}
             </div>
           </form>
+          ): <h3 style={{textAlign: 'center', color: 'red'}}><i>Inspection Signup Has Expired</i></h3>}
           {dates.length > 0
             ? dates.map((date, index) => (
                 <EventDay
@@ -334,11 +336,7 @@ const SailorEventView = () => {
               ))
             : ''}
         </div>
-      ) : (
-        <div style={{ margin: 'auto', marginTop: '25%', fontSize: 40 }}>
-          Inspection Signup Has Expired
-        </div>
-      )}
+      }
     </div>
   );
 };
