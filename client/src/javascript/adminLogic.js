@@ -62,3 +62,10 @@ export const removeSailorFromEvent = (ilcaNum, sailorID) => {
     });
   })
 }
+
+export const commitTimeChangeInDB = (newShutoffDate, ilcaNum) => {
+  console.log(newShutoffDate);
+  Axios.put(`http://localhost:3001/signups/updateshutoff/${ilcaNum}`, {
+    shutoffDate: newShutoffDate
+  });
+}
