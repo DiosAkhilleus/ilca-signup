@@ -7,7 +7,7 @@ const cors = require('cors');
 const Axios = require('axios');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 const MNKEY = process.env.MNKEY;
 const EDURL = process.env.EDURL;
 const SDURL = process.env.SDURL;
@@ -166,6 +166,23 @@ app.put('/signups/update/:uuid', async (req, res) => {
     }
   );
 });
+
+app.put('/signups/updateshutoff/:ilcaNum', async (req, res) => {
+  const ilcaNum = req.params.ilcaNum;
+  const newShutoffDate = req.body.shutoffDate
+
+  SignupSheetModel.findOneAndUpdate(
+    { ilcaNum: ilcaNum },
+    { shutoffDate: newShutoffDate },
+    { new: true, useFindAndModify: false },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    }
+  );
+})
 
 app.post('/insertsailor', async (req, res) => {
   // Adds a new sailor to the currently entered sailors list
