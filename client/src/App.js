@@ -23,7 +23,6 @@ function App() {
         <Route exact path='/admin/create' component={TimeslotPost} />
         <Route exact path='/timeslots' component={Timeslot} />
         <Route path='/signup/:id' children={<SailorEventView />}/>
-        <Route path='/edittimeslot/:id' children={Home}/>
         <Route path='/admin/event/:ilcaNum' children={<AdminEventView />}/>
         <Route exact path='/postsailor' component={PostSailor} />
         <Route exact path='/displaysailors' component={DisplaySailors} />
