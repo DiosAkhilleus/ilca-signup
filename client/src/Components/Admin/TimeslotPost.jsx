@@ -31,9 +31,9 @@ const TimeslotPost = () => {
   const [ilcaNum, setILCANum] = useState(''); // The number designation for the particular event, which will be used in the future for an API call requesting event information
   const [slotsAvailableByDay, setSlotsAvailableByDay] = useState({}); // This is the object that will represent all the information for each day, including unavailable slots and number of signups left per time option
   const [timeFrom, setTimeFrom] = useState(510); // The start time for each day of inspection signup
-  const [startValue, setStartValue] = useState(moment('2021-01-01 08:30')); // The initial time for the starting time selector
+  const [startValue, setStartValue] = useState(moment('2021-01-01 09:00')); // The initial time for the starting time selector
   const [timeTo, setTimeTo] = useState(870); // The end time for each day of inspection signup
-  const [endValue, setEndValue] = useState(moment('2021-01-01 14:30')); // The initial time for the ending time selector
+  const [endValue, setEndValue] = useState(moment('2021-01-01 18:00')); // The initial time for the ending time selector
   const [calendar, setCalendar] = useState([
     // The calendar's state information
     {
@@ -107,12 +107,15 @@ const TimeslotPost = () => {
             details.title,
             details.city,
             details.country,
+            details.logo,
+            details.startDate.date,
+            details.endDate.date,
             ilcaNum,
             timeFrom,
             timeTo,
             uuid
           );
-          setTimeout(reload, 500);
+          setTimeout(reload, 600);
         } else {
           alert('The Event ID entered does not match any existing events');
         }
@@ -197,6 +200,12 @@ const TimeslotPost = () => {
     replacementObj[el].unavailableSlots = [];
     setSlotsAvailableByDay(replacementObj);
   };
+
+  const handleChangeCutoff = (date) => {
+    date.setHours(23);
+    date.setMinutes(59);
+    setShutoffDate(date);
+  }
 
   return (
     <>
@@ -291,9 +300,9 @@ const TimeslotPost = () => {
               </div>
               <div className="start-end-group">
                 <div className="label"><strong>Signup End Date</strong></div>
-                <DatePicker value={shutoffDate} onChange={setShutoffDate}/>
+                <DatePicker value={shutoffDate} onChange={(value) => handleChangeCutoff(value)}/>
                 <div><i>@</i></div>
-                  <strong>{moment(shutoffDate).format('HH:mm')}</strong>
+                  <strong>{moment(shutoffDate).format('HH:mm')} CST</strong>
               </div>
             </div>
           </div>
