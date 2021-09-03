@@ -13,6 +13,7 @@ import {
 import Button from '@material-ui/core/Button';
 import DatePicker from 'react-date-picker';
 import moment from 'moment';
+import _ from 'lodash';
 import Day from './Day';
 import { fetchEventDetails } from '../../javascript/timeslotLogic';
 
@@ -29,12 +30,22 @@ const ViewEvent = () => {
   const [sailorToMove, setSailorToMove] = useState(''); // The sailor-toggled-to-move's sailorID, e.g. 'AUTAM6'
   const [eventDetails, setEventDetails] = useState({}); // Event details retrieved from the event API call
   const [sailorsRemainingUnsigned, setSailorsRemainingUnsigned] = useState([]); // Sets list of sailors registered for the event, but not signed up for inspection
+  const [sailorsSignedUp, setSailorsSignedUp] = useState([]);
   //eslint-disable-next-line
-  const [csvHeaders, setCSVHeader] = useState([
+  const [csvHeadersUnregistered, setCSVHeadersUnregistered] = useState([
     { label: 'Sailor ID', key: 'isaf' },
     { label: 'First Name', key: 'firstName' },
     { label: 'Family Name', key: 'familyName' },
   ]);
+  //eslint-disable-next-line
+  const [csvHeadersRegistered, setCSVHeadersRegistered] = useState([
+    { label: 'Date', key: 'day' },
+    { label: 'Time', key: 'time' },
+    { label: 'Sailor ID', key: 'sailorID' },
+    { label: 'First Name', key: 'name.firstName' },
+    { label: 'Family Name', key: 'name.familyName' },
+  ]);
+
   useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
@@ -67,6 +78,22 @@ const ViewEvent = () => {
       setSailorsRemainingUnsigned(filteredSailors);
     });
     //eslint-disable-next-line
+  }, [registered]);
+
+  useEffect(() => {
+    // Creates a sorted list for CSV export
+    let alteredTimeSailorList = _.cloneDeep(registered);
+    for (let sailor in alteredTimeSailorList) {
+      const sailorTime = alteredTimeSailorList[sailor].time;
+      let hours = Math.floor(sailorTime / 60);
+      let minutes = sailorTime % 60;
+      let format = `${hours}:${minutes === 0 ? `00` : minutes}`;
+      alteredTimeSailorList[sailor].time = format;
+    }
+    let sortedList = alteredTimeSailorList.sort((a, b) =>
+      a.day > b.day ? 1 : -1
+    );
+    setSailorsSignedUp(sortedList);
   }, [registered]);
 
   const toggleSailorMove = (sailorID, time, day) => {
@@ -179,7 +206,7 @@ const ViewEvent = () => {
     shutoff.setMinutes(59);
     commitTimeChangeInDB(shutoff, ilcaNum);
     setTimeout(reloadPage, 500);
-  }
+  };
 
   return (
     <div
@@ -243,19 +270,32 @@ const ViewEvent = () => {
               Link To Sailor Signup
             </Link>
             <CSVLink
+              className='link'
               data={sailorsRemainingUnsigned}
-              headers={csvHeaders}
+              headers={csvHeadersUnregistered}
               filename={`remaining_sailors_for_event_${ilcaNum}.csv`}
             >
               Download CSV of Sailors Not Registered For Inspection
             </CSVLink>
+            <CSVLink
+              className='link'
+              data={sailorsSignedUp}
+              headers={csvHeadersRegistered}
+              filename={`sailor_inspection_list_for_event_${ilcaNum}.csv`}
+            >
+              Download CSV of Sailors Registered For Inspection
+            </CSVLink>
             <div className="admin-date-picker">
-              <strong style={{marginBottom: 6}}>Change Signup Cutoff Date</strong>
+              <strong style={{ marginBottom: 6 }}>
+                Change Signup Cutoff Date
+              </strong>
               <DatePicker
                 value={shutoffDate}
                 onChange={(value) => handleDateChange(value)}
               ></DatePicker>
-              <div style={{textAlign: 'center', marginTop: 5}}><strong>At 23:59 CST</strong></div>
+              <div style={{ textAlign: 'center', marginTop: 5 }}>
+                <strong>At 23:59 CST</strong>
+              </div>
               <Button
                 variant="contained"
                 style={{
