@@ -14,8 +14,8 @@ function App() {
       <Switch>
         <Route exact path='/ilca-signup' component={Admin} />
         <Route exact path='/ilca-signup/admin/create' component={TimeslotPost} />
-        <Route path='/ilca-signup/signup/:id' children={<SailorEventView />}/>
-        <Route path='/ilca-signup/admin/event/:ilcaNum' children={<AdminEventView />}/>
+        <Route path='/ilca-signup/signup/:id' component={SailorEventView}/>
+        <Route path='/ilca-signup/admin/event/:ilcaNum' component={AdminEventView}/>
         <Route path='/' component={NotFound}/>
       </Switch>
     </BrowserRouter>
