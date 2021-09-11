@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 export const getSignupByEventNum = (ilcaNum) => {
-  const res = Axios.get('http://localhost:3001/signups/options').then(
+  const res = Axios.get('https://ilca-inspection-server.herokuapp.com/signups/options').then(
     (response) => {
       return response.data.filter((signup) => signup.ilcaNum === ilcaNum);
     }
@@ -43,21 +43,21 @@ export const updateSailorInspection = (
   let replacementSlotsObj = Object.assign(slotsByDay, {});
   replacementSlotsObj[day].entriesLeft = replacementEntriesLeft;
 
-  Axios.put(`http://localhost:3001/signups/updateinspecs/${ilcaNum}`, {
+  Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/updateinspecs/${ilcaNum}`, {
     inspectionReqs: inspectionReqs,
     slotsAvailableByDay: replacementSlotsObj,
   });
 };
 
 export const removeSignupByEventNum = (ilcaNum) => {
-  Axios.delete(`http://localhost:3001/signups/delete/${ilcaNum}`);
+  Axios.delete(`https://ilca-inspection-server.herokuapp.com/signups/delete/${ilcaNum}`);
 };
 
 export const removeSailorFromEvent = (ilcaNum, sailorID) => {
   getSignupByEventNum(ilcaNum).then(results => {
     const signup = results[0];
     const newInspectionReqs = signup.inspectionReqs.filter(el => el.sailorID !== sailorID);
-    Axios.put(`http://localhost:3001/signups/removesailor/${sailorID}/${ilcaNum}`, {
+    Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/removesailor/${sailorID}/${ilcaNum}`, {
       inspectionReqs: newInspectionReqs
     });
   })
@@ -65,7 +65,7 @@ export const removeSailorFromEvent = (ilcaNum, sailorID) => {
 
 export const commitTimeChangeInDB = (newShutoffDate, ilcaNum) => {
   console.log(newShutoffDate);
-  Axios.put(`http://localhost:3001/signups/updateshutoff/${ilcaNum}`, {
+  Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/updateshutoff/${ilcaNum}`, {
     shutoffDate: newShutoffDate
   });
 }

@@ -28,7 +28,7 @@ export const postCreatedTimeslotToDB = (
   timeTo,
   uuid
 ) => {
-  Axios.post('http://localhost:3001/signups/created/', {
+  Axios.post('https://ilca-inspection-server.herokuapp.com/signups/created/', {
     slotsAvailableByDay: slotsAvailableByDay,
     inspectionReqs: inspectionReqs,
     interval: interval,
@@ -54,7 +54,7 @@ export const postCreatedTimeslotToDB = (
 
 export const getTimeslots = () => {
   // Retrieves all currently created timeslots
-  const res = Axios.get('http://localhost:3001/signups/options').then(
+  const res = Axios.get('https://ilca-inspection-server.herokuapp.com/signups/options').then(
     (response) => {
       return response.data;
     }
@@ -89,7 +89,7 @@ export const updateTimeslotByUUID = async (
         results.filter((element) => element.uuid === UUID)[0].inspectionReqs
     )
     .then((currentReqs) => {
-      Axios.put(`http://localhost:3001/signups/update/${UUID}`, {
+      Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/update/${UUID}`, {
         slotsAvailableByDay: slotsAvailableByDay,
         inspectionReqs: [...currentReqs, inspectionReq],
       });
@@ -97,7 +97,7 @@ export const updateTimeslotByUUID = async (
 };
 
 export const fetchEventDetails = (ilcaNum) => {
-  const res = Axios.get(`http://localhost:3001/events/details/${ilcaNum}`).then(
+  const res = Axios.get(`https://ilca-inspection-server.herokuapp.com/events/details/${ilcaNum}`).then(
     (response) => {
       return response.data;
     }
@@ -106,7 +106,7 @@ export const fetchEventDetails = (ilcaNum) => {
 };
 
 export const fetchSailorDetails = (ilcaNum) => {
-  const res = Axios.get(`http://localhost:3001/events/sailors/${ilcaNum}`).then(
+  const res = Axios.get(`https://ilca-inspection-server.herokuapp.com/events/sailors/${ilcaNum}`).then(
     (response) => {
       return response.data;
     }
