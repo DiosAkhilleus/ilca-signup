@@ -210,7 +210,7 @@ const ViewEvent = () => {
   };
 
   const redirToAdmin = () => {
-    window.location.href = '/';
+    window.location.href = '/ilca-signup';
   };
 
   const handleDateChange = (date) => {
@@ -275,12 +275,12 @@ const ViewEvent = () => {
                 marginTop: 20,
                 marginBottom: 30,
               }}
-              to="/"
+              to="/ilca-signup"
             >
               Back to Admin
             </Link>
             <Link
-              to={`/signup/${currentSignup.uuid}`}
+              to={`/ilca-signup/signup/${currentSignup.uuid}`}
               style={{ marginBottom: 20 }}
             >
               Link To Sailor Signup

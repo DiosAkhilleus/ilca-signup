@@ -33,7 +33,7 @@ const Admin = () => {
         <Button
           variant="contained"
           color="primary"
-          href="/admin/create"
+          href="/ilca-signup/admin/create"
           style={{ width: 300, margin: 'auto' }}
         >
           Create Inspection Signup
@@ -56,7 +56,7 @@ const Admin = () => {
               <Button
                 variant="contained"
                 color="primary"
-                href={`/admin/event/${el.ilcaNum}`}
+                href={`/ilca-signup/admin/event/${el.ilcaNum}`}
                 style={{
                   width: 200,
                   marginLeft: 'auto',
