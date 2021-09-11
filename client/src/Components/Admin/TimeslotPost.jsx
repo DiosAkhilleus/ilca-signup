@@ -224,7 +224,7 @@ const TimeslotPost = () => {
         <Link
           style={{ fontSize: 20, marginBottom: 20 }}
           className="link"
-          to="/admin"
+          to="/"
         >
           Back to admin
         </Link>
