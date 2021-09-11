@@ -102,6 +102,7 @@ const TimeslotPost = () => {
             slotsAvailableByDay,
             inspectionReqs,
             interval,
+            entryLimit,
             selectedDates,
             shutoffDate,
             details.title,

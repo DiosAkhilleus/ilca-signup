@@ -106,6 +106,7 @@ app.post('/signups/created', async (req, res) => {
   const slotsAvailableByDay = req.body.slotsAvailableByDay;
   const inspectionReqs = req.body.inspectionReqs;
   const interval = req.body.interval;
+  const entryLimit = req.body.entryLimit;
   const selectedDates = req.body.selectedDates;
   const shutoffDate = req.body.shutoffDate;
   const eventTitle = req.body.eventTitle;
@@ -122,6 +123,7 @@ app.post('/signups/created', async (req, res) => {
     slotsAvailableByDay: slotsAvailableByDay,
     inspectionReqs: inspectionReqs,
     interval: interval,
+    entryLimit: entryLimit,
     selectedDates: selectedDates,
     shutoffDate: shutoffDate,
     eventTitle: eventTitle,
