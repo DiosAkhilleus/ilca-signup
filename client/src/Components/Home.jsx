@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 
+// DEPRECATED —— NOT IN USE
+
 const Home = () => {
   return (
     <div className="home-page">
