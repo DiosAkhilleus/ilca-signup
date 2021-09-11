@@ -22,19 +22,14 @@ const Admin = () => {
           textAlign: 'center',
         }}
       >
-      <div className='admin-header'>
-        <img
-          src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
-          alt="ILCA Logo"
-          style={{ width: 200, margin: 30, marginBottom: 0}}
-        />
-        <h1>Equipment Inspection Sign-Up Administration</h1>
-      </div>
-        
-        {/* <Link className="link" to="/" style={{ marginTop: 40 }}>
-          Back to Home
-        </Link> */}
-        {/* <Link className='link' to='/admin/create'>Create Inspection Signup</Link> */}
+        <div className="admin-header">
+          <img
+            src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
+            alt="ILCA Logo"
+            style={{ width: 200, margin: 30, marginBottom: 0 }}
+          />
+          <h1>Equipment Inspection Sign-Up Administration</h1>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -50,10 +45,14 @@ const Admin = () => {
               <div style={{ marginTop: 10 }}>
                 <strong>{el.eventTitle}</strong>
               </div>
-              <div style={{marginTop: 10}}>
+              <div style={{ marginTop: 10 }}>
                 {el.hostCity}, {el.hostCountry}
               </div>
-              <img style={{maxWidth: 200, maxHeight: 100, margin: 15}} src={el.logoURL} alt="event logo" />
+              <img
+                style={{ maxWidth: 200, maxHeight: 100, margin: 15 }}
+                src={el.logoURL}
+                alt="event logo"
+              />
               <Button
                 variant="contained"
                 color="primary"
@@ -63,7 +62,7 @@ const Admin = () => {
                   marginLeft: 'auto',
                   marginRight: 'auto',
                   marginBottom: 20,
-                  backgroundColor: 'rgb(2, 114, 186)'
+                  backgroundColor: 'rgb(2, 114, 186)',
                 }}
               >
                 Access Event Details
