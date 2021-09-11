@@ -360,7 +360,7 @@ body {
 
 .admin-event-card {
   width: 440px;
-  min-height: 150px;
+  min-height: 250px;
   background-color: rgb(250, 250, 250);
   margin: 12px;
   filter: drop-shadow(0 0 0.75rem rgb(190, 190, 190));
