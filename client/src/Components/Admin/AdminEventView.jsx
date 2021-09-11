@@ -275,7 +275,7 @@ const ViewEvent = () => {
                 marginTop: 20,
                 marginBottom: 30,
               }}
-              to="/admin"
+              to="/"
             >
               Back to Admin
             </Link>
