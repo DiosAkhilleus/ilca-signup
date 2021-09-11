@@ -37,14 +37,6 @@ const ViewEvent = () => {
     { label: 'First Name', key: 'firstName' },
     { label: 'Family Name', key: 'familyName' },
   ]);
-  //eslint-disable-next-line
-  const [csvHeadersRegistered, setCSVHeadersRegistered] = useState([
-    { label: 'Date', key: 'day' },
-    { label: 'Time', key: 'time' },
-    { label: 'Sailor ID', key: 'sailorID' },
-    { label: 'First Name', key: 'name.firstName' },
-    { label: 'Family Name', key: 'name.familyName' },
-  ]);
 
   useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
@@ -82,18 +74,42 @@ const ViewEvent = () => {
 
   useEffect(() => {
     // Creates a sorted list for CSV export
-    let alteredTimeSailorList = _.cloneDeep(registered);
-    for (let sailor in alteredTimeSailorList) {
-      const sailorTime = alteredTimeSailorList[sailor].time;
-      let hours = Math.floor(sailorTime / 60);
-      let minutes = sailorTime % 60;
-      let format = `${hours}:${minutes === 0 ? `00` : minutes}`;
-      alteredTimeSailorList[sailor].time = format;
+    let csv = [];
+    let timeList = [];
+    let timeListForFilter = [];
+    for (let day in currentSignup.slotsAvailableByDay) {
+      for (let el in currentSignup.slotsAvailableByDay[day].entriesLeft) {
+        let time = currentSignup.slotsAvailableByDay[day].entriesLeft[el][0];
+        let hours = Math.floor(time / 60);
+        let minutes = time % 60;
+        let formatted = `${hours}:${minutes === 0 ? `00` : minutes}`;
+        timeList.push(`${day}, ${formatted}`);
+        timeListForFilter.push([day, time]);
+      }
     }
-    let sortedList = alteredTimeSailorList.sort((a, b) =>
-      a.day > b.day ? 1 : -1
-    );
-    setSailorsSignedUp(sortedList);
+
+    for (let i = 0; i < currentSignup.entryLimit; i++) {
+      csv.push([]);
+    }
+    console.log(csv);
+
+    for (let i = 0; i < timeListForFilter.length; i++) {
+      let currentSlot = timeListForFilter[i];
+      let filteredEntries = registered.filter(req => (req.day === currentSlot[0] && req.time === currentSlot[1]));
+      for (let y = 0; y < csv.length; y++) {
+        if (filteredEntries.length > 0) {
+          let shiftedReq = filteredEntries.shift();
+          let name = `${shiftedReq.name.firstName} ${shiftedReq.name.familyName}`;
+          csv[y][i] = name;
+        } else {
+          csv[y][i] = '';
+        }
+      }
+    }
+    csv.unshift(timeList);
+
+    setSailorsSignedUp(csv);
+    //eslint-disable-next-line
   }, [registered]);
 
   const toggleSailorMove = (sailorID, time, day) => {
@@ -280,7 +296,7 @@ const ViewEvent = () => {
             <CSVLink
               className='link'
               data={sailorsSignedUp}
-              headers={csvHeadersRegistered}
+              // headers={csvHeadersRegistered}
               filename={`sailor_inspection_list_for_event_${ilcaNum}.csv`}
             >
               Download CSV of Sailors Registered For Inspection
