@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const SailorModel = require('./models/Sailor');
 const SignupSheetModel = require('./models/SignupSheet');
 const connectToDB = require('./db/conn');
 const cors = require('cors');
@@ -19,16 +18,6 @@ connectToDB(); // Connects to MongoDB
 
 app.get('/', (req, res) => {
   console.log(req.baseUrl);
-});
-
-app.get('/sailorinfo', (req, res) => {
-  // Retrieves all entered sailors
-  SailorModel.find({}, (err, result) => {
-    if (err) {
-      res.send(err);
-    }
-    res.send(result);
-  });
 });
 
 app.put('/signups/updateinspecs/:ilcaNum', async (req, res) => {
@@ -185,32 +174,6 @@ app.put('/signups/updateshutoff/:ilcaNum', async (req, res) => {
     }
   );
 })
-
-app.post('/insertsailor', async (req, res) => {
-  // Adds a new sailor to the currently entered sailors list
-  const sailorID = req.body.sailorID;
-  const name = req.body.name;
-  const sailNumber = req.body.sailNumber;
-  const rig = req.body.rig;
-  const dateEntered = req.body.dateEntered;
-  const country = req.body.country;
-
-  const sailor = new SailorModel({
-    sailorID: sailorID,
-    name: name,
-    sailNumber: sailNumber,
-    rig: rig,
-    dateEntered: dateEntered,
-    country: country,
-  });
-  try {
-    await sailor.save();
-  } catch (err) {
-    console.error(err);
-  }
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end('Posted User');
-});
 
 app.delete('/signups/delete/:ilcaNum', async (req, res) => {
   const ilcaNum = req.params.ilcaNum;
