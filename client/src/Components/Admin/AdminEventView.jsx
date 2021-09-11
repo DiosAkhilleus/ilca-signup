@@ -210,7 +210,7 @@ const ViewEvent = () => {
   };
 
   const redirToAdmin = () => {
-    window.location.href = '/ilca-signup';
+    window.location.href = '/';
   };
 
   const handleDateChange = (date) => {
@@ -275,7 +275,7 @@ const ViewEvent = () => {
                 marginTop: 20,
                 marginBottom: 30,
               }}
-              to="/ilca-signup"
+              to="/"
             >
               Back to Admin
             </Link>
