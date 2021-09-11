@@ -210,7 +210,7 @@ const ViewEvent = () => {
   };
 
   const redirToAdmin = () => {
-    window.location.href = '/admin';
+    window.location.href = '/';
   };
 
   const handleDateChange = (date) => {
