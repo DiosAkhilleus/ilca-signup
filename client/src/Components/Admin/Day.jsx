@@ -80,11 +80,11 @@ const Day = ({
                           moveSailorInDB(sailorToMove, info[0], date, ind);
                         }} // function params are sailorID, time, and date to which the sailor will be moved
                       >
-                        Place Here
+                        Move Sailor Here
                       </Button>
                     ) : info[0] !== toggledTime ? (
                       <Button variant="contained" disabled style={{marginBottom: 10}}>
-                        Place Here
+                        Move Sailor Here
                       </Button>
                     ) : (
                       ''

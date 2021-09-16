@@ -9,7 +9,10 @@ const Admin = () => {
   const [timeslots, setTimeslots] = useState([]);
 
   useEffect(() => {
-    getTimeslots().then((results) => setTimeslots(results));
+    getTimeslots().then((results) => {
+      let sortedByStartDate = results.sort((a, b) => a.startDate > b.startDate)
+      setTimeslots(sortedByStartDate)
+    });
   }, []);
 
   return (

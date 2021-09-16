@@ -13,7 +13,7 @@ import {
 import Button from '@material-ui/core/Button';
 import DatePicker from 'react-date-picker';
 import moment from 'moment';
-import _ from 'lodash';
+// import _ from 'lodash';
 import Day from './Day';
 import { fetchEventDetails } from '../../javascript/timeslotLogic';
 
@@ -22,6 +22,7 @@ const ViewEvent = () => {
   const [currentSignup, setCurrentSignup] = useState({}); // The event matching the ilcaNum from params
   const [dates, setDates] = useState([]); // The set of dates in the event
   const [shutoffDate, setShutoffDate] = useState({});
+  const [commitChangeButton, setCommitChangeButton] = useState(false);
   const [slotsByDay, setSlotsByDay] = useState({}); // The slotsAvailableByDay object from the event's DB entry
   const [registered, setRegistered] = useState([]); // The current list of people registered for equipment inspection
   const [moveToggle, setMoveToggle] = useState(false); // Whether or not a sailor has been toggle by the admin for moving
@@ -95,7 +96,9 @@ const ViewEvent = () => {
 
     for (let i = 0; i < timeListForFilter.length; i++) {
       let currentSlot = timeListForFilter[i];
-      let filteredEntries = registered.filter(req => (req.day === currentSlot[0] && req.time === currentSlot[1]));
+      let filteredEntries = registered.filter(
+        (req) => req.day === currentSlot[0] && req.time === currentSlot[1]
+      );
       for (let y = 0; y < csv.length; y++) {
         if (filteredEntries.length > 0) {
           let shiftedReq = filteredEntries.shift();
@@ -215,6 +218,7 @@ const ViewEvent = () => {
 
   const handleDateChange = (date) => {
     setShutoffDate(new Date(moment(date).format('M/D/YYYY')));
+    setCommitChangeButton(true);
   };
 
   const handleSubmitDateChange = (shutoff) => {
@@ -277,16 +281,16 @@ const ViewEvent = () => {
               }}
               to="/"
             >
-              Back to Admin
+              Return to Admin Home Page
             </Link>
             <Link
               to={`/ilca-signup/signup/${currentSignup.uuid}`}
               style={{ marginBottom: 20 }}
             >
-              Link To Sailor Signup
+              Public Link for Event Signup Sheet
             </Link>
             <CSVLink
-              className='link'
+              className="link"
               data={sailorsRemainingUnsigned}
               headers={csvHeadersUnregistered}
               filename={`remaining_sailors_for_event_${ilcaNum}.csv`}
@@ -294,7 +298,7 @@ const ViewEvent = () => {
               Download CSV of Sailors Not Registered For Inspection
             </CSVLink>
             <CSVLink
-              className='link'
+              className="link"
               data={sailorsSignedUp}
               // headers={csvHeadersRegistered}
               filename={`sailor_inspection_list_for_event_${ilcaNum}.csv`}
@@ -303,26 +307,37 @@ const ViewEvent = () => {
             </CSVLink>
             <div className="admin-date-picker">
               <strong style={{ marginBottom: 6 }}>
-                Change Signup Cutoff Date
+                Signup Sheet Closing Date
               </strong>
               <DatePicker
                 value={shutoffDate}
                 onChange={(value) => handleDateChange(value)}
               ></DatePicker>
               <div style={{ textAlign: 'center', marginTop: 5 }}>
-                <strong>At 23:59 CST</strong>
+                <strong>At 23:59 US Central Time</strong>
               </div>
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: 'rgb(2, 114, 186)',
-                  color: 'white',
-                  marginTop: 10,
-                }}
-                onClick={() => handleSubmitDateChange(shutoffDate)}
-              >
-                Commit Time Change
-              </Button>
+              {commitChangeButton ? (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: 'rgb(2, 114, 186)',
+                    color: 'white',
+                    marginTop: 10,
+                  }}
+                  onClick={() => handleSubmitDateChange(shutoffDate)}
+                >
+                  Confirm New Closing Date
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  disabled
+                  style={{ marginTop: 10 }}
+                  onClick={() => handleSubmitDateChange(shutoffDate)}
+                >
+                  Confirm New Closing Date
+                </Button>
+              )}
             </div>
           </div>
           <br />
