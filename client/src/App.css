@@ -176,7 +176,7 @@ body {
   margin-top: 10px;
 }
 .start-end-group-container {
-  width: 200px;
+  width: 240px;
   min-height: 240px;
   display: flex;
   flex-direction: column;
@@ -360,7 +360,7 @@ body {
 
 .admin-event-card {
   width: 440px;
-  min-height: 250px;
+  height: 250px;
   background-color: rgb(250, 250, 250);
   margin: 12px;
   filter: drop-shadow(0 0 0.75rem rgb(190, 190, 190));
