@@ -33,12 +33,12 @@ const Admin = () => {
         <Button
           variant="contained"
           color="primary"
-          href="/ilca-signup/admin/create"
+          href="/admin/create"
           style={{ width: 300, margin: 'auto' }}
         >
           Create Inspection Signup
         </Button>
-        <h3>Created Events</h3>
+        <h3>Existing Signup Sheets</h3>
         <div className="event-list-container">
           {timeslots.map((el, index) => (
             <div className="admin-event-card" key={index}>
@@ -56,16 +56,16 @@ const Admin = () => {
               <Button
                 variant="contained"
                 color="primary"
-                href={`/ilca-signup/admin/event/${el.ilcaNum}`}
+                href={`/admin/event/${el.ilcaNum}`}
                 style={{
-                  width: 200,
+                  width: 250,
                   marginLeft: 'auto',
                   marginRight: 'auto',
                   marginBottom: 20,
                   backgroundColor: 'rgb(2, 114, 186)',
                 }}
               >
-                Access Event Details
+                Access Signup Sheet Details
               </Button>
             </div>
           ))}

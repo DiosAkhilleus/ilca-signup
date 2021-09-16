@@ -44,11 +44,6 @@ const TimeslotPost = () => {
   ]);
 
   useEffect(() => {
-    console.log(shutoffDate);
-    console.log(moment(shutoffDate).format('YYYY-MM-DD'));
-  }, [shutoffDate]);
-
-  useEffect(() => {
     // Sets the list of days for the regatta and sets the "slotsAvailableByDay" state value
     let days = getDates(calendar[0].startDate, calendar[0].endDate);
     let formatted = days.map((date) => moment(date).format('YYYY-MM-DD'));
@@ -116,7 +111,7 @@ const TimeslotPost = () => {
             timeTo,
             uuid
           );
-          setTimeout(reload, 600);
+          setTimeout(redir, 600);
         } else {
           alert('The Event ID entered does not match any existing events');
         }
@@ -126,8 +121,8 @@ const TimeslotPost = () => {
     }
   };
 
-  const reload = () => {
-    window.location.reload();
+  const redir = () => {
+    window.location.href = `/admin/event/${ilcaNum}`;
   };
 
   //eslint-disable-next-line
@@ -270,7 +265,7 @@ const TimeslotPost = () => {
                 className="event-detail-form"
                 id="filled-number"
                 variant="filled"
-                label="Timeslot Entry Limit"
+                label="Spaces per Timeslot"
                 type="number"
                 value={entryLimit}
                 onChange={(e) => handleNumberInput(e)}
@@ -300,7 +295,7 @@ const TimeslotPost = () => {
                 />
               </div>
               <div className="start-end-group">
-                <div className="label"><strong>Signup End Date</strong></div>
+                <div className="label"><strong>Signup Sheet Closing Date</strong></div>
                 <DatePicker value={shutoffDate} onChange={(value) => handleChangeCutoff(value)}/>
                 <div><i>@</i></div>
                   <strong>{moment(shutoffDate).format('HH:mm')} CST</strong>
@@ -310,7 +305,7 @@ const TimeslotPost = () => {
         </div>
 
         <div className="timeslot">
-          <h3>Click individual slots below to make them unavailable</h3>
+          {Object.keys(slotsAvailableByDay).length > 0 ? <h3>Click individual slots below to make them unavailable</h3> : ''}
           {/* <hr style={{ height: 2, backgroundColor: 'grey', border: 'none' }} /> */}
           {Object.keys(slotsAvailableByDay).map((el, index) => (
             <div key={index} className="admin-slot-container">
