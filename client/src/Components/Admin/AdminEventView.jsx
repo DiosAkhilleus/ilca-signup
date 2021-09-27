@@ -207,9 +207,13 @@ const ViewEvent = () => {
   };
 
   const deleteSheet = (e) => {
-    removeSignupByEventNum(ilcaNum);
-    setTimeout(redirToAdmin, 500);
-    e.preventDefault();
+    //eslint-disable-next-line
+    let result = confirm('Are you certain you want to delete this event signup?');
+    if (result === true) {
+      removeSignupByEventNum(ilcaNum);
+      setTimeout(redirToAdmin, 500);
+      e.preventDefault();
+    }
   };
 
   const redirToAdmin = () => {
