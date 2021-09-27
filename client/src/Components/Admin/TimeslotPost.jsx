@@ -212,7 +212,7 @@ const TimeslotPost = () => {
           alt="ILCA Logo"
         />
         <div className="post-title">
-          <i>ILCA</i> Inspection Signup Creator
+          Create Inspection Signup
         </div>
       </header>
       <div className="timeslot-post">
