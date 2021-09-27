@@ -190,13 +190,6 @@ const TimeslotPost = () => {
     setSlotsAvailableByDay(replacementObj);
   };
 
-  const resetUnavailable = (el) => {
-    // Resets the unavailable slots for the selected day
-    let replacementObj = Object.assign({}, slotsAvailableByDay);
-    replacementObj[el].unavailableSlots = [];
-    setSlotsAvailableByDay(replacementObj);
-  };
-
   const handleChangeCutoff = (date) => {
     date.setHours(23);
     date.setMinutes(59);
@@ -312,19 +305,6 @@ const TimeslotPost = () => {
               <div style={{ textAlign: 'center', marginBottom: 10 }}>
                 <strong>{moment(el).format('D MMMM YYYY')}</strong>
               </div>
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: 'rgb(46, 134, 175)',
-                  marginBottom: 20,
-                  color: 'white',
-                }}
-                onClick={() => {
-                  resetUnavailable(el);
-                }}
-              >
-                Reset Unavailable Slots
-              </Button>
               <div style={{ marginBottom: 8 }}>
                 <AdjustEntries
                   setSlotsAvailableByDay={setSlotsAvailableByDay}
