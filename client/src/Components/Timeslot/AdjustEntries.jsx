@@ -10,19 +10,23 @@ const AdjustEntries = ({
     // Controls the effects of clicking the up or down arrows on each day's entry limit
     let replacementObj = Object.assign({}, slotsAvailableByDay);
     if (method === 'increase') {
-      if (
-        // if this specific slot is not found in the list of unavailable slots...
-        replacementObj[element].unavailableSlots.indexOf(
-          replacementObj[element].entriesLeft[index][0]
-        ) === -1
-      ) {
+      // if (
+      //   // if this specific slot is not found in the list of unavailable slots...
+      //   replacementObj[element].unavailableSlots.indexOf(
+      //     replacementObj[element].entriesLeft[index][0]
+      //   ) === -1
+      // ) {
         // ...add one to that slot's entry limit
+        if (replacementObj[element].unavailableSlots.indexOf(replacementObj[element].entriesLeft[index][0]) > -1) {
+          replacementObj[element].unavailableSlots = replacementObj[element].unavailableSlots.filter((el) => el !== replacementObj[element].entriesLeft[index][0]);
+        }
         replacementObj[element].entriesLeft = replacementObj[
           element
         ].entriesLeft.map((el, ind) =>
           ind === index ? [el[0], el[1] + 1] : el
         );
-      }
+
+      // }
       console.log(replacementObj);
     } else if (method === 'decrease') {
       // if this specific slot is not found in the list of unavailable slots...
