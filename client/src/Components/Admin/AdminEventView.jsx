@@ -301,7 +301,7 @@ const ViewEvent = () => {
               Return to Admin Home Page
             </Link>
             <Link
-              to={`/ilca-signup/signup/${currentSignup.uuid}`}
+              to={`/signup/${currentSignup.uuid}`}
               style={{ marginBottom: 20 }}
             >
               Public Link for Event Signup Sheet
