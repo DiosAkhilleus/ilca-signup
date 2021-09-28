@@ -196,13 +196,6 @@ const SailorEventView = () => {
       ) : 
         <div>
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              width: '100%',
-            }}
             className="event-header"
           >
             <img
@@ -229,8 +222,15 @@ const SailorEventView = () => {
                   {eventDetails.title}
                 </h3>
               </i>
-              <h3 style={{ fontSize: 24 }}>Equipment Inspection Signup</h3>
             </div>
+            <h3>{`${eventDetails.country}, ${eventDetails.city}`}</h3>
+            <strong style={{fontSize: 20, marginBottom: 20}}>
+              {moment(eventDetails.startDate.date).format(
+                'dddd, MMMM Do, YYYY'
+              )}{' '}
+              —{' '}
+              {moment(eventDetails.endDate.date).format('dddd, MMMM Do, YYYY')}
+            </strong>
             <img
               src={eventDetails.logo}
               alt="Event Logo"
@@ -245,32 +245,7 @@ const SailorEventView = () => {
               marginTop: 20,
             }}
           />
-          <div
-            style={{
-              margin: 'auto',
-              textAlign: 'center',
-              fontSize: 20,
-              marginBottom: 30,
-            }}
-          >
-            <h3>{`${eventDetails.country}, ${eventDetails.city}`}</h3>
-          </div>
-          <div
-            style={{
-              margin: 'auto',
-              textAlign: 'center',
-              fontSize: 20,
-              marginBottom: 30,
-            }}
-          >
-            <strong>
-              {moment(eventDetails.startDate.date).format(
-                'dddd, MMMM Do, YYYY'
-              )}{' '}
-              —{' '}
-              {moment(eventDetails.endDate.date).format('dddd, MMMM Do, YYYY')}
-            </strong>
-          </div>
+          <h3 style={{ fontSize: 24, textAlign: 'center' }}>Equipment Inspection Signup</h3>
           <div style={{ margin: 'auto', textAlign: 'center', fontSize: 20 }}>
             1. Begin typing a sailor's name or sailor ID in the form below <br />
             2. Select the timeslot you'd like to have for equipment inspection <br />
