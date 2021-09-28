@@ -43,10 +43,12 @@ app.put('/signups/updateinspecs/:ilcaNum', async (req, res) => {
 app.put('/signups/removesailor/:sailorID/:ilcaNum', async (req, res) => {
   const ilcaNum = req.params.ilcaNum;
   const inspectionReqs = req.body.inspectionReqs;
+  const slotsAvailableByDay = req.body.slotsAvailableByDay;
   SignupSheetModel.findOneAndUpdate(
     { ilcaNum: ilcaNum },
     {
       inspectionReqs: inspectionReqs,
+      slotsAvailableByDay: slotsAvailableByDay,
     },
     { new: true, useFindAndModify: false },
     (err, result) => {
