@@ -207,12 +207,24 @@ const ViewEvent = () => {
   };
 
   const deleteSheet = (e) => {
+    console.log(currentSignup);
     //eslint-disable-next-line
     let result = confirm('Are you certain you want to delete this event signup?');
     if (result === true) {
-      removeSignupByEventNum(ilcaNum);
-      setTimeout(redirToAdmin, 500);
-      e.preventDefault();
+      let currentTime = new Date();
+      if (currentSignup.inspectionReqs.length > 0 && currentTime < currentSignup.endDate) {
+        //eslint-disable-next-line
+        let result2 = confirm('There are sailors currently signup up for this event, and the end Date for the event has not been reached. Are you CERTAIN you want to delete this sheet?');
+        if (result2 === true) {
+          removeSignupByEventNum(ilcaNum);
+          setTimeout(redirToAdmin, 500);
+          e.preventDefault();
+        }
+      } else {
+        removeSignupByEventNum(ilcaNum);
+        setTimeout(redirToAdmin, 500);
+        e.preventDefault();
+      } 
     }
   };
 
@@ -243,13 +255,6 @@ const ViewEvent = () => {
       {eventDetails.logo ? (
         <div>
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              width: '100%',
-            }}
             className="event-header"
           >
             <img
@@ -262,6 +267,14 @@ const ViewEvent = () => {
                 {eventDetails.title}
               </h3>
             </i>
+            <h3>{`${eventDetails.country}, ${eventDetails.city}`}</h3>
+            <strong style={{marginBottom: 20}}>
+              {moment(eventDetails.startDate.date).format(
+                'dddd, MMMM Do, YYYY'
+              )}{' '}
+              —{' '}
+              {moment(eventDetails.endDate.date).format('dddd, MMMM Do, YYYY')}
+            </strong>
             <img
               src={eventDetails.logo}
               alt="Event Logo"
