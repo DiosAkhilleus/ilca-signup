@@ -335,8 +335,10 @@ body {
 .event-header {
   margin-top: 30px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
+  justify-content: center; 
+  align-items: center;
 }
 
 .submission-cancellation-button-container {
