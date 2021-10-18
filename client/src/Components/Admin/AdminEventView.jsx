@@ -233,8 +233,10 @@ const ViewEvent = () => {
   };
 
   const handleDateChange = (date) => {
-    setShutoffDate(new Date(moment(date).format('M/D/YYYY')));
-    setCommitChangeButton(true);
+    if (date !== null) {
+      setShutoffDate(new Date(moment(date).format('M/D/YYYY')));
+      setCommitChangeButton(true);
+    }
   };
 
   const handleSubmitDateChange = (shutoff) => {
@@ -298,13 +300,23 @@ const ViewEvent = () => {
               }}
               to="/"
             >
-              Return to Admin Home Page
+              <Button variant='contained' style={{
+                backgroundColor: 'rgb(2, 114, 186)',
+                color: 'white'
+              }}>
+                Return to Admin Home Page
+              </Button>
             </Link>
             <Link
               to={`/signup/${currentSignup.uuid}`}
               style={{ marginBottom: 20 }}
             >
-              Public Link for Event Signup Sheet
+              <Button variant='contained' style={{
+                backgroundColor: 'rgba(230,95,39,255)',
+                color: 'ivory',
+              }}>
+                Public Link for Event Signup Sheet
+              </Button>
             </Link>
             <CSVLink
               className="link"
@@ -312,7 +324,9 @@ const ViewEvent = () => {
               headers={csvHeadersUnregistered}
               filename={`remaining_sailors_for_event_${ilcaNum}.csv`}
             >
-              Download CSV of Sailors Not Registered For Inspection
+              <Button variant='contained' color='primary'>
+                Download CSV of Sailors Not Registered For Inspection
+              </Button>
             </CSVLink>
             <CSVLink
               className="link"
@@ -320,7 +334,9 @@ const ViewEvent = () => {
               // headers={csvHeadersRegistered}
               filename={`sailor_inspection_list_for_event_${ilcaNum}.csv`}
             >
-              Download CSV of Sailors Registered For Inspection
+              <Button variant='contained' color='primary'>
+                Download CSV of Sailors Registered For Inspection
+              </Button>
             </CSVLink>
             <div className="admin-date-picker">
               <strong style={{ marginBottom: 6 }}>
@@ -391,6 +407,7 @@ const ViewEvent = () => {
                 margin: 'auto !important',
                 marginBottom: 30,
               }}
+              variant='contained'
               onClick={(e) => deleteSheet(e)}
             >
               Delete This Signup Sheet
