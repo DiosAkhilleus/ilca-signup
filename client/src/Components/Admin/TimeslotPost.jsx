@@ -25,7 +25,7 @@ import 'react-date-range/dist/theme/default.css';
 
 const TimeslotPost = () => {
   const [interval, setInterval] = useState(30); // The time interval between signup time options
-  const [shutoffDate, setShutoffDate] = useState(new Date());
+  const [shutoffDate, setShutoffDate] = useState();
   const [selectedDates, setSelectedDates] = useState([]); // An array representing the dates during which the event will take place
   const [entryLimit, setEntryLimit] = useState(0); // The initial entry limit for all time options, though each time option can later be individually adjusted
   const [ilcaNum, setILCANum] = useState(''); // The number designation for the particular event, which will be used in the future for an API call requesting event information
@@ -86,7 +86,6 @@ const TimeslotPost = () => {
   }, [endValue]);
 
   const handleTimeslotPost = () => {
-    // Handles Timeslot DB Submission. Currently not active. Needs some changes based on other intracomponent adjustments
     if (ilcaNum !== '' && entryLimit !== 0 && selectedDates.length) {
       let uuid = uuidv4(); // creates unique ID for the DB entry
       let inspectionReqs = [];
@@ -191,10 +190,16 @@ const TimeslotPost = () => {
   };
 
   const handleChangeCutoff = (date) => {
-    date.setHours(23);
-    date.setMinutes(59);
-    setShutoffDate(date);
-  }
+    // This function sets the newly created shutoff date to GMT rather than CST, and then sets it in State
+    if (date !== null) {
+      date.setHours(23);
+      date.setMinutes(59);
+      let dateValue = date.valueOf();
+      let offsetInMS = date.getTimezoneOffset() * 60000;
+      let dateWithOffset = new Date(dateValue - offsetInMS);
+      setShutoffDate(dateWithOffset);
+    }
+  };
 
   return (
     <>
@@ -204,9 +209,7 @@ const TimeslotPost = () => {
           src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
           alt="ILCA Logo"
         />
-        <div className="post-title">
-          Create Inspection Signup
-        </div>
+        <div className="post-title">Create Inspection Signup</div>
       </header>
       <div className="timeslot-post">
         <Link
@@ -214,7 +217,9 @@ const TimeslotPost = () => {
           className="link"
           to="/"
         >
-          Back to admin
+          <Button variant='contained' style={{backgroundColor: 'rgb(2, 114, 186)', color: 'white'}}>
+            Back to admin
+          </Button>
         </Link>
 
         <div className="timeslot-options-container">
@@ -268,7 +273,9 @@ const TimeslotPost = () => {
           <div className="start-end-times">
             <div className="start-end-group-container">
               <div className="start-end-group">
-                <div className="label"><strong>Start Time</strong></div>
+                <div className="label">
+                  <strong>Start Time</strong>
+                </div>
                 <TimePicker
                   showSecond={false}
                   allowEmpty={false}
@@ -278,7 +285,9 @@ const TimeslotPost = () => {
                 />
               </div>
               <div className="start-end-group">
-                <div className="label"><strong>End Time</strong></div>
+                <div className="label">
+                  <strong>End Time</strong>
+                </div>
                 <TimePicker
                   showSecond={false}
                   allowEmpty={false}
@@ -288,17 +297,28 @@ const TimeslotPost = () => {
                 />
               </div>
               <div className="start-end-group">
-                <div className="label"><strong>Signup Sheet Closing Date</strong></div>
-                <DatePicker value={shutoffDate} onChange={(value) => handleChangeCutoff(value)}/>
-                <div><i>@</i></div>
-                  <strong>{moment(shutoffDate).format('HH:mm')} CST</strong>
+                <div className="label">
+                  <strong>Signup Sheet Closing Date</strong>
+                </div>
+                <DatePicker
+                  value={shutoffDate}
+                  onChange={(value) => handleChangeCutoff(value)}
+                />
+                <div>
+                  <i>@</i>
+                </div>
+                <strong>23:59 CST</strong>
               </div>
             </div>
           </div>
         </div>
 
         <div className="timeslot">
-          {Object.keys(slotsAvailableByDay).length > 0 ? <h3>Click individual slots below to make them unavailable</h3> : ''}
+          {Object.keys(slotsAvailableByDay).length > 0 ? (
+            <h3>Click individual slots below to make them unavailable</h3>
+          ) : (
+            ''
+          )}
           {/* <hr style={{ height: 2, backgroundColor: 'grey', border: 'none' }} /> */}
           {Object.keys(slotsAvailableByDay).map((el, index) => (
             <div key={index} className="admin-slot-container">
