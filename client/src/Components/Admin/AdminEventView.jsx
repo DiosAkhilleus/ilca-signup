@@ -40,6 +40,12 @@ const ViewEvent = () => {
   ]);
 
   useEffect(() => {
+    console.log(Date.now());
+    console.log(Date.parse(currentSignup.endDate));
+    console.log(sailorsSignedUp);
+  }, [currentSignup])
+
+  useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
       setCurrentSignup(results[0]);
@@ -209,12 +215,19 @@ const ViewEvent = () => {
   const deleteSheet = (e) => {
     console.log(currentSignup);
     //eslint-disable-next-line
-    let result = confirm('Are you certain you want to delete this event signup?');
+    let result = confirm(
+      'Are you certain you want to delete this event signup?'
+    );
     if (result === true) {
       let currentTime = new Date();
-      if (currentSignup.inspectionReqs.length > 0 && currentTime < currentSignup.endDate) {
+      if (
+        currentSignup.inspectionReqs.length > 0 &&
+        currentTime < currentSignup.endDate
+      ) {
         //eslint-disable-next-line
-        let result2 = confirm('There are sailors currently signup up for this event, and the end Date for the event has not been reached. Are you CERTAIN you want to delete this sheet?');
+        let result2 = confirm(
+          'There are sailors currently signup up for this event, and the end Date for the event has not been reached. Are you CERTAIN you want to delete this sheet?'
+        );
         if (result2 === true) {
           removeSignupByEventNum(ilcaNum);
           setTimeout(redirToAdmin, 500);
@@ -224,7 +237,7 @@ const ViewEvent = () => {
         removeSignupByEventNum(ilcaNum);
         setTimeout(redirToAdmin, 500);
         e.preventDefault();
-      } 
+      }
     }
   };
 
@@ -256,9 +269,7 @@ const ViewEvent = () => {
     >
       {eventDetails.logo ? (
         <div>
-          <div
-            className="event-header"
-          >
+          <div className="event-header">
             <img
               src="http://www.laserinternational.org/wp-content/uploads/2020/03/ILCA-logo-and-full-name-blue-and-grey.jpg"
               alt="ILCA Logo"
@@ -270,7 +281,7 @@ const ViewEvent = () => {
               </h3>
             </i>
             <h3>{`${eventDetails.country}, ${eventDetails.city}`}</h3>
-            <strong style={{marginBottom: 20}}>
+            <strong style={{ marginBottom: 20 }}>
               {moment(eventDetails.startDate.date).format(
                 'dddd, MMMM Do, YYYY'
               )}{' '}
@@ -300,10 +311,13 @@ const ViewEvent = () => {
               }}
               to="/"
             >
-              <Button variant='contained' style={{
-                backgroundColor: 'rgb(2, 114, 186)',
-                color: 'white'
-              }}>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: 'rgb(2, 114, 186)',
+                  color: 'white',
+                }}
+              >
                 Return to Admin Home Page
               </Button>
             </Link>
@@ -311,10 +325,13 @@ const ViewEvent = () => {
               to={`/signup/${currentSignup.uuid}`}
               style={{ marginBottom: 20 }}
             >
-              <Button variant='contained' style={{
-                backgroundColor: 'rgba(230,95,39,255)',
-                color: 'ivory',
-              }}>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: 'rgba(230,95,39,255)',
+                  color: 'ivory',
+                }}
+              >
                 Public Link for Event Signup Sheet
               </Button>
             </Link>
@@ -324,7 +341,7 @@ const ViewEvent = () => {
               headers={csvHeadersUnregistered}
               filename={`remaining_sailors_for_event_${ilcaNum}.csv`}
             >
-              <Button variant='contained' color='primary'>
+              <Button variant="contained" color="primary">
                 Download CSV of Sailors Not Registered For Inspection
               </Button>
             </CSVLink>
@@ -334,7 +351,7 @@ const ViewEvent = () => {
               // headers={csvHeadersRegistered}
               filename={`sailor_inspection_list_for_event_${ilcaNum}.csv`}
             >
-              <Button variant='contained' color='primary'>
+              <Button variant="contained" color="primary">
                 Download CSV of Sailors Registered For Inspection
               </Button>
             </CSVLink>
@@ -399,19 +416,35 @@ const ViewEvent = () => {
               alignItems: 'center',
             }}
           >
-            <Button
-              style={{
-                backgroundColor: 'rgb(194, 60, 75, 1)',
-                color: 'ivory',
-                maxWidth: 300,
-                margin: 'auto !important',
-                marginBottom: 30,
-              }}
-              variant='contained'
-              onClick={(e) => deleteSheet(e)}
-            >
-              Delete This Signup Sheet
-            </Button>
+            {(Date.now() < Date.parse(currentSignup.endDate) && Date.now() > Date.parse(currentSignup.startDate)) && (currentSignup.inspectionReqs.length > 0) ? (
+              <div style={{display: 'flex', flexDirection: 'column', alignContent: 'center', alignItems: 'center'}}>
+                <Button
+                  style={{
+                    maxWidth: 300,
+                    margin: 'auto !important',
+                  }}
+                  variant="contained"
+                  disabled
+                >
+                  Sheet Deletion Disabled
+                </Button>
+                <strong style={{marginBottom: 30, marginTop: 15}}>Unable to delete sheets while event is ongoing and sailors are registered for inspection times</strong>
+              </div>
+            ) : (
+              <Button
+                style={{
+                  backgroundColor: 'rgb(194, 60, 75, 1)',
+                  color: 'ivory',
+                  maxWidth: 300,
+                  margin: 'auto !important',
+                  marginBottom: 30,
+                }}
+                variant="contained"
+                onClick={(e) => deleteSheet(e)}
+              >
+                Delete This Signup Sheet
+              </Button>
+            )}
           </div>
         </div>
       ) : (
