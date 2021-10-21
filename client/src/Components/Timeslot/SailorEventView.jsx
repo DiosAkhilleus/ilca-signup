@@ -28,7 +28,7 @@ const SailorEventView = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [eventDetails, setEventDetails] = useState({});
   //eslint-disable-next-line
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(Date.now());
 
   let { id } = useParams(); // Retrieves the id from the URL params in order to match it with a corresponding DB entry
 
@@ -37,10 +37,6 @@ const SailorEventView = () => {
     getTimeslots().then((results) => handleIDSubmission(results));
     //eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    console.log(currentDate, currentSignup.shutoffDate);
-  }, [currentSignup])
 
   const handleIDSubmission = (timeslots) => {
     // Handles submission of an ID. If it matches that of a created timeslot, it will display that timeslot
@@ -155,7 +151,6 @@ const SailorEventView = () => {
         );
         let firstName = sailorEntry[0].firstName;
         let familyName = sailorEntry[0].familyName;
-        console.log(firstName, familyName);
         let inspectionReq = {
           // This is the format of the inspection request, so that the information can later be displayed publicly or on the admin page
           eventTitle: currentSignup.eventTitle,
@@ -258,7 +253,7 @@ const SailorEventView = () => {
                 <br />
             <strong>If you submitted a time but would like to change it, please contact the ILCA office</strong>
           </div>
-          {currentDate < new Date(currentSignup.shutoffDate) ? (
+          {currentDate < Date.parse(currentSignup.shutoffDate) ? (
           <form className="signup-form">
             <Autocomplete // Autocomplete form that has the currently entered sailors for the specific event as options
               id="combo-box-demo"
