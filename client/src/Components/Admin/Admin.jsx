@@ -10,8 +10,8 @@ const Admin = () => {
 
   useEffect(() => {
     getTimeslots().then((results) => {
-      let sortedByStartDate = results.sort((a, b) => a.startDate > b.startDate)
-      setTimeslots(sortedByStartDate)
+      let sortedByStartDate = results.sort((a, b) => a.startDate > b.startDate);
+      setTimeslots(sortedByStartDate);
     });
   }, []);
 
@@ -51,11 +51,20 @@ const Admin = () => {
               <div style={{ marginTop: 10 }}>
                 {el.hostCity}, {el.hostCountry}
               </div>
-              <img
-                style={{ maxWidth: 200, maxHeight: 100, margin: 15 }}
-                src={el.logoURL}
-                alt="event logo"
-              />
+              <div
+                style={{
+                  maxWidth: 200,
+                  maxHeight: 100,
+                  alignContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <img
+                  style={{ maxWidth: 200, maxHeight: 100 }}
+                  src={el.logoURL}
+                  alt="event logo"
+                />
+              </div>
               <Button
                 variant="contained"
                 color="primary"
