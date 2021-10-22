@@ -40,12 +40,6 @@ const ViewEvent = () => {
   ]);
 
   useEffect(() => {
-    console.log(Date.now());
-    console.log(Date.parse(currentSignup.endDate));
-    console.log(sailorsSignedUp);
-  }, [currentSignup])
-
-  useEffect(() => {
     // Retrieves the correct event from the DB based on the ilcaNum url param
     getSignupByEventNum(ilcaNum).then((results) => {
       setCurrentSignup(results[0]);
