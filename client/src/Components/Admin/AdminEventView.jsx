@@ -92,7 +92,6 @@ const ViewEvent = () => {
     for (let i = 0; i < currentSignup.entryLimit; i++) {
       csv.push([]);
     }
-    console.log(csv);
 
     for (let i = 0; i < timeListForFilter.length; i++) {
       let currentSlot = timeListForFilter[i];
@@ -207,7 +206,6 @@ const ViewEvent = () => {
   };
 
   const deleteSheet = (e) => {
-    console.log(currentSignup);
     //eslint-disable-next-line
     let result = confirm(
       'Are you certain you want to delete this event signup?'

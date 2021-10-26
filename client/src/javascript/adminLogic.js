@@ -59,14 +59,12 @@ export const removeSailorFromEvent = (ilcaNum, sailorID) => {
     const inspectionToDelete = signup.inspectionReqs.filter(el => el.sailorID === sailorID)[0];
     const toDeleteDay = inspectionToDelete.day;
     const toDeleteTime = inspectionToDelete.time;
-    console.log(toDeleteDay, toDeleteTime);
     for (let i = 0; i < signup.slotsAvailableByDay[toDeleteDay].entriesLeft.length; i++) {
       let currentSlot = signup.slotsAvailableByDay[toDeleteDay].entriesLeft[i];
       if (currentSlot[0] === toDeleteTime) {
         currentSlot[1] ++;
       }
     }
-    console.log(signup);
       
     const newInspectionReqs = signup.inspectionReqs.filter(el => el.sailorID !== sailorID);
     Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/removesailor/${sailorID}/${ilcaNum}`, {
@@ -77,7 +75,6 @@ export const removeSailorFromEvent = (ilcaNum, sailorID) => {
 }
 
 export const commitTimeChangeInDB = (newShutoffDate, ilcaNum) => {
-  console.log(newShutoffDate);
   Axios.put(`https://ilca-inspection-server.herokuapp.com/signups/updateshutoff/${ilcaNum}`, {
     shutoffDate: newShutoffDate
   });
